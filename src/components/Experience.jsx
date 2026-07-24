@@ -30,7 +30,7 @@ const experiences = [
     date: '2023.01',
     title: 'Electrical Engineering Intern',
     company: 'Beijing Lingkong Tianxing',
-    description: 'Participated in a rocket R&D program. Honestly didn't do much — mainly observed and learned about connector standards and cable layout.',
+    description: "Participated in a rocket R&D program. Honestly didn't do much — mainly observed and learned about connector standards and cable layout.",
   },
   {
     date: '2021.09 — 2025.06',
