@@ -23,7 +23,7 @@ export default function Home() {
 
   return (
     <div className="home">
-      <div className="container">
+      <div className="container term-glow">
         {/* ─── Terminal Header ─── */}
         <div className="term-bar fade-in fade-in-1">
           <span className="term-dot" style={{ background: '#F38BA8' }} />

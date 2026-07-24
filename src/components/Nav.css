@@ -2,10 +2,11 @@ nav {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(30, 30, 46, 0.85);
+  background: var(--nav-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
+  transition: background 0.3s;
 }
 
 nav .container {
@@ -21,6 +22,12 @@ nav .logo {
   color: var(--text);
 }
 nav .logo:hover { text-decoration: none; }
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
 
 nav ul {
   list-style: none;
@@ -41,7 +48,25 @@ nav ul a.active {
   text-decoration: none;
 }
 
+.theme-toggle {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  line-height: 1;
+  transition: background 0.2s, border-color 0.2s;
+  color: var(--text);
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
 @media (max-width: 700px) {
-  nav ul { gap: 16px; }
+  nav ul { gap: 12px; }
   nav ul a { font-size: 0.8rem; }
+  .nav-right { gap: 10px; }
 }

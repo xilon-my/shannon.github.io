@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Nav from './components/Nav.jsx'
 import Footer from './components/Footer.jsx'
@@ -8,9 +9,22 @@ import Write from './components/Write.jsx'
 import CV from './pages/CV.jsx'
 
 export default function App() {
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('theme') || 'dark'
+  })
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem('theme', theme)
+  }, [theme])
+
+  const toggleTheme = () => {
+    setTheme(t => t === 'dark' ? 'light' : 'dark')
+  }
+
   return (
     <>
-      <Nav />
+      <Nav theme={theme} onToggleTheme={toggleTheme} />
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
