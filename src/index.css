@@ -21,7 +21,7 @@ body {
   font-family: var(--font);
   font-weight: 400;
   font-style: italic;
-  font-variation-settings: 'wght' 800;
+  font-variation-settings: 'wght' 700;
   font-synthesis: none;
   background: var(--bg);
   color: var(--text);
