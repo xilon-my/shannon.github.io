@@ -17,16 +17,16 @@ const neofetch = `
 
 const responses = {
   help: `available commands:
-  help      show this message
-  whoami    about me
-  neofetch  system info
-  projects  what i've built
-  skills    things i work with
-  awards    achievements
-  github    github profile
-  email     email address
-  clear     clear terminal
-  banner    show the banner`,
+  /help      show this message
+  /whoami    about me
+  /neofetch  system info
+  /projects  what i've built
+  /skills    things i work with
+  /awards    achievements
+  /github    github profile
+  /email     email address
+  /clear     clear terminal
+  /banner    show the banner`,
 
   whoami: `Shannon Zhang
 M.S. @ Tsinghua University
@@ -54,14 +54,14 @@ RoboCup China Open — Basketball Champion`,
 
   banner: `╔══════════════════════════════╗
 ║    shannon@shannon.zone      ║
-║  ❯ type help for commands    ║
+║  ❯ type /help for commands   ║
 ╚══════════════════════════════╝`,
 }
 
 export default function LiveTerminal({ compact }) {
   const [history, setHistory] = useState([
     { type: 'output', text: responses.banner },
-    { type: 'output', text: 'Type "help" to see available commands.' },
+    { type: 'output', text: 'Type /help to see available commands.' },
   ])
   const [input, setInput] = useState('')
   const [commandHistory, setCommandHistory] = useState([])
@@ -74,7 +74,7 @@ export default function LiveTerminal({ compact }) {
   }, [history])
 
   const runCommand = (cmd) => {
-    const trimmed = cmd.trim().toLowerCase()
+    const trimmed = cmd.trim().toLowerCase().replace(/^\//, '')
     if (!trimmed) return
 
     setCommandHistory(h => [...h, trimmed])
@@ -137,7 +137,7 @@ export default function LiveTerminal({ compact }) {
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="type help..."
+          placeholder="type /help..."
           spellCheck={false}
           autoComplete="off"
         />
