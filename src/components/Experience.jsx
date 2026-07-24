@@ -4,14 +4,14 @@ const experiences = [
   {
     date: '2025.09 — Present',
     title: 'M.S. in Electronic Information',
-    company: 'Tsinghua University',
-    description: 'Shenzhen International Graduate School. GPA: 3.93/4.0 (top 5%). Research focus on AI, large language models, and intelligent instrumentation.',
+    company: 'Tsinghua University (SIGS)',
+    description: 'Research focus on six-dimensional force sensors. GPA: 3.93/4.0 (top 5%).',
   },
   {
     date: '2021.09 — 2025.06',
-    title: 'B.S. in Measurement & Control Technology',
+    title: 'B.S. in Measurement & Control Technology and Instruments',
     company: 'Xiamen University',
-    description: 'School of Aeronautics & Astronautics. GPA: 3.78/4.0 (ranked 1/35). National Scholarship winner. CET-6 (532). Outstanding Graduate & Outstanding Graduation Design.',
+    description: 'School of Aeronautics & Astronautics. Ranked 1/35. Awards: National Scholarship, Luyan Scholarship, BYD Scholarship, Academic Excellence Scholarship, Academic Innovation Scholarship. Honors: Outstanding Merit Student, Outstanding Graduate, Outstanding Graduation Design, Excellent League Member, Military Training Outstanding Trainee.',
   },
   {
     date: '2024.09 — 2024.11',

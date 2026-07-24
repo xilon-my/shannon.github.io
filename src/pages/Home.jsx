@@ -16,19 +16,20 @@ export default function Home() {
           <div className="about-grid">
             <div className="about-text">
               <p>
-                I'm a master's student at Tsinghua University, where I study electronic information
-                engineering at the Shenzhen International Graduate School. My research spans large language
-                models, multimodal AI, and intelligent instrumentation systems.
+                I'm a master's student at Tsinghua University's Shenzhen International Graduate School (SIGS),
+                where I research <strong>six-dimensional force sensors</strong> in electronic information engineering.
               </p>
               <p>
-                I hold a B.S. from Xiamen University (ranked 1/35), with a National Scholarship and awards
-                including the RoboCup China Open champion and National College Math Contest prize. I've
-                published research in Polymer Composites and hold a national invention patent.
+                I earned my B.S. in <strong>Measurement &amp; Control Technology and Instruments</strong> from
+                Xiamen University, School of Aeronautics &amp; Astronautics (2021–2025). During my undergraduate
+                studies, I was ranked 1st in my class and received:
               </p>
               <p>
-                Outside of research, I enjoy building AI systems end-to-end — from training LLMs to
-                deploying RAG pipelines and CLI agents. I also run half marathons (PB: 1:56:08)
-                and love cycling and hiking.
+                <strong>Scholarships:</strong> National Scholarship (top 3%), Luyan Scholarship (top 3%),
+                BYD Scholarship (top 1%), Academic Excellence Scholarship, Academic Innovation Scholarship.
+                <br />
+                <strong>Honors:</strong> Outstanding Merit Student (top 3%), Outstanding Graduate,
+                Outstanding Graduation Design, Excellent League Member, Military Training Outstanding Trainee.
               </p>
             </div>
             <Skills />
