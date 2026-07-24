@@ -1,7 +1,5 @@
-import { useState, useEffect } from 'react'
-import MDEditor from '@uiw/react-md-editor'
-import '@uiw/react-md-editor/markdown-editor.css'
-import '@uiw/react-markdown-preview/markdown.css'
+import { useState, useEffect, useRef } from 'react'
+import Markdown from 'react-markdown'
 import './Write.css'
 
 const GITHUB_TOKEN_KEY = 'blog_github_token'
@@ -32,21 +30,61 @@ function buildMarkdown({ title, date, tags, body }) {
   return makeFrontmatter({ title, date, tags }) + body.trim() + '\n'
 }
 
+const TOOLS = [
+  { label: 'B', tag: '**', hint: 'bold' },
+  { label: 'I', tag: '_', hint: 'italic', style: { fontStyle: 'italic' } },
+  { label: 'H1', tag: '# ', hint: 'heading 1' },
+  { label: 'H2', tag: '## ', hint: 'heading 2' },
+  { label: 'H3', tag: '### ', hint: 'heading 3' },
+  { label: '•', tag: '- ', hint: 'list item' },
+  { label: '[]', tag: '- [ ] ', hint: 'checkbox' },
+  { label: '🔗', tag: '[text](url)', hint: 'link' },
+  { label: '`', tag: '`code`', hint: 'inline code' },
+  { label: '▨', tag: '```\n\n```', hint: 'code block' },
+]
+
 export default function Write() {
   const [token, setToken] = useState(() => localStorage.getItem(GITHUB_TOKEN_KEY) || '')
   const [title, setTitle] = useState('')
   const [tagsInput, setTagsInput] = useState('')
   const [body, setBody] = useState('')
+  const [showPreview, setShowPreview] = useState(false)
   const [status, setStatus] = useState(null)
   const [publishing, setPublishing] = useState(false)
+  const textareaRef = useRef(null)
 
   useEffect(() => {
     if (token) localStorage.setItem(GITHUB_TOKEN_KEY, token)
   }, [token])
 
-  useEffect(() => {
-    document.documentElement.setAttribute('data-color-mode', 'light')
-  }, [])
+  function insertTag(tag) {
+    const ta = textareaRef.current
+    if (!ta) return
+    const start = ta.selectionStart
+    const end = ta.selectionEnd
+    const selected = body.substring(start, end)
+    const before = body.substring(0, start)
+    const after = body.substring(end)
+    let insertion
+
+    if (tag === '```') {
+      insertion = '```\n' + (selected || 'code') + '\n```'
+    } else if (tag === '[text](url)') {
+      insertion = selected ? `[${selected}](url)` : tag
+    } else if (tag === '`code`') {
+      insertion = selected ? `\`${selected}\`` : tag
+    } else {
+      insertion = tag + (selected || '')
+    }
+
+    const newBody = before + insertion + after
+    setBody(newBody)
+    setTimeout(() => {
+      ta.focus()
+      const pos = before.length + insertion.length
+      ta.setSelectionRange(pos, pos)
+    }, 0)
+  }
 
   async function publishPost() {
     if (!title.trim()) {
@@ -124,10 +162,6 @@ export default function Write() {
     }
   }
 
-  const handleEditorChange = (value) => {
-    setBody(value || '')
-  }
-
   return (
     <div className="write-page">
       <h1 className="write-page-title">Write a Post</h1>
@@ -145,7 +179,7 @@ export default function Write() {
         </div>
 
         <div className="write-row">
-          <div className="write-field" style={{ flex: 1 }}>
+          <div className="write-field write-field-half">
             <label className="write-label">Title</label>
             <input
               type="text"
@@ -155,7 +189,7 @@ export default function Write() {
               placeholder="Post title..."
             />
           </div>
-          <div className="write-field" style={{ flex: 1 }}>
+          <div className="write-field write-field-half">
             <label className="write-label">Tags (comma separated)</label>
             <input
               type="text"
@@ -168,16 +202,43 @@ export default function Write() {
         </div>
 
         <div className="write-field">
-          <label className="write-label">Content</label>
-          <div className="write-editor-wrapper">
-            <MDEditor
-              value={body}
-              onChange={handleEditorChange}
-              preview="live"
-              height={500}
-              visibleDragbar={false}
-            />
+          <div className="write-label-row">
+            <label className="write-label">Content</label>
+            <button
+              className="write-preview-toggle"
+              onClick={() => setShowPreview(!showPreview)}
+            >
+              {showPreview ? '✏️ Edit' : '👁️ Preview'}
+            </button>
           </div>
+
+          <div className="write-toolbar">
+            {TOOLS.map(t => (
+              <button
+                key={t.hint}
+                className="write-tool-btn"
+                onClick={() => insertTag(t.tag)}
+                title={t.hint}
+                style={t.style}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+
+          {showPreview ? (
+            <div className="write-preview">
+              <Markdown>{body}</Markdown>
+            </div>
+          ) : (
+            <textarea
+              ref={textareaRef}
+              className="write-textarea"
+              value={body}
+              onChange={e => setBody(e.target.value)}
+              placeholder="Write your post in markdown..."
+            />
+          )}
         </div>
 
         <div className="write-actions">
