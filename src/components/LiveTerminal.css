@@ -105,39 +105,32 @@
   flex-shrink: 0;
 }
 
-/* ── Command suggestions (inline, like Claude Code) ── */
-.suggestions-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  padding: 6px 32px;
+/* ── Command suggestions (inline in output, like Claude Code) ── */
+.sug-list {
   border-top: 1px solid var(--border);
-  background: var(--surface);
-  font-size: 0.78rem;
+  margin-top: 4px;
+  padding-top: 4px;
 }
 
-.live-terminal.compact .suggestions-bar {
-  padding: 6px 32px;
-}
-
-.sug-item {
-  padding: 2px 10px;
-  border-radius: 4px;
+.sug-line {
+  display: flex;
+  gap: 6px;
+  padding: 2px 0;
   cursor: pointer;
+  border-radius: 4px;
+}
+
+.sug-line.sug-act {
+  background: var(--accent-light);
+  border-radius: 4px;
+}
+
+.sug-line pre {
   color: var(--text-secondary);
-  font-family: 'JetBrains Mono', monospace;
-  font-style: italic;
-  transition: background 0.1s, color 0.1s;
 }
 
-.sug-item:hover {
-  color: var(--text);
-  background: var(--accent-light);
-}
-
-.sug-item.sug-sel {
+.sug-line.sug-act pre {
   color: var(--green);
-  background: var(--accent-light);
 }
 
 /* ── Typewriter cursor ── */

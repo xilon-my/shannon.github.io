@@ -106,6 +106,12 @@ export default function LiveTerminal({ compact }) {
     if (showSuggestions && filteredSuggestions.length > 0) {
       if (e.key === 'Enter') {
         e.preventDefault()
+        runCommand('/' + filteredSuggestions[selectedSuggestion])
+        setShowSuggestions(false)
+        return
+      }
+      if (e.key === 'Tab') {
+        e.preventDefault()
         setInput('/' + filteredSuggestions[selectedSuggestion] + ' ')
         setShowSuggestions(false)
         return
@@ -120,7 +126,7 @@ export default function LiveTerminal({ compact }) {
         setSelectedSuggestion(i => Math.max(i - 1, 0))
         return
       }
-      if (e.key === 'Escape' || e.key === 'Tab') {
+      if (e.key === 'Escape') {
         e.preventDefault()
         setShowSuggestions(false)
         return
@@ -161,24 +167,22 @@ export default function LiveTerminal({ compact }) {
             <pre style={{ margin: 0, fontFamily: 'inherit', fontSize: 'inherit', whiteSpace: 'pre-wrap' }}>{entry.text}</pre>
           </div>
         ))}
+        {showSuggestions && filteredSuggestions.length > 0 && (
+          <div className="sug-list">
+            {filteredSuggestions.map((cmd, i) => (
+              <div key={cmd} className={`sug-line ${i === selectedSuggestion ? 'sug-act' : ''}`}
+                onMouseDown={() => {
+                  setShowSuggestions(false)
+                  runCommand('/' + cmd)
+                }}
+              >
+                <span className="prompt-sign">❯ </span>
+                <pre style={{ margin: 0, fontFamily: 'inherit', fontSize: 'inherit', whiteSpace: 'pre' }}>/{cmd}</pre>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-      {showSuggestions && filteredSuggestions.length > 0 && (
-        <div className="suggestions-bar">
-          {filteredSuggestions.map((cmd, i) => (
-            <span
-              key={cmd}
-              className={`sug-item ${i === selectedSuggestion ? 'sug-sel' : ''}`}
-              onMouseDown={() => {
-                setInput('/' + cmd + ' ')
-                setShowSuggestions(false)
-                inputRef.current?.focus()
-              }}
-            >
-              /{cmd}
-            </span>
-          ))}
-        </div>
-      )}
       <div className="term-input-line">
         <input
           ref={inputRef}
