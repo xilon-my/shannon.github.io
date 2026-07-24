@@ -1,0 +1,177 @@
+.cv-page {
+  padding: 48px 0 64px;
+}
+
+/* ── Terminal dots bar ── */
+.cv-header {
+  border: 1px solid var(--border);
+  border-radius: var(--radius) var(--radius) 0 0;
+  overflow: hidden;
+}
+
+.term-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.t-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.t-title {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.cv-name {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 800;
+  font-variation-settings: 'wght' 800;
+  padding: 28px 32px 4px;
+}
+
+.cv-sub {
+  padding: 0 32px 28px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Sections ── */
+.cv-section {
+  border: 1px solid var(--border);
+  border-top: none;
+  padding: 28px 32px;
+}
+
+.cv-prompt {
+  font-size: 0.85rem;
+  color: var(--green);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.prompt-cv {
+  color: var(--green);
+  font-weight: 700;
+}
+
+/* ── Education ── */
+.cv-edu-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  align-items: flex-start;
+}
+
+.cv-edu-row:last-child {
+  margin-bottom: 0;
+}
+
+.cv-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.cv-edu-row h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.cv-meta {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.cv-desc {
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+/* ── Block ── */
+.cv-block {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+}
+
+/* ── Awards ── */
+.cv-awards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.cv-award-cat {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--yellow);
+  margin-bottom: 8px;
+}
+
+.cv-award-list {
+  list-style: none;
+  padding: 0;
+}
+
+.cv-award-list li {
+  font-size: 0.85rem;
+  padding: 3px 0;
+  color: var(--text);
+}
+
+.cv-award-list li::before {
+  content: '▸ ';
+  color: var(--accent);
+}
+
+/* ── Skills override ── */
+.cv-section .skills h3 {
+  display: none;
+}
+
+/* ── Footer ── */
+.cv-footer {
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  padding: 14px 32px;
+  background: var(--surface);
+}
+
+.blink-cv {
+  animation: blink 1s step-end infinite;
+  color: var(--green);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+@media (max-width: 700px) {
+  .cv-page { padding: 24px 0 48px; }
+  .cv-name { padding: 20px 20px 4px; }
+  .cv-sub { padding: 0 20px 24px; }
+  .cv-section { padding: 20px; }
+  .cv-footer { padding: 12px 20px; }
+  .cv-awards-grid { grid-template-columns: 1fr; }
+}

@@ -8,7 +8,7 @@ const taglines = [
   'National Scholarship, BYD Scholarship...',
   'CLI agents & LLMs',
   'half marathon runner (1:56:08)',
-  'Tsinghua SIGS · Xiamen U',
+  'Tsinghua · Xiamen U',
 ]
 
 export default function Home() {
@@ -41,7 +41,7 @@ export default function Home() {
             Xinlong <span className="highlight">Zhang</span>
           </h1>
           <p className="desc">
-            M.S. student @ Tsinghua SIGS · previously @ Xiamen University
+            M.S. student @ Tsinghua University · previously @ Xiamen University
           </p>
           <div className="rotating-tags">
             <span className="prompt-sign">❯</span> Currently into{' '}
@@ -56,7 +56,7 @@ export default function Home() {
             <span className="ql-label">blog</span>
             <span className="ql-arrow">→</span>
           </Link>
-          <a href="https://github.com/ytian4" target="_blank" rel="noopener noreferrer" className="ql-link">
+          <a href="https://github.com/xilon-my" target="_blank" rel="noopener noreferrer" className="ql-link">
             <span className="ql-icon"></span>
             <span className="ql-label">github</span>
             <span className="ql-arrow">→</span>
@@ -76,7 +76,7 @@ export default function Home() {
           <div className="about-body">
             <p>
               B.S. in <strong>Measurement &amp; Control Technology and Instruments</strong> @ Xiamen University (top 1/35).
-              Now M.S. in <strong>Electronic Information</strong> @ Tsinghua SIGS, researching <strong>six-dimensional force sensors</strong>.
+              Now M.S. in <strong>Electronic Information</strong> @ Tsinghua University, researching <strong>six-dimensional force sensors</strong>.
             </p>
             <p className="awards-line">
               🏆 National Scholarship · Luyan Scholarship · BYD Scholarship (top 1%) · Academic Excellence ·

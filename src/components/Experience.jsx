@@ -2,9 +2,15 @@ import './Experience.css'
 
 const experiences = [
   {
+    date: '2026.06 — Present',
+    title: 'Agent Development Intern',
+    company: 'Huawei',
+    description: 'Quality & Process IT department. Developing intelligent agents for lights-out factory (黑灯工厂) automation within legacy systems.',
+  },
+  {
     date: '2025.09 — Present',
     title: 'M.S. in Electronic Information',
-    company: 'Tsinghua University (SIGS)',
+    company: 'Tsinghua University',
     description: 'Research focus on six-dimensional force sensors. GPA: 3.93/4.0 (top 5%).',
     logo: '/images/tsinghua.webp',
   },

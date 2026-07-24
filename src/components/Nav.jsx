@@ -3,6 +3,7 @@ import './Nav.css'
 
 const links = [
   { to: '/', label: 'Home' },
+  { to: '/cv', label: 'CV' },
   { to: '/blog', label: 'Blog' },
   { to: '/write', label: 'Write' },
 ]

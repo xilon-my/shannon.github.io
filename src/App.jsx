@@ -5,6 +5,7 @@ import Home from './pages/Home.jsx'
 import BlogPage from './pages/Blog.jsx'
 import BlogPost from './components/BlogPost.jsx'
 import Write from './components/Write.jsx'
+import CV from './pages/CV.jsx'
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/cv" element={<CV />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/write" element={<Write />} />
