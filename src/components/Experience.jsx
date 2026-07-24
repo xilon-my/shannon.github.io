@@ -42,9 +42,11 @@ export default function Experience() {
         <div className="timeline-item" key={i}>
           <div className="date">{j.date}</div>
           <h3>
-            {j.logo && <img src={j.logo} alt="" className="school-logo" />}
             <span className="title-line">{j.title}</span>
-            <span className="company">@ {j.company}</span>
+            <span className="company">
+              {j.logo && <img src={j.logo} alt="" className="school-logo" />}
+              @ {j.company}
+            </span>
           </h3>
           <p>{j.description}</p>
         </div>
