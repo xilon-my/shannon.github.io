@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
-import Markdown from 'react-markdown'
-import './Blog.css'
+import MDEditor from '@uiw/react-md-editor'
+import '@uiw/react-md-editor/markdown-editor.css'
+import '@uiw/react-markdown-preview/markdown.css'
+import './Write.css'
 
 const GITHUB_TOKEN_KEY = 'blog_github_token'
 const OWNER = 'xilon-my'
@@ -34,21 +36,24 @@ export default function Write() {
   const [token, setToken] = useState(() => localStorage.getItem(GITHUB_TOKEN_KEY) || '')
   const [title, setTitle] = useState('')
   const [tagsInput, setTagsInput] = useState('')
-  const [body, setBody] = useState('')
-  const [showPreview, setShowPreview] = useState(false)
-  const [status, setStatus] = useState(null) // { type: 'success'|'error'|'info', message }
+  const [body, setBody] = useState('**Start writing here...**')
+  const [status, setStatus] = useState(null)
   const [publishing, setPublishing] = useState(false)
 
   useEffect(() => {
     if (token) localStorage.setItem(GITHUB_TOKEN_KEY, token)
   }, [token])
 
+  useEffect(() => {
+    document.documentElement.setAttribute('data-color-mode', 'light')
+  }, [])
+
   async function publishPost() {
     if (!title.trim()) {
       setStatus({ type: 'error', message: 'Title is required.' })
       return
     }
-    if (!body.trim()) {
+    if (!body.trim() || body.trim() === '**Start writing here...**') {
       setStatus({ type: 'error', message: 'Post body is required.' })
       return
     }
@@ -65,7 +70,7 @@ export default function Write() {
       title: title.trim(),
       date: today,
       tags: tagsInput.split(',').map(t => t.trim()).filter(Boolean),
-      body,
+      body: body.trim(),
     })
 
     const slug = slugify(title)
@@ -73,7 +78,6 @@ export default function Write() {
     const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`
 
     try {
-      // Try to get existing file (for the SHA, if updating)
       let sha = null
       try {
         const getRes = await fetch(url, {
@@ -85,13 +89,12 @@ export default function Write() {
         }
       } catch {}
 
-      // Commit the new file
-      const body = {
+      const reqBody = {
         message: sha ? `Update blog post: ${title.trim()}` : `Add blog post: ${title.trim()}`,
         content: btoa(unescape(encodeURIComponent(content))),
         branch: 'main',
       }
-      if (sha) body.sha = sha
+      if (sha) reqBody.sha = sha
 
       const res = await fetch(url, {
         method: 'PUT',
@@ -99,7 +102,7 @@ export default function Write() {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify(reqBody),
       })
 
       if (!res.ok) {
@@ -109,13 +112,11 @@ export default function Write() {
 
       setStatus({
         type: 'success',
-        message: `Published! The site will update after the next deploy (usually 1–2 min).`,
+        message: 'Published! The site will update after the next deploy (usually 1–2 min).',
       })
-
-      // Clear form
       setTitle('')
       setTagsInput('')
-      setBody('')
+      setBody('**Start writing here...**')
     } catch (e) {
       setStatus({ type: 'error', message: e.message })
     } finally {
@@ -123,48 +124,60 @@ export default function Write() {
     }
   }
 
+  const handleEditorChange = (value) => {
+    setBody(value || '')
+  }
+
   return (
     <div className="write-page">
-      <h1>Write a Post</h1>
+      <h1 className="write-page-title">Write a Post</h1>
 
       <div className="write-form">
-        <div>
-          <div className="write-label">GitHub Token</div>
+        <div className="write-field">
+          <label className="write-label">GitHub Token</label>
           <input
             type="password"
+            className="write-input"
             value={token}
             onChange={e => setToken(e.target.value)}
-            placeholder="ghp_xxxxxxxxxxxx"
+            placeholder="github_px_xxxxxxxxxxxxxxxxxxxx"
           />
         </div>
 
-        <div>
-          <div className="write-label">Title</div>
-          <input
-            type="text"
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-            placeholder="Post title..."
-          />
+        <div className="write-row">
+          <div className="write-field" style={{ flex: 1 }}>
+            <label className="write-label">Title</label>
+            <input
+              type="text"
+              className="write-input"
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              placeholder="Post title..."
+            />
+          </div>
+          <div className="write-field" style={{ flex: 1 }}>
+            <label className="write-label">Tags (comma separated)</label>
+            <input
+              type="text"
+              className="write-input"
+              value={tagsInput}
+              onChange={e => setTagsInput(e.target.value)}
+              placeholder="AI, LLM, Python"
+            />
+          </div>
         </div>
 
-        <div>
-          <div className="write-label">Tags (comma separated)</div>
-          <input
-            type="text"
-            value={tagsInput}
-            onChange={e => setTagsInput(e.target.value)}
-            placeholder="AI, LLM, Python"
-          />
-        </div>
-
-        <div>
-          <div className="write-label">Body (Markdown)</div>
-          <textarea
-            value={body}
-            onChange={e => setBody(e.target.value)}
-            placeholder="Write your post in markdown..."
-          />
+        <div className="write-field">
+          <label className="write-label">Content</label>
+          <div className="write-editor-wrapper">
+            <MDEditor
+              value={body}
+              onChange={handleEditorChange}
+              preview="live"
+              height={500}
+              visibleDragbar={false}
+            />
+          </div>
         </div>
 
         <div className="write-actions">
@@ -175,27 +188,11 @@ export default function Write() {
           >
             {publishing ? 'Publishing...' : 'Publish'}
           </button>
-          <button
-            className="write-btn write-btn-secondary"
-            onClick={() => setShowPreview(!showPreview)}
-          >
-            {showPreview ? 'Hide Preview' : 'Preview'}
-          </button>
         </div>
 
         {status && (
           <div className={`write-status ${status.type}`}>
             {status.message}
-          </div>
-        )}
-
-        {showPreview && (body || title) && (
-          <div className="write-preview">
-            <h3>Preview</h3>
-            {title && <h1 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: 8 }}>{title}</h1>}
-            <div className="blog-post-content">
-              <Markdown>{body}</Markdown>
-            </div>
           </div>
         )}
       </div>

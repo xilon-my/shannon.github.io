@@ -1,0 +1,140 @@
+.write-page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 80px 24px 64px;
+}
+
+.write-page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 32px;
+}
+
+.write-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.write-row {
+  display: flex;
+  gap: 20px;
+}
+
+.write-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.write-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.write-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', monospace;
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.write-input:focus {
+  border-color: var(--accent);
+}
+
+.write-editor-wrapper {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+/* Override editor font — terminal style */
+.write-editor-wrapper .w-md-editor-text-input,
+.write-editor-wrapper .w-md-editor-text-pre,
+.write-editor-wrapper .w-md-editor-preview {
+  font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', monospace !important;
+  font-size: 15px !important;
+  line-height: 1.7 !important;
+}
+
+/* Override preview content font */
+.wmde-markdown {
+  font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', monospace !important;
+  font-size: 15px !important;
+  line-height: 1.7 !important;
+}
+
+.write-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.write-btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  font-family: inherit;
+}
+
+.write-btn:hover {
+  opacity: 0.85;
+}
+
+.write-btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.write-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.write-status {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+.write-status.success {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.write-status.error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.write-status.info {
+  background: var(--accent-light);
+  color: var(--accent-dark);
+}
+
+@media (max-width: 700px) {
+  .write-page {
+    padding: 64px 16px 48px;
+  }
+  .write-row {
+    flex-direction: column;
+  }
+  .write-editor-wrapper .w-md-editor-text-input,
+  .write-editor-wrapper .w-md-editor-text-pre,
+  .write-editor-wrapper .w-md-editor-preview {
+    font-size: 13px !important;
+  }
+}
