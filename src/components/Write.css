@@ -4,6 +4,10 @@
   padding: 48px 24px 64px;
 }
 
+.write-page .term-body {
+  padding: 32px;
+}
+
 /* ── Meta fields ── */
 .write-meta {
   display: flex;

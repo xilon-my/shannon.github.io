@@ -3,6 +3,10 @@
   padding: 80px 0 64px;
 }
 
+.blog-page .term-body {
+  padding: 32px;
+}
+
 .blog-header {
   margin-bottom: 48px;
 }

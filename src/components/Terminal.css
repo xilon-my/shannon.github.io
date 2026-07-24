@@ -1,0 +1,53 @@
+.terminal {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.term-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+}
+
+.term-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.term-title {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.term-body {
+  background: var(--bg);
+}
+
+/* ── Terminal glow ── */
+.term-glow {
+  box-shadow: 0 0 20px rgba(137, 180, 250, 0.06), 0 0 60px rgba(137, 180, 250, 0.03);
+}
+
+[data-theme="light"] .term-glow {
+  box-shadow: 0 0 20px rgba(64, 160, 43, 0.08), 0 0 60px rgba(64, 160, 43, 0.04);
+}
+
+/* ── Typewriter ── */
+.typewriter {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typing 1.5s steps(30, end) forwards;
+  vertical-align: bottom;
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}

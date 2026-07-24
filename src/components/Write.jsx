@@ -4,6 +4,7 @@ import { BubbleMenu } from '@tiptap/react/menus'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
 import Turndown from 'turndown'
+import Terminal from './Terminal.jsx'
 import './Write.css'
 
 const GITHUB_TOKEN_KEY = 'blog_github_token'
@@ -147,6 +148,7 @@ export default function Write() {
 
   return (
     <div className="write-page">
+      <Terminal title="shannon@personal-site ~ %">
       <div className="write-meta">
         <div className="write-field">
           <input
@@ -242,6 +244,7 @@ export default function Write() {
           {status.message}
         </div>
       )}
+      </Terminal>
     </div>
   )
 }
