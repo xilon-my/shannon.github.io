@@ -25,7 +25,7 @@ export default function Hero() {
         <h1>Hi, I'm <span className="highlight">Xinlong Zhang</span>.</h1>
         <p className="subtitle">
           M.S. student at Tsinghua SIGS, researching six-dimensional force sensors.
-          B.S. from Xiamen University. Awarded National Scholarship, BYD Scholarship, and more.
+          B.S. from Xiamen University. Awarded National Scholarship, and more.
         </p>
         <div className="social-links">
           {socials.map(s => (
