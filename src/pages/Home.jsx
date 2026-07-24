@@ -52,18 +52,23 @@ export default function Home() {
 
         {/* ─── Quick Links ─── */}
         <div className="quick-links fade-in fade-in-3">
+          <Link to="/cv" className="ql-link">
+            <span className="ql-icon">❯</span>
+            <span className="ql-label">cv</span>
+            <span className="ql-arrow">→</span>
+          </Link>
           <Link to="/blog" className="ql-link">
-            <span className="ql-icon"></span>
+            <span className="ql-icon">❯</span>
             <span className="ql-label">blog</span>
             <span className="ql-arrow">→</span>
           </Link>
           <a href="https://github.com/xilon-my" target="_blank" rel="noopener noreferrer" className="ql-link">
-            <span className="ql-icon"></span>
+            <span className="ql-icon">❯</span>
             <span className="ql-label">github</span>
             <span className="ql-arrow">→</span>
           </a>
           <a href="mailto:3422647204@qq.com" className="ql-link">
-            <span className="ql-icon"></span>
+            <span className="ql-icon">❯</span>
             <span className="ql-label">email</span>
             <span className="ql-arrow">→</span>
           </a>
