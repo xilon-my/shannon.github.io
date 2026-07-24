@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './Experience.css'
 
 const experiences = [
@@ -36,33 +36,38 @@ const experiences = [
   },
 ]
 
-function ExpandableDesc({ text }) {
-  const [open, setOpen] = useState(false)
-  return (
-    <div className="exp-wrap">
-      <p className={`exp-desc ${open ? 'exp-open' : ''}`}>{text}</p>
-      <button className="exp-toggle" onClick={() => setOpen(!open)}>
-        <span className="prompt-sign">{open ? '▾' : '▸'}</span> cat description.md
-      </button>
-    </div>
-  )
+function FadeInItem({ children }) {
+  const ref = useRef(null)
+  const [vis, setVis] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setVis(true); obs.disconnect() }
+    }, { threshold: 0.15 })
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [])
+  return <div ref={ref} className={`fade-item ${vis ? 'fade-in' : ''}`}>{children}</div>
 }
 
 export default function Experience() {
   return (
     <div className="timeline">
       {experiences.map((j, i) => (
-        <div className="timeline-item" key={i}>
-          <div className="date">{j.date}</div>
-          <h3>
-            <span className="title-line">{j.title}</span>
-            <span className="company-line">
-              {j.logo && <img src={j.logo} alt="" className="school-logo" />}
-              @ {j.company}
-            </span>
-          </h3>
-          <ExpandableDesc text={j.description} />
-        </div>
+        <FadeInItem key={i}>
+          <div className="timeline-item">
+            <div className="date">{j.date}</div>
+            <h3>
+              <span className="title-line">{j.title}</span>
+              <span className="company-line">
+                {j.logo && <img src={j.logo} alt="" className="school-logo" />}
+                @ {j.company}
+              </span>
+            </h3>
+            <p className="exp-desc">{j.description}</p>
+          </div>
+        </FadeInItem>
       ))}
     </div>
   )
