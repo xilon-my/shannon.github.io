@@ -8,12 +8,12 @@ const neofetch = `
   ⠀⠀⣠⣿⣿⣿⡿⣫⣷⣶⣯⣻⣿⣿⣿⣿⣿⣿⣿⣻⣾⣿⣷⡽⣿⣿⣆⢀⠀   ─────────────────────
   ⠀⡶⣽⣿⣿⣿⡿⣿⣿⣽⣿⡷⣿⣿⣿⣿⡿⣿⣿⣿⣿⣾⣿⣏⣿⣿⣿⠵⠀   OS         human
   ⠀⠉⠹⣿⣿⣿⣿⣽⣿⣿⣿⣿⣿⣿⢿⣿⣯⢿⣿⣿⣿⣭⣷⣿⣿⣿⠃⠀⠀   Host       Tsinghua University
-  ⠀⠀⠀⠈⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣶⣿⣿⣿⣿⣿⣿⣿⠟⠁⠀⠀⠀   Uptime  22 years
+  ⠀⠀⠀⠈⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣶⣿⣿⣿⣿⣿⣿⣿⠟⠁⠀⠀⠀   Uptime     22 years
   ⠀⠀⠀⠀⠀⠈⠙⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠁⠀⠀⠀⠀⠀   Shell      bash
   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣭⣽⡟⠛⣿⣿⡉⢹⣅⠀⠀⠀⠀⠀⠀⠀⠀⠀   Terminal   Alacritty
   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣽⣗⣭⣿⡶⣻⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀   CPU       brain (2 cores)
   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠯⠻⣿⣿⡿⠟⠿⠿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀   Memory    16 GiB
-                                                                                  Status    doing interesting things
+                                                                                           Status     doing interesting things
 `
 
 const responses = {

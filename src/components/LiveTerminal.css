@@ -63,13 +63,11 @@
   color: var(--text);
   display: flex;
   gap: 6px;
-  word-break: break-word;
 }
 
 .line-out {
   color: var(--text-secondary);
   margin-bottom: 4px;
-  word-break: break-word;
 }
 
 .line-out pre {
@@ -119,9 +117,13 @@
 
 @media (max-width: 700px) {
   .live-terminal { font-size: 0.75rem; }
-  .live-terminal.compact { margin: 0 -16px -32px; }
-  .live-terminal.compact .term-output { padding: 0 16px; }
+  .live-terminal.compact { margin: 0 -16px -20px; }
+  .live-terminal.compact .term-output { padding: 0 16px; overflow-x: auto; }
   .live-terminal.compact .term-input-line { padding: 10px 16px; }
-  .term-input { font-size: 0.75rem; }
-  .line-out pre { white-space: pre; overflow-x: auto; }
+  .term-input { font-size: 0.75rem; line-height: 1.6; }
+  .live-terminal.compact .line-out pre,
+  .live-terminal.compact .line-cmd pre {
+    white-space: pre !important;
+    overflow-x: auto;
+  }
 }
