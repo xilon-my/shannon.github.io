@@ -50,58 +50,12 @@
 .cv-section {
   border: 1px solid var(--border);
   border-top: none;
-  padding: 28px 32px;
-}
-
-.cv-prompt {
-  font-size: 0.85rem;
-  color: var(--green);
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  padding: 32px;
 }
 
 .prompt-cv {
   color: var(--green);
   font-weight: 700;
-}
-
-/* ── Education ── */
-.cv-edu-row {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 20px;
-  align-items: flex-start;
-}
-
-.cv-edu-row:last-child {
-  margin-bottom: 0;
-}
-
-.cv-logo {
-  width: 40px;
-  height: 40px;
-  border-radius: 6px;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.cv-edu-row h3 {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 2px;
-}
-
-.cv-meta {
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-  margin-bottom: 4px;
-}
-
-.cv-desc {
-  font-size: 0.88rem;
-  color: var(--text);
 }
 
 /* ── Block ── */
@@ -115,7 +69,7 @@
 /* ── Awards ── */
 .cv-awards-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 24px;
 }
 
@@ -142,11 +96,6 @@
   color: var(--accent);
 }
 
-/* ── Skills override ── */
-.cv-section .skills h3 {
-  display: none;
-}
-
 /* ── Footer ── */
 .cv-footer {
   border: 1px solid var(--border);
@@ -171,7 +120,7 @@
   .cv-page { padding: 24px 0 48px; }
   .cv-name { padding: 20px 20px 4px; }
   .cv-sub { padding: 0 20px 24px; }
-  .cv-section { padding: 20px; }
+  .cv-section { padding: 24px 20px; }
   .cv-footer { padding: 12px 20px; }
   .cv-awards-grid { grid-template-columns: 1fr; }
 }

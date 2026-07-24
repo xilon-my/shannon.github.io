@@ -13,18 +13,13 @@ const projects = [
   },
   {
     title: 'Multimodal Document RAG',
-    desc: 'Built a multimodal RAG system with RAGAnything + LightRAG + MinerU for parsing text, images, tables from PDFs. Used BGE-Reranker for result re-ranking. Improved context precision from 0.542 to 0.993 and factual correctness from 0.453 to 0.564.',
+    desc: 'Built a multimodal RAG system with RAGAnything + LightRAG + MinerU for parsing text, images, tables from PDFs. Used BGE-Reranker for result re-ranking.',
     tags: ['RAG', 'LLM', 'Embedding', 'Reranker', 'Python'],
   },
   {
     title: 'CFRP Bolt Sensing System',
     desc: 'Designed an intelligent CFRP bolt with embedded CNT eddy current sensors for damage self-diagnosis of bolted composite joints. Published in Polymer Composites (IF 4.7). Granted national invention patent.',
     tags: ['Sensor', 'NDT', 'CFRP', 'Patent', 'Research'],
-  },
-  {
-    title: 'RoboCup Basketball Champion',
-    desc: 'Led development of basketball simulation robot. Used radar for real-time field data, camera for landmark tracking, PID control for motion optimization, and filtering for sensor noise reduction. National First Prize.',
-    tags: ['Robotics', 'PID', 'Computer Vision', 'Sensor Fusion'],
   },
 ]
 
