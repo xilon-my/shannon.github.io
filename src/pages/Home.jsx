@@ -75,25 +75,11 @@ export default function Home() {
           </p>
           <div className="about-body">
             <p>
-              Born 2003.08.24 in China · ISTP · fitness enthusiast 🏋️
+              Born 2003.08.24 in China · ISTP · fitness enthusiast
             </p>
             <p>
-              Currently switching to CS (转码中). Recreational coder &amp; open source enthusiast.
-              Tsinghua M.S. · Xiamen B.S. · Huawei intern.
-            </p>
-            <p>
-              I like to spend time on interesting things. Grateful to live in an open-source world.
-              Love VS Code. Happy to contribute for free to fun projects &amp; ideas — feel free to email me!
-            </p>
-            <p className="quote-line">
-              "The mission of learning is to gain an understanding of various designs."
-            </p>
-            <p className="quote-line">
-              "Attempt to achieve any sustainable behavior through automated means."
-            </p>
-            <p className="awards-line">
-              🏆 National Scholarship · BYD Scholarship · Luyan Scholarship · Academic Excellence ·
-              Outstanding Merit Student · Outstanding Graduate · RoboCup Champion
+              M.S. student @ Tsinghua University. B.S. @ Xiamen University.
+              Intern @ Huawei. Open source enthusiast.
             </p>
           </div>
         </div>
