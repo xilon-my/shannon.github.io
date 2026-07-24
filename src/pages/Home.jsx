@@ -65,6 +65,11 @@ export default function Home() {
           </div>
 
           {/* ─── Interactive Terminal ─── */}
+          <div className="term-divider">
+            <p className="prompt">
+              <span className="prompt-sign">❯</span> ./interactive.sh
+            </p>
+          </div>
           <LiveTerminal compact />
         </Terminal>
       </div>

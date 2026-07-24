@@ -130,6 +130,15 @@
   margin-bottom: 6px;
 }
 
+/* ── Terminal divider ── */
+.term-divider {
+  padding: 20px 0 0;
+}
+
+.term-divider .prompt {
+  margin-bottom: 0;
+}
+
 @keyframes blink {
   50% { opacity: 0; }
 }
