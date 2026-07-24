@@ -1,65 +1,73 @@
-import Hero from '../components/Hero.jsx'
-import Skills from '../components/Skills.jsx'
-import Experience from '../components/Experience.jsx'
-import Projects from '../components/Projects.jsx'
-import BlogList from '../components/BlogList.jsx'
+import { useState, useEffect } from 'react'
+import Terminal from '../components/Terminal.jsx'
+import LiveTerminal from '../components/LiveTerminal.jsx'
+import './Home.css'
+
+const taglines = [
+  'six-dimensional force sensors',
+  'CLI agents & LLMs',
+  'half marathon runner (1:56:08)',
+  'open source & building things',
+]
 
 export default function Home() {
+  const [tagIndex, setTagIndex] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTagIndex(i => (i + 1) % taglines.length)
+    }, 3000)
+    return () => clearInterval(timer)
+  }, [])
+
   return (
-    <>
-      <Hero />
-
-      <section id="about" className="section">
-        <div className="container">
-          <p className="section-label">About</p>
-          <h2 className="section-title">Who I Am</h2>
-          <div className="about-grid">
-            <div className="about-text">
-              <p>
-                I'm a master's student at Tsinghua University's Shenzhen International Graduate School,
-                where I research <strong>six-dimensional force sensors</strong> in electronic information engineering.
-              </p>
-              <p>
-                I earned my B.S. in <strong>Measurement &amp; Control Technology and Instruments</strong> from
-                Xiamen University, School of Aeronautics &amp; Astronautics (2021–2025). During my undergraduate
-                studies, I was ranked 1st in my class and received:
-              </p>
-              <p>
-                <strong>Scholarships:</strong> National Scholarship (top 3%), Luyan Scholarship (top 3%),
-                BYD Scholarship (top 1%), Academic Excellence Scholarship, Academic Innovation Scholarship.
-                <br />
-                <strong>Honors:</strong> Outstanding Merit Student (top 3%), Outstanding Graduate,
-                Outstanding Graduation Design.
-              </p>
+    <div className="home">
+      <div className="container">
+        <Terminal title="shannon@shannon.zone ~ %" glow>
+          {/* ─── Intro ─── */}
+          <div className="intro">
+            <p className="prompt">
+              <span className="prompt-sign">❯</span> whoami
+            </p>
+            <h1 className="name">Shannon Zhang</h1>
+            <p className="desc">
+              M.S. in Electronic Information @ Tsinghua University · B.S. @ Xiamen University
+            </p>
+            <div className="rotating-tags">
+              <span className="prompt-sign">❯</span> Currently into{' '}
+              <span className="tag-rotator">{taglines[tagIndex]}</span>
             </div>
-            <Skills />
           </div>
-        </div>
-      </section>
 
-      <section id="experience" className="section">
-        <div className="container">
-          <p className="section-label">Experience</p>
-          <h2 className="section-title">My Journey</h2>
-          <Experience />
-        </div>
-      </section>
+          {/* ─── Quick Links ─── */}
+          <div className="quick-links">
+            <a href="https://github.com/xilon-my" target="_blank" rel="noopener noreferrer" className="ql-link">
+              <span className="ql-icon">❯</span>
+              <span className="ql-label">github</span>
+              <span className="ql-arrow">→</span>
+            </a>
+            <a href="mailto:3422647204@qq.com" className="ql-link">
+              <span className="ql-icon">❯</span>
+              <span className="ql-label">email</span>
+              <span className="ql-arrow">→</span>
+            </a>
+          </div>
 
-      <section id="projects" className="section">
-        <div className="container">
-          <p className="section-label">Projects</p>
-          <h2 className="section-title">Things I've Built</h2>
-          <Projects />
-        </div>
-      </section>
+          {/* ─── About ─── */}
+          <div className="about-section">
+            <p className="prompt">
+              <span className="prompt-sign">❯</span> cat about.md
+            </p>
+            <div className="about-content">
+              <p>Born 2003.08.24 in China · ISTP · fitness enthusiast</p>
+              <p>My wish is to do interesting things.</p>
+            </div>
+          </div>
 
-      <section id="blog" className="section">
-        <div className="container">
-          <p className="section-label">Blog</p>
-          <h2 className="section-title">Recent Writing</h2>
-          <BlogList limit={3} />
-        </div>
-      </section>
-    </>
+          {/* ─── Interactive Terminal ─── */}
+          <LiveTerminal compact />
+        </Terminal>
+      </div>
+    </div>
   )
 }
