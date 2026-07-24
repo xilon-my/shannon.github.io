@@ -12,10 +12,10 @@ const neofetch = `
   ⠀⠀⠀⠀⠀⠈⠙⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠁⠀⠀⠀⠀⠀   CPU        brain (2 cores)
   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣭⣽⡟⠛⣿⣿⡉⢹⣅⠀⠀⠀⠀⠀⠀⠀⠀⠀   Memory     16 bits
   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣽⣗⣭⣿⡶⣻⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀   Status     doing interesting things
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠯⠻⣿⣿⡿⠟⠿⠿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀   Location   Shenzhen, China    
+  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠯⠻⣿⣿⡿⠟⠿⠿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀   Location   Shenzhen, China
 `
 
-const responses = {
+const CMD = {
   help: `available commands:
   /help      show this message
   /whoami    about me
@@ -58,147 +58,104 @@ RoboCup China Open — Basketball Champion`,
 ╚══════════════════════════════╝`,
 }
 
+const CMD_NAMES = Object.keys(CMD).filter(k => k !== 'banner').sort()
+
 export default function LiveTerminal({ compact }) {
   const [history, setHistory] = useState([
-    { type: 'output', text: responses.banner },
+    { type: 'output', text: CMD.banner },
     { type: 'output', text: 'Type /help to see available commands.' },
   ])
   const [input, setInput] = useState('')
-  const [commandHistory, setCommandHistory] = useState([])
-  const [histIndex, setHistIndex] = useState(-1)
-  const [showSuggestions, setShowSuggestions] = useState(false)
-  const [selectedSuggestion, setSelectedSuggestion] = useState(0)
+  const [cmdHist, setCmdHist] = useState([])
+  const [histIdx, setHistIdx] = useState(-1)
+  const [showHint, setShowHint] = useState(false)
+  const [hintIdx, setHintIdx] = useState(0)
   const inputRef = useRef(null)
   const scrollRef = useRef(null)
 
-  const commandList = Object.keys(responses).filter(k => k !== 'banner').sort()
-  const filteredSuggestions = input.startsWith('/')
-    ? commandList.filter(cmd => cmd.startsWith(input.slice(1)))
+  const matches = input.startsWith('/')
+    ? CMD_NAMES.filter(c => c.startsWith(input.slice(1)))
     : []
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
-  }, [history])
+  }, [history, showHint])
 
-  const runCommand = (cmd) => {
-    const trimmed = cmd.trim().toLowerCase().replace(/^\//, '')
-    if (!trimmed) return
-
-    setCommandHistory(h => [...h, trimmed])
-    setHistIndex(-1)
-
-    let output
-    if (trimmed === 'clear') {
-      setHistory([])
-      setInput('')
-      return
-    } else if (responses[trimmed]) {
-      output = responses[trimmed]
-    } else {
-      output = `command not found: ${trimmed}`
-    }
-
-    setHistory(h => [...h, { type: 'command', text: cmd }, { type: 'output', text: output }])
+  function exec(cmd) {
+    const key = cmd.trim().toLowerCase().replace(/^\//, '')
+    if (!key) return
+    setCmdHist(h => [...h, key])
+    setHistIdx(-1)
+    if (key === 'clear') { setHistory([]); setInput(''); return }
+    setHistory(h => [...h, { type: 'cmd', text: cmd }, { type: 'out', text: CMD[key] || `command not found: ${key}` }])
     setInput('')
   }
 
-  const handleKeyDown = (e) => {
-    if (showSuggestions && filteredSuggestions.length > 0) {
-      if (e.key === 'Enter') {
-        e.preventDefault()
-        runCommand('/' + filteredSuggestions[selectedSuggestion])
-        setShowSuggestions(false)
-        return
-      }
-      if (e.key === 'Tab') {
-        e.preventDefault()
-        setInput('/' + filteredSuggestions[selectedSuggestion] + ' ')
-        setShowSuggestions(false)
-        return
-      }
-      if (e.key === 'ArrowDown') {
-        e.preventDefault()
-        setSelectedSuggestion(i => Math.min(i + 1, filteredSuggestions.length - 1))
-        return
-      }
-      if (e.key === 'ArrowUp') {
-        e.preventDefault()
-        setSelectedSuggestion(i => Math.max(i - 1, 0))
-        return
-      }
-      if (e.key === 'Escape') {
-        e.preventDefault()
-        setShowSuggestions(false)
-        return
+  function onKey(e) {
+    if (showHint && matches.length) {
+      switch (e.key) {
+        case 'Enter': e.preventDefault(); exec('/' + matches[hintIdx]); setShowHint(false); return
+        case 'Tab': e.preventDefault(); setInput('/' + matches[hintIdx] + ' '); setShowHint(false); return
+        case 'ArrowDown': e.preventDefault(); setHintIdx(i => Math.min(i + 1, matches.length - 1)); return
+        case 'ArrowUp': e.preventDefault(); setHintIdx(i => Math.max(i - 1, 0)); return
+        case 'Escape': e.preventDefault(); setShowHint(false); return
       }
     }
-    if (e.key === 'Tab') {
-      e.preventDefault()
-      return
+    switch (e.key) {
+      case 'Tab': e.preventDefault(); break
+      case 'Enter': exec(input); break
+      case 'ArrowUp':
+        if (showHint) break
+        e.preventDefault()
+        if (!cmdHist.length) return
+        const up = histIdx === -1 ? cmdHist.length - 1 : Math.max(0, histIdx - 1)
+        setHistIdx(up); setInput(cmdHist[up])
+        break
+      case 'ArrowDown':
+        if (showHint) break
+        e.preventDefault()
+        if (histIdx === -1) break
+        const dn = histIdx + 1
+        if (dn >= cmdHist.length) { setHistIdx(-1); setInput('') }
+        else { setHistIdx(dn); setInput(cmdHist[dn]) }
+        break
     }
-    if (e.key === 'Enter') {
-      runCommand(input)
-    } else if (!showSuggestions && e.key === 'ArrowUp') {
-      e.preventDefault()
-      if (commandHistory.length === 0) return
-      const newIdx = histIndex === -1 ? commandHistory.length - 1 : Math.max(0, histIndex - 1)
-      setHistIndex(newIdx)
-      setInput(commandHistory[newIdx])
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      if (histIndex === -1) return
-      const newIdx = histIndex + 1
-      if (newIdx >= commandHistory.length) {
-        setHistIndex(-1)
-        setInput('')
-      } else {
-        setHistIndex(newIdx)
-        setInput(commandHistory[newIdx])
-      }
-    }
+  }
+
+  function onInput(v) {
+    setInput(v)
+    const willShow = v.startsWith('/')
+    setShowHint(willShow)
+    if (willShow) setHintIdx(0)
   }
 
   return (
     <div className={"live-terminal" + (compact ? " compact" : "")} onClick={() => inputRef.current?.focus()}>
-      <div className="term-output" ref={scrollRef}>
+      <div className="term-out" ref={scrollRef}>
         {history.map((entry, i) => (
-          <div key={i} className={entry.type === 'command' ? 'line-cmd' : 'line-out'}>
-            {entry.type === 'command' && <span className="prompt-sign">❯ </span>}
-            <pre style={{ margin: 0, fontFamily: 'inherit', fontSize: 'inherit', whiteSpace: 'pre-wrap' }}>{entry.text}</pre>
+          <div key={i} className={entry.type === 'cmd' ? 'l-cmd' : 'l-out'}>
+            {entry.type === 'cmd' && <span className="p-green">❯ </span>}
+            <pre className={entry.type === 'cmd' ? 'p-cmd' : 'p-out'}>{entry.text}</pre>
           </div>
         ))}
-        {showSuggestions && filteredSuggestions.length > 0 && (
-          <div className="sug-list">
-            {filteredSuggestions.map((cmd, i) => (
-              <div key={cmd} className={`sug-line ${i === selectedSuggestion ? 'sug-act' : ''}`}
-                onMouseDown={() => {
-                  setShowSuggestions(false)
-                  runCommand('/' + cmd)
-                }}
-              >
-                <span className="prompt-sign">❯ </span>
-                <pre style={{ margin: 0, fontFamily: 'inherit', fontSize: 'inherit', whiteSpace: 'pre' }}>/{cmd}</pre>
+        {showHint && matches.length > 0 && (
+          <div className="hints">
+            {matches.map((c, i) => (
+              <div key={c}
+                className={"hint" + (i === hintIdx ? " hint-on" : "")}
+                onMouseDown={() => { setShowHint(false); exec('/' + c) }}>
+                <span className="p-green">❯ </span><span className="hint-cmd">/{c}</span>
               </div>
             ))}
           </div>
         )}
       </div>
-      <div className="term-input-line">
-        <input
-          ref={inputRef}
-          type="text"
-          className="term-input"
-          value={input}
-          onChange={e => {
-            setInput(e.target.value)
-            setShowSuggestions(e.target.value.startsWith('/'))
-            setSelectedSuggestion(0)
-          }}
-          onKeyDown={handleKeyDown}
-          placeholder="type /help..."
-          spellCheck={false}
-          autoComplete="off"
-        />
+      <div className="inp-line">
+        <span className="p-green">❯ </span>
+        <input ref={inputRef} type="text" className="inp"
+          value={input} onChange={e => onInput(e.target.value)}
+          onKeyDown={onKey} placeholder="type /help..."
+          spellCheck={false} autoComplete="off" />
       </div>
     </div>
   )
