@@ -11,7 +11,7 @@ const experiences = [
     date: '2025.09 — Present',
     title: 'M.S. in Electronic Information',
     company: 'Tsinghua University',
-    description: 'Researching six-dimensional force sensors. GPA: 3.93/4.0. Member of the Graduate Student Union Sports Department (研会体育部).',
+    description: 'Researching six-dimensional force sensors. GPA: 3.93/4.0. Member of the Graduate Student Union Sports Department.',
     logo: '/images/tsinghua.webp',
   },
   {
