@@ -4,6 +4,7 @@ import './Nav.css'
 const links = [
   { to: '/', label: 'Home' },
   { to: '/blog', label: 'Blog' },
+  { to: '/write', label: 'Write' },
 ]
 
 export default function Nav() {
