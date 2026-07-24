@@ -94,6 +94,33 @@
   margin-bottom: 6px;
 }
 
+/* ── ASCII banner ── */
+.ascii-banner pre {
+  color: var(--accent);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  margin-bottom: 20px;
+  font-style: normal;
+  font-variation-settings: 'wght' 400;
+}
+
+/* ── Hero prompt (magenta accent) ── */
+.prompt-hero .prompt-sign {
+  color: var(--magenta);
+}
+
+/* ── Section separator ── */
+.sec-sep {
+  padding: 8px 0 4px;
+}
+
+.sep-line {
+  color: var(--border);
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  font-style: normal;
+}
+
 /* ── Terminal divider ── */
 .term-divider {
   padding: 20px 0 0;

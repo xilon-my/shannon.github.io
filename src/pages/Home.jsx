@@ -24,9 +24,18 @@ export default function Home() {
     <div className="home">
       <div className="container">
         <Terminal title="shannon@shannon.zone ~ %" glow>
+
+          {/* ─── ASCII banner ─── */}
+          <div className="ascii-banner">
+            <pre>{`  ╭──────────────────────╮
+  │  shannon.zone        │
+  │  personal term & cv  │
+  ╰──────────────────────╯`}</pre>
+          </div>
+
           {/* ─── Intro ─── */}
           <div className="intro">
-            <p className="prompt">
+            <p className="prompt prompt-hero">
               <span className="prompt-sign">❯</span> whoami
             </p>
             <h1 className="name">Shannon Zhang</h1>
@@ -60,6 +69,11 @@ export default function Home() {
               <p>Born 2003.08.24 in China · ISTP · fitness enthusiast</p>
               <p>My wish is to do interesting things.</p>
             </div>
+          </div>
+
+          {/* ─── Separator ─── */}
+          <div className="sec-sep">
+            <span className="sep-line">────</span>
           </div>
 
           {/* ─── Interactive Terminal ─── */}
