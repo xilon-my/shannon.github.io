@@ -9,6 +9,7 @@ export default function BlogPage() {
     <div className="blog-page">
       <div className="container">
         <div className="blog-header">
+          <p className="blog-prompt"><span className="prompt-cv">❯</span> ls posts/</p>
           <h1>Blog</h1>
           <p>Projects, notes, and things I've learned.</p>
         </div>

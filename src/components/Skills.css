@@ -18,10 +18,12 @@
 }
 
 .skill-tags span {
-  background: var(--accent-light);
-  color: var(--accent-dark);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
   font-size: 0.78rem;
   font-weight: 500;
+  font-style: italic;
   padding: 4px 12px;
-  border-radius: 999px;
+  border-radius: 6px;
 }

@@ -58,6 +58,15 @@
   font-weight: 700;
 }
 
+.cv-prompt {
+  font-size: 0.85rem;
+  color: var(--green);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 /* ── Block ── */
 .cv-block {
   background: var(--bg);

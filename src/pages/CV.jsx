@@ -21,13 +21,15 @@ export default function CV() {
           </p>
         </div>
 
-        {/* ─── Timeline (Education + Experience) ─── */}
+        {/* ─── Timeline ─── */}
         <section className="cv-section">
+          <p className="cv-prompt"><span className="prompt-cv">❯</span> cat education-experience.md</p>
           <Experience />
         </section>
 
         {/* ─── Awards ─── */}
         <section className="cv-section">
+          <p className="cv-prompt"><span className="prompt-cv">❯</span> cat awards.md</p>
           <div className="cv-block">
             <div className="cv-awards-block">
               <div className="cv-award-group">
@@ -62,6 +64,7 @@ export default function CV() {
 
         {/* ─── Skills ─── */}
         <section className="cv-section">
+          <p className="cv-prompt"><span className="prompt-cv">❯</span> cat skills.md</p>
           <Skills />
         </section>
 
