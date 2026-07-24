@@ -92,6 +92,12 @@ export default function LiveTerminal({ compact }) {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
   }, [history, streamId])
 
+  useEffect(() => {
+    if (!showHint || !scrollRef.current) return
+    const el = scrollRef.current.querySelector('.hint-on')
+    el?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+  }, [hintIdx, showHint])
+
   function exec(cmd) {
     const key = cmd.trim().toLowerCase().replace(/^\//, '')
     if (!key) return

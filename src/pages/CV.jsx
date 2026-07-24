@@ -65,11 +65,6 @@ export default function CV() {
           <p className="cv-prompt"><span className="prompt-cv">❯</span> cat skills.md</p>
           <Skills />
         </section>
-
-        {/* ─── Footer ─── */}
-        <div className="cv-footer">
-          <span className="prompt-cv">❯</span> <span className="blink-cv">_</span>
-        </div>
       </div>
     </div>
   )
