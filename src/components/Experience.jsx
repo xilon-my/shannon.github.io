@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import './Experience.css'
 
 const experiences = [
@@ -35,6 +36,18 @@ const experiences = [
   },
 ]
 
+function ExpandableDesc({ text }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="exp-wrap">
+      <p className={`exp-desc ${open ? 'exp-open' : ''}`}>{text}</p>
+      <button className="exp-toggle" onClick={() => setOpen(!open)}>
+        <span className="prompt-sign">{open ? '▾' : '▸'}</span> cat description.md
+      </button>
+    </div>
+  )
+}
+
 export default function Experience() {
   return (
     <div className="timeline">
@@ -48,7 +61,7 @@ export default function Experience() {
               @ {j.company}
             </span>
           </h3>
-          <p>{j.description}</p>
+          <ExpandableDesc text={j.description} />
         </div>
       ))}
     </div>
