@@ -13,8 +13,8 @@ html { scroll-behavior: smooth; }
   --accent-dark: #1d4ed8;
   --radius: 12px;
   --max-w: 960px;
-  --font: 'JetBrains Mono', 'Fira Code', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', 'WenQuanYi Micro Hei', monospace;
-  --mono: 'JetBrains Mono', 'Fira Code', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', 'WenQuanYi Micro Hei', monospace;
+  --font: 'JetBrains Mono', 'LXGW WenKai', 'STKaiti', 'KaiTi', 'AR PL UKai CN', serif;
+  --mono: 'JetBrains Mono', 'LXGW WenKai', 'STKaiti', 'KaiTi', 'AR PL UKai CN', serif;
 }
 
 body {
