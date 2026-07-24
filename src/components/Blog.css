@@ -54,7 +54,8 @@
 .blog-card-meta {
   display: flex;
   align-items: center;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-bottom: 10px;
   font-family: var(--mono);
   font-size: 0.8rem;
@@ -432,6 +433,10 @@
 /* ── Responsive ── */
 @media (max-width: 700px) {
   .blog-page { padding: 40px 0; }
-  .blog-card { padding: 20px; }
+  .blog-card { padding: 16px; }
+  .blog-card h2 { font-size: 1rem; }
+  .blog-card p { font-size: 0.82rem; }
+  .blog-card-meta { font-size: 0.7rem; gap: 4px; }
+  .blog-card-tags span { font-size: 0.65rem; padding: 1px 7px; }
   .blog-post-page { padding: 64px 16px 48px; }
 }
