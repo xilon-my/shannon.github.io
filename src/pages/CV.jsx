@@ -13,7 +13,7 @@ export default function CV() {
             <span className="t-dot" style={{ background: '#F38BA8' }} />
             <span className="t-dot" style={{ background: '#F9E2AF' }} />
             <span className="t-dot" style={{ background: '#A6E3A1' }} />
-            <span className="t-title">cv — shannon</span>
+            <span className="t-title">shannon@shannon.zone ~/cv %</span>
           </div>
           <h1 className="cv-name">Shannon Zhang</h1>
           <p className="cv-sub">
