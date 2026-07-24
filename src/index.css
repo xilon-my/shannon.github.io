@@ -19,8 +19,9 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font);
-  font-weight: 800;
+  font-weight: 400;
   font-style: italic;
+  font-variation-settings: 'wght' 800;
   font-synthesis: none;
   background: var(--bg);
   color: var(--text);
