@@ -66,8 +66,15 @@ export default function LiveTerminal({ compact }) {
   const [input, setInput] = useState('')
   const [commandHistory, setCommandHistory] = useState([])
   const [histIndex, setHistIndex] = useState(-1)
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [selectedSuggestion, setSelectedSuggestion] = useState(0)
   const inputRef = useRef(null)
   const scrollRef = useRef(null)
+
+  const commandList = Object.keys(responses).filter(k => k !== 'banner').sort()
+  const filteredSuggestions = input.startsWith('/')
+    ? commandList.filter(cmd => cmd.startsWith(input.slice(1)))
+    : []
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
@@ -96,6 +103,32 @@ export default function LiveTerminal({ compact }) {
   }
 
   const handleKeyDown = (e) => {
+    if (showSuggestions && filteredSuggestions.length > 0) {
+      if (e.key === 'Tab' || (e.key === 'Enter' && filteredSuggestions.length === 1)) {
+        e.preventDefault()
+        setInput('/' + filteredSuggestions[selectedSuggestion] + ' ')
+        setShowSuggestions(false)
+        return
+      }
+      if (e.key === 'ArrowDown') {
+        e.preventDefault()
+        setSelectedSuggestion(i => Math.min(i + 1, filteredSuggestions.length - 1))
+        return
+      }
+      if (e.key === 'ArrowUp') {
+        e.preventDefault()
+        setSelectedSuggestion(i => Math.max(i - 1, 0))
+        return
+      }
+      if (e.key === 'Escape') {
+        setShowSuggestions(false)
+        return
+      }
+    }
+    if (e.key === 'Tab') {
+      e.preventDefault()
+      return
+    }
     if (e.key === 'Enter') {
       runCommand(input)
     } else if (e.key === 'ArrowUp') {
@@ -128,14 +161,35 @@ export default function LiveTerminal({ compact }) {
           </div>
         ))}
       </div>
-      <div className="term-input-line">
+      <div className="term-input-line" style={{ position: 'relative' }}>
+        {showSuggestions && filteredSuggestions.length > 0 && (
+          <div className="cmd-suggestions">
+            {filteredSuggestions.map((cmd, i) => (
+              <div
+                key={cmd}
+                className={`cmd-suggestion ${i === selectedSuggestion ? 'selected' : ''}`}
+                onMouseDown={() => {
+                  setInput('/' + cmd + ' ')
+                  setShowSuggestions(false)
+                  inputRef.current?.focus()
+                }}
+              >
+                /{cmd}
+              </div>
+            ))}
+          </div>
+        )}
         <span className="prompt-sign">❯ </span>
         <input
           ref={inputRef}
           type="text"
           className="term-input"
           value={input}
-          onChange={e => setInput(e.target.value)}
+          onChange={e => {
+            setInput(e.target.value)
+            setShowSuggestions(e.target.value.startsWith('/'))
+            setSelectedSuggestion(0)
+          }}
           onKeyDown={handleKeyDown}
           placeholder="type /help..."
           spellCheck={false}

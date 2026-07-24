@@ -48,8 +48,6 @@ export default function CV() {
                   <li>Outstanding Merit Student</li>
                   <li>Outstanding Graduate</li>
                   <li>Outstanding Graduation Design</li>
-                  <li>Excellent League Member</li>
-                  <li>Military Training Outstanding Trainee</li>
                 </ul>
               </div>
               <div className="cv-award-group">

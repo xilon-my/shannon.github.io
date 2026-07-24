@@ -105,6 +105,37 @@
   flex-shrink: 0;
 }
 
+/* ── Command suggestions ── */
+.cmd-suggestions {
+  position: absolute;
+  bottom: 100%;
+  left: 28px;
+  margin-bottom: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  z-index: 10;
+  min-width: 140px;
+}
+
+.cmd-suggestion {
+  padding: 5px 14px;
+  font-size: 0.78rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-style: italic;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.cmd-suggestion:hover,
+.cmd-suggestion.selected {
+  background: var(--accent-light);
+  color: var(--green);
+}
+
 /* ── Typewriter cursor ── */
 .type-cursor {
   animation: blink 1s step-end infinite;
