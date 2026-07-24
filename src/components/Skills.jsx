@@ -1,7 +1,8 @@
 const skills = [
-  'Go', 'TypeScript', 'Python', 'React', 'Node.js',
-  'PostgreSQL', 'Kubernetes', 'Docker', 'Rust',
-  'Linux', 'GCP', 'Git',
+  'Python', 'PyTorch', 'Transformer', 'LLM', 'RAG',
+  'Node.js', 'TypeScript', 'React', 'Altium Designer',
+  'Origin', 'Visio', 'Adobe Illustrator',
+  'Linux', 'Git',
 ]
 
 export default function Skills() {

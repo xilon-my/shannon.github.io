@@ -16,12 +16,19 @@ export default function Home() {
           <div className="about-grid">
             <div className="about-text">
               <p>
-                I&apos;m a software engineer passionate about building systems that are both elegant and practical.
-                I work across the stack — from designing resilient backends to crafting interfaces people enjoy using.
+                I'm a master's student at Tsinghua University, where I study electronic information
+                engineering at the Shenzhen International Graduate School. My research spans large language
+                models, multimodal AI, and intelligent instrumentation systems.
               </p>
               <p>
-                Outside of code, I love diving into distributed systems, developer tooling, and open-source.
-                I believe the best tools feel invisible, and the best code is a pleasure to read.
+                I hold a B.S. from Xiamen University (ranked 1/35), with a National Scholarship and awards
+                including the RoboCup China Open champion and National College Math Contest prize. I've
+                published research in Polymer Composites and hold a national invention patent.
+              </p>
+              <p>
+                Outside of research, I enjoy building AI systems end-to-end — from training LLMs to
+                deploying RAG pipelines and CLI agents. I also run half marathons (PB: 1:56:08)
+                and love cycling and hiking.
               </p>
             </div>
             <Skills />
@@ -32,7 +39,7 @@ export default function Home() {
       <section id="experience" className="section">
         <div className="container">
           <p className="section-label">Experience</p>
-          <h2 className="section-title">Where I&apos;ve Worked</h2>
+          <h2 className="section-title">My Journey</h2>
           <Experience />
         </div>
       </section>
@@ -40,7 +47,7 @@ export default function Home() {
       <section id="projects" className="section">
         <div className="container">
           <p className="section-label">Projects</p>
-          <h2 className="section-title">Things I&apos;ve Built</h2>
+          <h2 className="section-title">Things I've Built</h2>
           <Projects />
         </div>
       </section>

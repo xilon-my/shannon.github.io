@@ -10,7 +10,7 @@ export default function Nav() {
   return (
     <nav>
       <div className="container">
-        <NavLink to="/" className="logo">shannon</NavLink>
+        <NavLink to="/" className="logo">Xinlong</NavLink>
         <ul>
           {links.map(l => (
             <li key={l.to}>

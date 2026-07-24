@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <footer>
       <div className="container">
-        <p>&copy; {year} Shannon. Built with curiosity.</p>
+        <p>&copy; {year} Xinlong Zhang. Built with curiosity.</p>
       </div>
     </footer>
   )
