@@ -11,14 +11,8 @@ const experiences = [
     date: '2025.09 — Present',
     title: 'M.S. in Electronic Information',
     company: 'Tsinghua University',
-    description: 'Researching six-dimensional force sensors. GPA: 3.93/4.0.',
+    description: 'Researching six-dimensional force sensors. GPA: 3.93/4.0. Member of the Graduate Student Union Sports Department (研会体育部).',
     logo: '/images/tsinghua.webp',
-  },
-  {
-    date: '2024.09 — 2025.01',
-    title: 'Academic Peer Tutor',
-    company: 'Xiamen University',
-    description: 'Provided advanced mathematics tutoring for underclassmen.',
   },
   {
     date: '2024.09 — 2024.11',
@@ -34,9 +28,9 @@ const experiences = [
   },
   {
     date: '2021.09 — 2025.06',
-    title: 'B.S. in Measurement & Control Technology and Instruments',
+    title: 'B.S. in Measurement & Control Technology',
     company: 'Xiamen University',
-    description: 'School of Aeronautics & Astronautics. Ranked 1/35.',
+    description: 'School of Aeronautics & Astronautics. Ranked 1/35. Also served as an Academic Peer Tutor, providing advanced mathematics tutoring for underclassmen.',
     logo: '/images/xiamen.webp',
   },
 ]
@@ -49,7 +43,8 @@ export default function Experience() {
           <div className="date">{j.date}</div>
           <h3>
             {j.logo && <img src={j.logo} alt="" className="school-logo" />}
-            {j.title} <span className="company">@ {j.company}</span>
+            <span className="title-line">{j.title}</span>
+            <span className="company">@ {j.company}</span>
           </h3>
           <p>{j.description}</p>
         </div>

@@ -67,10 +67,20 @@
 }
 
 /* ── Awards ── */
-.cv-awards-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 24px;
+.cv-awards-block {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cv-award-group {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+}
+
+.cv-award-group:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .cv-award-cat {
@@ -83,11 +93,14 @@
 .cv-award-list {
   list-style: none;
   padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
 }
 
 .cv-award-list li {
   font-size: 0.85rem;
-  padding: 3px 0;
+  padding: 2px 0;
   color: var(--text);
 }
 

@@ -30,8 +30,8 @@ export default function CV() {
         {/* ─── Awards ─── */}
         <section className="cv-section">
           <div className="cv-block">
-            <div className="cv-awards-grid">
-              <div>
+            <div className="cv-awards-block">
+              <div className="cv-award-group">
                 <h4 className="cv-award-cat">Scholarships</h4>
                 <ul className="cv-award-list">
                   <li>National Scholarship</li>
@@ -41,7 +41,7 @@ export default function CV() {
                   <li>Academic Innovation Scholarship</li>
                 </ul>
               </div>
-              <div>
+              <div className="cv-award-group">
                 <h4 className="cv-award-cat">Honors</h4>
                 <ul className="cv-award-list">
                   <li>Outstanding Merit Student</li>
@@ -51,7 +51,7 @@ export default function CV() {
                   <li>Military Training Outstanding Trainee</li>
                 </ul>
               </div>
-              <div>
+              <div className="cv-award-group">
                 <h4 className="cv-award-cat">Competitions</h4>
                 <ul className="cv-award-list">
                   <li>RoboCup China Open — Basketball Champion (National First Prize)</li>

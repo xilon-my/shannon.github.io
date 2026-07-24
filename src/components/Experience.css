@@ -36,7 +36,8 @@
   margin-bottom: 4px;
 }
 
-.timeline-item h3 { font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.timeline-item h3 { font-size: 1.1rem; font-weight: 600; display: flex; align-items: flex-start; gap: 6px; flex-wrap: wrap; }
+.title-line { flex-basis: 100%; }
 .timeline-item .company { color: var(--accent); font-weight: 500; }
 .timeline-item p { color: var(--text-secondary); font-size: 0.9rem; margin-top: 6px; }
 
