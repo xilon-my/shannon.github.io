@@ -4,10 +4,10 @@ import './Home.css'
 const taglines = [
   'six-dimensional force sensors',
   'measurement & control technology',
-  'National Scholarship, BYD Scholarship...',
+  'National Scholarship & Outstanding Graduate',
   'CLI agents & LLMs',
   'half marathon runner (1:56:08)',
-  'Tsinghua · Xiamen U',
+  'Tsinghua University · Xiamen University',
 ]
 
 export default function Home() {
