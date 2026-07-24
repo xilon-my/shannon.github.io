@@ -4,7 +4,6 @@ import Footer from './components/Footer.jsx'
 import Home from './pages/Home.jsx'
 import BlogPage from './pages/Blog.jsx'
 import BlogPost from './components/BlogPost.jsx'
-import Write from './components/Write.jsx'
 
 export default function App() {
   return (
@@ -15,7 +14,6 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
-          <Route path="/write" element={<Write />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
