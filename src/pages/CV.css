@@ -139,10 +139,14 @@
 }
 
 @media (max-width: 700px) {
-  .cv-page { padding: 24px 0 48px; }
-  .cv-name { padding: 20px 20px 4px; }
-  .cv-sub { padding: 0 20px 24px; }
-  .cv-section { padding: 24px 20px; }
-  .cv-footer { padding: 12px 20px; }
-  .cv-awards-grid { grid-template-columns: 1fr; }
+  .cv-page { padding: 16px 0 48px; }
+  .cv-name { padding: 16px 16px 4px; font-size: clamp(1.4rem, 5vw, 1.8rem); }
+  .cv-sub { padding: 0 16px 20px; font-size: 0.8rem; }
+  .cv-section { padding: 20px 16px; }
+  .cv-block { padding: 16px; }
+  .cv-footer { padding: 10px 16px; }
+  .cv-prompt { font-size: 0.78rem; margin-bottom: 14px; }
+  .cv-award-cat { font-size: 0.8rem; }
+  .cv-award-list li { font-size: 0.8rem; }
+  .term-body { padding: 20px; }
 }

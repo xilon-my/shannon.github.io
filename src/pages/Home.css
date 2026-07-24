@@ -207,11 +207,15 @@
 
 /* ── Responsive ── */
 @media (max-width: 700px) {
-  .home { padding: 32px 0 48px; }
-  .intro { padding: 28px 20px 20px; }
-  .about-block { padding: 20px; }
-  .home-footer { padding: 12px 20px; }
+  .home { padding: 16px 0 32px; min-height: auto; }
+  .intro { padding: 24px 16px 16px; }
+  .name { font-size: clamp(1.5rem, 8vw, 2rem); }
+  .desc { font-size: 0.85rem; }
+  .about-block { padding: 16px; }
+  .about-body { font-size: 0.85rem; }
+  .home-footer { padding: 10px 16px; }
   .quick-links { flex-direction: column; }
-  .ql-link { border-right: none; border-bottom: 1px solid var(--border); }
+  .ql-link { border-right: none; border-bottom: 1px solid var(--border); padding: 12px 16px; }
   .ql-link:last-child { border-bottom: none; }
+  .ql-label { font-size: 0.82rem; }
 }

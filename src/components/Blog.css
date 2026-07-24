@@ -430,13 +430,7 @@
 
 /* ── Responsive ── */
 @media (max-width: 700px) {
-  .blog-card {
-    padding: 20px;
-  }
-  .blog-post-page {
-    padding: 64px 16px 48px;
-  }
-  .write-page {
-    padding: 64px 16px 48px;
-  }
+  .blog-page { padding: 40px 0; }
+  .blog-card { padding: 20px; }
+  .blog-post-page { padding: 64px 16px 48px; }
 }

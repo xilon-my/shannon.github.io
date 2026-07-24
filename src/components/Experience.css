@@ -47,3 +47,13 @@
   border-radius: 4px;
   flex-shrink: 0;
 }
+
+@media (max-width: 700px) {
+  .timeline { padding-left: 22px; }
+  .timeline-item { padding-bottom: 28px; }
+  .timeline-item::before { left: -28px; width: 10px; height: 10px; }
+  .timeline-item h3 { font-size: 0.95rem; }
+  .timeline-item .date { font-size: 0.7rem; }
+  .timeline-item p { font-size: 0.82rem; }
+  .school-logo { width: 20px; height: 20px; }
+}
