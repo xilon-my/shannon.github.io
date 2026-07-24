@@ -60,11 +60,22 @@ RoboCup China Open — Basketball Champion`,
 
 const CMD_NAMES = Object.keys(CMD).filter(k => k !== 'banner').sort()
 
+function StreamText({ text, speed = 8, onDone }) {
+  const [pos, setPos] = useState(0)
+  useEffect(() => {
+    if (pos >= text.length) { onDone?.(); return }
+    const t = setTimeout(() => setPos(p => p + Math.min(3, text.length - p)), speed)
+    return () => clearTimeout(t)
+  }, [pos, text, speed, onDone])
+  return <>{text.slice(0, pos)}<span className="str-cursor" /></>
+}
+
 export default function LiveTerminal({ compact }) {
   const [history, setHistory] = useState([
-    { type: 'output', text: CMD.banner },
-    { type: 'output', text: 'Type /help to see available commands.' },
+    { type: 'out', text: CMD.banner },
+    { type: 'out', text: 'Type /help to see available commands.' },
   ])
+  const [streamId, setStreamId] = useState(null)
   const [input, setInput] = useState('')
   const [cmdHist, setCmdHist] = useState([])
   const [histIdx, setHistIdx] = useState(-1)
@@ -79,7 +90,7 @@ export default function LiveTerminal({ compact }) {
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
-  }, [history, showHint])
+  }, [history, streamId])
 
   function exec(cmd) {
     const key = cmd.trim().toLowerCase().replace(/^\//, '')
@@ -87,8 +98,16 @@ export default function LiveTerminal({ compact }) {
     setCmdHist(h => [...h, key])
     setHistIdx(-1)
     if (key === 'clear') { setHistory([]); setInput(''); return }
-    setHistory(h => [...h, { type: 'cmd', text: cmd }, { type: 'out', text: CMD[key] || `command not found: ${key}` }])
+    const output = CMD[key] || `command not found: ${key}`
+    const id = Date.now()
+    setStreamId(id)
+    setHistory(h => [...h, { type: 'cmd', text: cmd }, { type: 'stream', id, text: output, done: false }])
     setInput('')
+  }
+
+  function onStreamDone(id) {
+    setHistory(h => h.map(e => e.type === 'stream' && e.id === id ? { ...e, done: true } : e))
+    setStreamId(s => s === id ? null : s)
   }
 
   function onKey(e) {
@@ -108,25 +127,17 @@ export default function LiveTerminal({ compact }) {
         if (showHint) break
         e.preventDefault()
         if (!cmdHist.length) return
-        const up = histIdx === -1 ? cmdHist.length - 1 : Math.max(0, histIdx - 1)
-        setHistIdx(up); setInput(cmdHist[up])
+        setHistIdx(i => i === -1 ? cmdHist.length - 1 : Math.max(0, i - 1))
+        setInput(cmdHist[histIdx === -1 ? cmdHist.length - 1 : Math.max(0, histIdx - 1)])
         break
       case 'ArrowDown':
         if (showHint) break
         e.preventDefault()
         if (histIdx === -1) break
-        const dn = histIdx + 1
-        if (dn >= cmdHist.length) { setHistIdx(-1); setInput('') }
-        else { setHistIdx(dn); setInput(cmdHist[dn]) }
+        if (histIdx + 1 >= cmdHist.length) { setHistIdx(-1); setInput('') }
+        else { setHistIdx(histIdx + 1); setInput(cmdHist[histIdx + 1]) }
         break
     }
-  }
-
-  function onInput(v) {
-    setInput(v)
-    const willShow = v.startsWith('/')
-    setShowHint(willShow)
-    if (willShow) setHintIdx(0)
   }
 
   return (
@@ -135,14 +146,19 @@ export default function LiveTerminal({ compact }) {
         {history.map((entry, i) => (
           <div key={i} className={entry.type === 'cmd' ? 'l-cmd' : 'l-out'}>
             {entry.type === 'cmd' && <span className="p-green">❯ </span>}
-            <pre className={entry.type === 'cmd' ? 'p-cmd' : 'p-out'}>{entry.text}</pre>
+            {entry.type === 'stream' ? (
+              <pre className="p-out">
+                {entry.done ? entry.text : <StreamText text={entry.text} speed={6} onDone={() => onStreamDone(entry.id)} />}
+              </pre>
+            ) : (
+              <pre className={entry.type === 'cmd' ? 'p-cmd' : 'p-out'}>{entry.text}</pre>
+            )}
           </div>
         ))}
         {showHint && matches.length > 0 && (
           <div className="hints">
             {matches.map((c, i) => (
-              <div key={c}
-                className={"hint" + (i === hintIdx ? " hint-on" : "")}
+              <div key={c} className={"hint" + (i === hintIdx ? " hint-on" : "")}
                 onMouseDown={() => { setShowHint(false); exec('/' + c) }}>
                 <span className="p-green">❯ </span><span className="hint-cmd">/{c}</span>
               </div>
@@ -153,9 +169,8 @@ export default function LiveTerminal({ compact }) {
       <div className="inp-line">
         <span className="p-green">❯ </span>
         <input ref={inputRef} type="text" className="inp"
-          value={input} onChange={e => onInput(e.target.value)}
-          onKeyDown={onKey} placeholder="type /help..."
-          spellCheck={false} autoComplete="off" />
+          value={input} onChange={e => { setInput(e.target.value); setShowHint(e.target.value.startsWith('/')); setHintIdx(0) }}
+          onKeyDown={onKey} placeholder="type /help..." spellCheck={false} autoComplete="off" />
       </div>
     </div>
   )
