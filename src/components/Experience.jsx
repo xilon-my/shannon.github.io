@@ -16,7 +16,7 @@ const experiences = [
   },
   {
     date: '2021.09 — 2025.06',
-    title: 'B.S. in Measurement & Control Technology and Instruments',
+    title: 'B.S. in Measurement & Control Technology',
     company: 'Xiamen University',
     description: 'School of Aeronautics & Astronautics. Ranked 1/35. Also served as an Academic Peer Tutor, providing advanced mathematics tutoring for underclassmen.',
     logo: '/images/xiamen.webp',
@@ -25,13 +25,13 @@ const experiences = [
     date: '2024.09 — 2024.11',
     title: 'Hardware Engineer Intern',
     company: 'Xiamen Kebi Detection Technology',
-    description: 'Designed eddy current NDT hardware modules including excitation signal generation, sensing signal acquisition, and signal conditioning circuits. Completed schematic design and PCB layout with Altium Designer.',
+    description: 'Designed eddy current NDT hardware modules: excitation signal generation, sensing signal acquisition, and signal conditioning circuits.',
   },
   {
     date: '2023.01',
-    title: 'Electrical Team Member',
+    title: 'Electrical Engineering Intern',
     company: 'Beijing Lingkong Tianxing',
-    description: 'Participated in rocket R&D program. Mastered connector types and interface standards for reliable signal transmission. Used Capital software for cable layout drawing and testing.',
+    description: "Participated in a rocket R&D program. Honestly didn't do much — mainly observed.",
   },
 ]
 
