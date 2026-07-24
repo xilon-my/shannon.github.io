@@ -56,7 +56,7 @@ export default function Home() {
         <div className="container">
           <p className="section-label">Blog</p>
           <h2 className="section-title">Recent Writing</h2>
-          <BlogList />
+          <BlogList limit={3} />
         </div>
       </section>
     </>
