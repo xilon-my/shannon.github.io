@@ -63,9 +63,9 @@ img { max-width: 100%; display: block; }
 
 /* ── About ── */
 .about-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
 }
 
 .about-text p {
