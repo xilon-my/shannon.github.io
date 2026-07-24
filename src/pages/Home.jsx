@@ -68,19 +68,32 @@ export default function Home() {
           </a>
         </div>
 
-        {/* ─── About — compact ─── */}
+        {/* ─── About ─── */}
         <div className="about-block fade-in fade-in-4">
           <p className="prompt">
-            <span className="prompt-sign">❯</span> echo $BACKGROUND
+            <span className="prompt-sign">❯</span> cat about.md
           </p>
           <div className="about-body">
             <p>
-              B.S. in <strong>Measurement &amp; Control Technology and Instruments</strong> @ Xiamen University (top 1/35).
-              Now M.S. in <strong>Electronic Information</strong> @ Tsinghua University, researching <strong>six-dimensional force sensors</strong>.
+              Born 2003.08.24 in China · ISTP · fitness enthusiast 🏋️
+            </p>
+            <p>
+              Currently switching to CS (转码中). Recreational coder &amp; open source enthusiast.
+              Tsinghua M.S. · Xiamen B.S. · Huawei intern.
+            </p>
+            <p>
+              I like to spend time on interesting things. Grateful to live in an open-source world.
+              Love VS Code. Happy to contribute for free to fun projects &amp; ideas — feel free to email me!
+            </p>
+            <p className="quote-line">
+              "The mission of learning is to gain an understanding of various designs."
+            </p>
+            <p className="quote-line">
+              "Attempt to achieve any sustainable behavior through automated means."
             </p>
             <p className="awards-line">
-              🏆 National Scholarship · Luyan Scholarship · BYD Scholarship (top 1%) · Academic Excellence ·
-              Academic Innovation · Outstanding Merit Student · Outstanding Graduate
+              🏆 National Scholarship · BYD Scholarship · Luyan Scholarship · Academic Excellence ·
+              Outstanding Merit Student · Outstanding Graduate · RoboCup Champion
             </p>
           </div>
         </div>

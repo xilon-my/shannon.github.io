@@ -172,6 +172,15 @@
   color: var(--text-secondary);
 }
 
+.quote-line {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  border-left: 2px solid var(--accent);
+  padding-left: 14px;
+  font-style: normal;
+  font-variation-settings: 'wght' 400;
+}
+
 /* ── Footer ── */
 .home-footer {
   border: 1px solid var(--border);
