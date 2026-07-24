@@ -39,18 +39,16 @@ export default function Home() {
             </div>
           </div>
 
-          {/* ─── Quick Links ─── */}
-          <div className="quick-links">
-            <a href="https://github.com/xilon-my" target="_blank" rel="noopener noreferrer" className="ql-link">
-              <span className="ql-icon">❯</span>
-              <span className="ql-label">github</span>
-              <span className="ql-arrow">→</span>
-            </a>
-            <a href="mailto:3422647204@qq.com" className="ql-link">
-              <span className="ql-icon">❯</span>
-              <span className="ql-label">email</span>
-              <span className="ql-arrow">→</span>
-            </a>
+          {/* ─── Contact ─── */}
+          <div className="about-section">
+            <p className="prompt">
+              <span className="prompt-sign">❯</span> cat contact.md
+            </p>
+            <div className="about-content contact-links">
+              <a href="https://github.com/xilon-my" target="_blank" rel="noopener noreferrer">github.com/xilon-my</a>
+              <span className="contact-sep">·</span>
+              <a href="mailto:3422647204@qq.com">3422647204@qq.com</a>
+            </div>
           </div>
 
           {/* ─── About ─── */}

@@ -60,59 +60,23 @@
   transition: opacity 0.3s;
 }
 
-/* ── Quick links ── */
-.quick-links {
-  display: flex;
-  gap: 0;
-  margin: 0 -32px;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
-}
-
-.ql-link {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 24px;
-  color: var(--text);
-  transition: background 0.2s, color 0.2s;
-  text-decoration: none !important;
-  border-right: 1px solid var(--border);
-}
-
-.ql-link:last-child {
-  border-right: none;
-}
-
-.ql-link:hover {
-  background: var(--border);
-  color: var(--magenta);
-}
-
-.ql-icon {
-  font-size: 1rem;
-  width: 20px;
-  text-align: center;
-  color: var(--green);
-}
-
-.ql-label {
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.ql-arrow {
-  margin-left: auto;
+/* ── Contact links ── */
+.contact-links {
+  font-size: 0.92rem;
   color: var(--text-secondary);
-  font-size: 0.85rem;
-  transition: transform 0.2s;
 }
 
-.ql-link:hover .ql-arrow {
-  transform: translateX(4px);
+.contact-links a {
+  color: var(--accent);
+}
+
+.contact-links a:hover {
   color: var(--magenta);
+}
+
+.contact-sep {
+  margin: 0 10px;
+  color: var(--border);
 }
 
 /* ── About section ── */
@@ -151,8 +115,5 @@
   .desc { font-size: 0.85rem; }
   .about-section { padding: 16px 0 0; }
   .about-content { font-size: 0.85rem; }
-  .quick-links { margin: 0 -16px; flex-direction: column; }
-  .ql-link { border-right: none; border-bottom: 1px solid var(--border); padding: 12px 16px; }
-  .ql-link:last-child { border-bottom: none; }
-  .ql-label { font-size: 0.82rem; }
+  .contact-links { font-size: 0.82rem; }
 }
