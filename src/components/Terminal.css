@@ -27,6 +27,7 @@
 
 .term-body {
   background: var(--bg);
+  padding: 32px;
 }
 
 /* ── Terminal glow ── */

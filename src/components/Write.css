@@ -1,11 +1,7 @@
 .write-page {
-  max-width: 760px;
+  max-width: var(--max-w);
   margin: 0 auto;
   padding: 48px 24px 64px;
-}
-
-.write-page .term-body {
-  padding: 32px;
 }
 
 /* ── Meta fields ── */
