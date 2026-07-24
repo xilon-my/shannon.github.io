@@ -21,18 +21,11 @@
   gap: 8px;
 }
 
-.blog-header h1 {
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
-  margin-bottom: 10px;
-}
-
-.blog-header p {
+.blog-sub {
   color: var(--text-secondary);
-  font-size: 1.05rem;
+  font-size: 1rem;
   max-width: 520px;
+  margin-top: 4px;
 }
 
 .blog-grid {
