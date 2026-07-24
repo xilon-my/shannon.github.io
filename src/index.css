@@ -19,11 +19,13 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font);
+  font-weight: 800;
   font-style: italic;
   font-synthesis: none;
   background: var(--bg);
   color: var(--text);
-  line-height: 1.6;
+  line-height: 1.8;
+  letter-spacing: 0.04em;
   -webkit-font-smoothing: antialiased;
 }
 
