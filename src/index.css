@@ -13,12 +13,13 @@ html { scroll-behavior: smooth; }
   --accent-dark: #1d4ed8;
   --radius: 12px;
   --max-w: 960px;
-  --font: 'Inter', system-ui, -apple-system, sans-serif;
-  --mono: 'JetBrains Mono', 'Noto Sans SC', monospace;
+  --font: 'JetBrains Mono', 'Fira Code', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', 'WenQuanYi Micro Hei', monospace;
+  --mono: 'JetBrains Mono', 'Fira Code', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', 'WenQuanYi Micro Hei', monospace;
 }
 
 body {
   font-family: var(--font);
+  font-style: normal;
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
