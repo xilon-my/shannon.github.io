@@ -46,10 +46,14 @@ nav ul a {
   align-items: center;
 }
 
-nav ul a:hover,
 nav ul a.active {
   color: var(--green);
   background: var(--accent-light);
+  text-decoration: none;
+}
+
+nav ul a:hover {
+  color: var(--green);
   text-decoration: none;
 }
 
@@ -73,16 +77,16 @@ nav ul a.active .nav-arrow {
 
 .theme-toggle {
   background: transparent;
-  border: 1px solid transparent;
+  border: none;
   font-size: 0.8rem;
   font-family: var(--font);
   font-style: italic;
   cursor: pointer;
-  line-height: inherit;
+  line-height: 1.4;
   color: var(--text-secondary);
   padding: 3px 8px;
   border-radius: 4px;
-  transition: color 0.2s, background 0.2s, border-color 0.2s;
+  transition: color 0.2s, background 0.2s;
   display: inline-flex;
   align-items: center;
 }
@@ -98,6 +102,8 @@ nav ul a.active .nav-arrow {
   nav .logo { font-size: 0.85rem; }
   nav ul { gap: 2px; }
   nav ul a { font-size: 0.7rem; padding: 2px 5px; }
+  nav ul a.active { background: transparent; }
+  nav ul a:hover { background: transparent; }
   .nav-arrow { display: none; }
   .nav-right { gap: 4px; }
   .nav-sep { display: none; }
