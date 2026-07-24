@@ -78,8 +78,7 @@ export default function Home() {
               Born 2003.08.24 in China · ISTP · fitness enthusiast
             </p>
             <p>
-              M.S. student @ Tsinghua University. B.S. @ Xiamen University.
-              Intern @ Huawei. Open source enthusiast.
+              My wish is to do interesting things.
             </p>
           </div>
         </div>

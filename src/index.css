@@ -16,9 +16,13 @@ html { scroll-behavior: smooth; }
   --yellow: #F9E2AF;
   --magenta: #F5C2E7;
   --radius: 10px;
-  --max-w: 720px;
+  --max-w: 820px;
   --font: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'LXGW WenKai', 'LXGW WenKai Mono', 'Noto Sans SC', 'STKaiti', 'KaiTi', monospace, serif;
   --mono: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'LXGW WenKai', 'LXGW WenKai Mono', 'Noto Sans SC', 'STKaiti', 'KaiTi', monospace, serif;
+}
+
+@media (min-width: 1400px) {
+  :root { --max-w: 960px; }
 }
 
 body {
