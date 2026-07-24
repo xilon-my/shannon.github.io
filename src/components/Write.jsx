@@ -1,11 +1,17 @@
-import { useState, useEffect, useRef } from 'react'
-import Markdown from 'react-markdown'
+import { useState, useEffect, useCallback } from 'react'
+import { useEditor, EditorContent } from '@tiptap/react'
+import { BubbleMenu } from '@tiptap/react/menus'
+import StarterKit from '@tiptap/starter-kit'
+import Placeholder from '@tiptap/extension-placeholder'
+import Turndown from 'turndown'
 import './Write.css'
 
 const GITHUB_TOKEN_KEY = 'blog_github_token'
 const OWNER = 'xilon-my'
 const REPO = 'xilon-my.github.io'
 const POSTS_PATH = 'src/posts'
+
+const turndown = new Turndown({ headingStyle: 'atx' })
 
 function slugify(text) {
   return text
@@ -30,67 +36,42 @@ function buildMarkdown({ title, date, tags, body }) {
   return makeFrontmatter({ title, date, tags }) + body.trim() + '\n'
 }
 
-const TOOLS = [
-  { label: 'B', tag: '**', hint: 'bold' },
-  { label: 'I', tag: '_', hint: 'italic', style: { fontStyle: 'italic' } },
-  { label: 'H1', tag: '# ', hint: 'heading 1' },
-  { label: 'H2', tag: '## ', hint: 'heading 2' },
-  { label: 'H3', tag: '### ', hint: 'heading 3' },
-  { label: '•', tag: '- ', hint: 'list item' },
-  { label: '[]', tag: '- [ ] ', hint: 'checkbox' },
-  { label: '🔗', tag: '[text](url)', hint: 'link' },
-  { label: '`', tag: '`code`', hint: 'inline code' },
-  { label: '▨', tag: '```\n\n```', hint: 'code block' },
-]
-
 export default function Write() {
   const [token, setToken] = useState(() => localStorage.getItem(GITHUB_TOKEN_KEY) || '')
   const [title, setTitle] = useState('')
   const [tagsInput, setTagsInput] = useState('')
-  const [body, setBody] = useState('')
-  const [showPreview, setShowPreview] = useState(false)
   const [status, setStatus] = useState(null)
   const [publishing, setPublishing] = useState(false)
-  const textareaRef = useRef(null)
 
   useEffect(() => {
     if (token) localStorage.setItem(GITHUB_TOKEN_KEY, token)
   }, [token])
 
-  function insertTag(tag) {
-    const ta = textareaRef.current
-    if (!ta) return
-    const start = ta.selectionStart
-    const end = ta.selectionEnd
-    const selected = body.substring(start, end)
-    const before = body.substring(0, start)
-    const after = body.substring(end)
-    let insertion
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Placeholder.configure({ placeholder: 'Start writing...' }),
+    ],
+    editorProps: {
+      attributes: {
+        class: 'write-editor',
+      },
+    },
+  })
 
-    if (tag === '```') {
-      insertion = '```\n' + (selected || 'code') + '\n```'
-    } else if (tag === '[text](url)') {
-      insertion = selected ? `[${selected}](url)` : tag
-    } else if (tag === '`code`') {
-      insertion = selected ? `\`${selected}\`` : tag
-    } else {
-      insertion = tag + (selected || '')
-    }
-
-    const newBody = before + insertion + after
-    setBody(newBody)
-    setTimeout(() => {
-      ta.focus()
-      const pos = before.length + insertion.length
-      ta.setSelectionRange(pos, pos)
-    }, 0)
-  }
+  const getMarkdown = useCallback(() => {
+    if (!editor) return ''
+    const html = editor.getHTML()
+    return turndown.turndown(html)
+  }, [editor])
 
   async function publishPost() {
     if (!title.trim()) {
       setStatus({ type: 'error', message: 'Title is required.' })
       return
     }
+
+    const body = getMarkdown()
     if (!body.trim()) {
       setStatus({ type: 'error', message: 'Post body is required.' })
       return
@@ -108,7 +89,7 @@ export default function Write() {
       title: title.trim(),
       date: today,
       tags: tagsInput.split(',').map(t => t.trim()).filter(Boolean),
-      body: body.trim(),
+      body,
     })
 
     const slug = slugify(title)
@@ -150,11 +131,11 @@ export default function Write() {
 
       setStatus({
         type: 'success',
-        message: 'Published! The site will update after the next deploy (usually 1–2 min).',
+        message: 'Published! Site will update after next deploy (1–2 min).',
       })
       setTitle('')
       setTagsInput('')
-      setBody('')
+      editor?.commands.setContent('')
     } catch (e) {
       setStatus({ type: 'error', message: e.message })
     } finally {
@@ -162,25 +143,22 @@ export default function Write() {
     }
   }
 
+  if (!editor) return null
+
   return (
     <div className="write-page">
-      <h1 className="write-page-title">Write a Post</h1>
-
-      <div className="write-form">
+      <div className="write-meta">
         <div className="write-field">
-          <label className="write-label">GitHub Token</label>
           <input
             type="password"
-            className="write-input"
+            className="write-input write-input-sm"
             value={token}
             onChange={e => setToken(e.target.value)}
-            placeholder="github_px_xxxxxxxxxxxxxxxxxxxx"
+            placeholder="GitHub token"
           />
         </div>
-
         <div className="write-row">
           <div className="write-field write-field-half">
-            <label className="write-label">Title</label>
             <input
               type="text"
               className="write-input"
@@ -190,73 +168,80 @@ export default function Write() {
             />
           </div>
           <div className="write-field write-field-half">
-            <label className="write-label">Tags (comma separated)</label>
             <input
               type="text"
               className="write-input"
               value={tagsInput}
               onChange={e => setTagsInput(e.target.value)}
-              placeholder="AI, LLM, Python"
+              placeholder="Tags (comma separated)"
             />
           </div>
         </div>
+      </div>
 
-        <div className="write-field">
-          <div className="write-label-row">
-            <label className="write-label">Content</label>
-            <button
-              className="write-preview-toggle"
-              onClick={() => setShowPreview(!showPreview)}
-            >
-              {showPreview ? '✏️ Edit' : '👁️ Preview'}
+      {/* Floating format menu on text selection */}
+      {editor && (
+        <BubbleMenu editor={editor} tippyOptions={{ duration: 150 }}>
+          <div className="bubble-menu">
+            <button onClick={() => editor.chain().focus().toggleBold().run()} className={editor.isActive('bold') ? 'is-active' : ''}>
+              <strong>B</strong>
+            </button>
+            <button onClick={() => editor.chain().focus().toggleItalic().run()} className={editor.isActive('italic') ? 'is-active' : ''}>
+              <em>I</em>
+            </button>
+            <button onClick={() => editor.chain().focus().toggleStrike().run()} className={editor.isActive('strike') ? 'is-active' : ''}>
+              <s>S</s>
+            </button>
+            <span className="bubble-sep">|</span>
+            <button onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()} className={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}>
+              H1
+            </button>
+            <button onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} className={editor.isActive('heading', { level: 2 }) ? 'is-active' : ''}>
+              H2
+            </button>
+            <button onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} className={editor.isActive('heading', { level: 3 }) ? 'is-active' : ''}>
+              H3
+            </button>
+            <span className="bubble-sep">|</span>
+            <button onClick={() => editor.chain().focus().toggleBulletList().run()} className={editor.isActive('bulletList') ? 'is-active' : ''}>
+              • list
+            </button>
+            <button onClick={() => editor.chain().focus().toggleOrderedList().run()} className={editor.isActive('orderedList') ? 'is-active' : ''}>
+              1. list
+            </button>
+            <span className="bubble-sep">|</span>
+            <button onClick={() => editor.chain().focus().toggleCode().run()} className={editor.isActive('code') ? 'is-active' : ''}>
+              {'<>'}
+            </button>
+            <button onClick={() => editor.chain().focus().toggleCodeBlock().run()} className={editor.isActive('codeBlock') ? 'is-active' : ''}>
+              code block
+            </button>
+            <button onClick={() => editor.chain().focus().toggleBlockquote().run()} className={editor.isActive('blockquote') ? 'is-active' : ''}>
+              ❝ quote
             </button>
           </div>
+        </BubbleMenu>
+      )}
 
-          <div className="write-toolbar">
-            {TOOLS.map(t => (
-              <button
-                key={t.hint}
-                className="write-tool-btn"
-                onClick={() => insertTag(t.tag)}
-                title={t.hint}
-                style={t.style}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
-
-          {showPreview ? (
-            <div className="write-preview">
-              <Markdown>{body}</Markdown>
-            </div>
-          ) : (
-            <textarea
-              ref={textareaRef}
-              className="write-textarea"
-              value={body}
-              onChange={e => setBody(e.target.value)}
-              placeholder="Write your post in markdown..."
-            />
-          )}
-        </div>
-
-        <div className="write-actions">
-          <button
-            className="write-btn write-btn-primary"
-            onClick={publishPost}
-            disabled={publishing}
-          >
-            {publishing ? 'Publishing...' : 'Publish'}
-          </button>
-        </div>
-
-        {status && (
-          <div className={`write-status ${status.type}`}>
-            {status.message}
-          </div>
-        )}
+      <div className="write-editor-wrapper">
+        <EditorContent editor={editor} />
       </div>
+
+      <div className="write-actions">
+        <button
+          className="write-btn write-btn-primary"
+          onClick={publishPost}
+          disabled={publishing}
+        >
+          {publishing ? 'Publishing...' : 'Publish'}
+        </button>
+      </div>
+
+      {status && (
+        <div className={`write-status ${status.type}`}>
+          {status.message}
+        </div>
+      )}
     </div>
   )
 }
