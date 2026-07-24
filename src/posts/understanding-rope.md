@@ -2,6 +2,7 @@
 title: "Understanding RoPE: Rotary Position Embedding"
 date: 2026-06-28
 tags: [LLM, Transformer, Deep Learning, Math]
+category: note
 slug: understanding-rope
 ---
 

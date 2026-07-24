@@ -2,6 +2,7 @@
 title: "Building MiniMind: A 26M Parameter LLM from Scratch"
 date: 2026-07-20
 tags: [LLM, PyTorch, Transformer, AI]
+category: project
 slug: building-minimind
 ---
 

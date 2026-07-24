@@ -22,7 +22,7 @@ export default function Hero() {
   return (
     <section className="hero">
       <div className="container">
-        <h1>Hi, I'm <span className="highlight">Xinlong Zhang</span>.</h1>
+        <h1>Hi, I'm <span className="highlight">Shannon</span>.</h1>
         <p className="subtitle">
           M.S. student at Tsinghua University, researching six-dimensional force sensors.
           B.S. from Xiamen University. Awarded National Scholarship, and more.

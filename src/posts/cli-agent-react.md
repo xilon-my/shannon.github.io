@@ -2,6 +2,7 @@
 title: "Building a CLI Agent with ReAct Pattern"
 date: 2026-07-15
 tags: [Node.js, TypeScript, Agent, AI]
+category: project
 slug: cli-agent-react
 ---
 

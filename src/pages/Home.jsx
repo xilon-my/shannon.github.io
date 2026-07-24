@@ -29,7 +29,7 @@ export default function Home() {
           <span className="term-dot" style={{ background: '#F38BA8' }} />
           <span className="term-dot" style={{ background: '#F9E2AF' }} />
           <span className="term-dot" style={{ background: '#A6E3A1' }} />
-          <span className="term-title">xinlong@personal-site ~ %</span>
+          <span className="term-title">shannon@personal-site ~ %</span>
         </div>
 
         {/* ─── Intro ─── */}
@@ -38,10 +38,10 @@ export default function Home() {
             <span className="prompt-sign">❯</span> whoami
           </p>
           <h1 className="name">
-            Xinlong <span className="highlight">Zhang</span>
+            Shannon <span className="highlight">Zhang</span>
           </h1>
           <p className="desc">
-            M.S. student @ Tsinghua University · previously @ Xiamen University
+            M.S. in Electronic Information @ Tsinghua University · B.S. @ Xiamen University
           </p>
           <div className="rotating-tags">
             <span className="prompt-sign">❯</span> Currently into{' '}

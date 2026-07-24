@@ -18,7 +18,6 @@ function parseFrontmatter(raw) {
         try {
           val = JSON.parse(val.replace(/'/g, '"'))
         } catch {
-          // unquoted tags like [LLM, PyTorch, AI]
           val = val.slice(1, -1).split(',').map(v => v.trim()).filter(Boolean)
         }
       }
@@ -37,15 +36,20 @@ export const posts = Object.entries(postModules)
   })
   .sort((a, b) => new Date(b.date) - new Date(a.date))
 
-export default function BlogList({ limit }) {
-  const shown = limit ? posts.slice(0, limit) : posts
+const categories = ['all', ...new Set(posts.map(p => p.category).filter(Boolean))]
+
+export default function BlogList({ limit, category: activeCategory }) {
+  const filtered = activeCategory && activeCategory !== 'all'
+    ? posts.filter(p => p.category === activeCategory)
+    : posts
+  const shown = limit ? filtered.slice(0, limit) : filtered
 
   if (shown.length === 0) {
     return (
       <div className="blog-empty">
         <div className="icon">&#128221;</div>
         <h3>Coming soon</h3>
-        <p>I&apos;m working on my first posts — check back soon!</p>
+        <p>No posts yet in this category.</p>
       </div>
     )
   }
@@ -56,6 +60,7 @@ export default function BlogList({ limit }) {
         <Link key={post.slug} to={`/blog/${post.slug}`} className="blog-card">
           <div className="blog-card-meta">
             <time>{post.date}</time>
+            {post.category && <span className="blog-category">{post.category}</span>}
             {post.tags?.length > 0 && (
               <div className="blog-card-tags">
                 {post.tags.map(t => <span key={t}>{t}</span>)}
@@ -65,6 +70,22 @@ export default function BlogList({ limit }) {
           <h2>{post.title}</h2>
           <p>{post.excerpt}</p>
         </Link>
+      ))}
+    </div>
+  )
+}
+
+export function BlogFilter({ current, onChange }) {
+  return (
+    <div className="blog-filter">
+      {categories.map(cat => (
+        <button
+          key={cat}
+          className={`blog-filter-btn ${cat === current ? 'active' : ''}`}
+          onClick={() => onChange(cat)}
+        >
+          {cat === 'all' ? 'All' : cat}
+        </button>
       ))}
     </div>
   )

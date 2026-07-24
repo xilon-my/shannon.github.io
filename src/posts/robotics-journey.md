@@ -2,6 +2,7 @@
 title: "From Lab to Competition: My Robotics Journey"
 date: 2026-07-05
 tags: [Robotics, Computer Vision, Embedded, Competition]
+category: note
 slug: robotics-journey
 ---
 

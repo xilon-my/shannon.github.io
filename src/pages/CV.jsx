@@ -1,5 +1,4 @@
 import Experience from '../components/Experience.jsx'
-import Projects from '../components/Projects.jsx'
 import Skills from '../components/Skills.jsx'
 import './CV.css'
 
@@ -14,9 +13,9 @@ export default function CV() {
             <span className="t-dot" style={{ background: '#F38BA8' }} />
             <span className="t-dot" style={{ background: '#F9E2AF' }} />
             <span className="t-dot" style={{ background: '#A6E3A1' }} />
-            <span className="t-title">cv — xinlong zhang</span>
+            <span className="t-title">cv — shannon</span>
           </div>
-          <h1 className="cv-name">Xinlong Zhang</h1>
+          <h1 className="cv-name">Shannon Zhang</h1>
           <p className="cv-sub">
             <span className="prompt-cv">❯</span> github.com/xilon-my · 3422647204@qq.com
           </p>
@@ -59,11 +58,6 @@ export default function CV() {
               </div>
             </div>
           </div>
-        </section>
-
-        {/* ─── Projects ─── */}
-        <section className="cv-section">
-          <Projects />
         </section>
 
         {/* ─── Skills ─── */}

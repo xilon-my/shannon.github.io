@@ -2,6 +2,7 @@
 title: "Building a Multimodal Document RAG System"
 date: 2026-07-10
 tags: [RAG, LLM, Python, Embedding]
+category: project
 slug: multimodal-document-rag
 ---
 
