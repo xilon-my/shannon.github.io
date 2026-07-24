@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import './Home.css'
 
@@ -52,16 +51,6 @@ export default function Home() {
 
         {/* ─── Quick Links ─── */}
         <div className="quick-links fade-in fade-in-3">
-          <Link to="/cv" className="ql-link">
-            <span className="ql-icon">❯</span>
-            <span className="ql-label">cv</span>
-            <span className="ql-arrow">→</span>
-          </Link>
-          <Link to="/blog" className="ql-link">
-            <span className="ql-icon">❯</span>
-            <span className="ql-label">blog</span>
-            <span className="ql-arrow">→</span>
-          </Link>
           <a href="https://github.com/xilon-my" target="_blank" rel="noopener noreferrer" className="ql-link">
             <span className="ql-icon">❯</span>
             <span className="ql-label">github</span>
