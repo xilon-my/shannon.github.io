@@ -1,0 +1,204 @@
+.home {
+  padding: 60px 0 80px;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+}
+
+.home .container {
+  width: 100%;
+}
+
+/* ── Terminal bar ── */
+.term-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 10px 16px;
+  margin-bottom: 0;
+}
+
+.term-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.term-title {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* ── Intro (inside a terminal window) ── */
+.intro {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-top: none;
+  padding: 40px 32px 28px;
+}
+
+.prompt {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.prompt-sign {
+  color: var(--green);
+  font-weight: 700;
+}
+
+.name {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 10px;
+  font-variation-settings: 'wght' 800;
+}
+
+.highlight {
+  color: var(--accent);
+}
+
+.desc {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 16px;
+}
+
+/* ── Rotating tags ── */
+.rotating-tags {
+  font-size: 0.95rem;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-height: 2em;
+}
+
+.tag-rotator {
+  display: inline-block;
+  color: var(--magenta);
+  font-weight: 600;
+  transition: opacity 0.3s;
+}
+
+/* ── Quick links ── */
+.quick-links {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-top: none;
+  background: var(--surface);
+}
+
+.ql-link {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  color: var(--text);
+  transition: background 0.2s, color 0.2s;
+  text-decoration: none !important;
+  border-right: 1px solid var(--border);
+}
+
+.ql-link:last-child {
+  border-right: none;
+}
+
+.ql-link:hover {
+  background: var(--border);
+  color: var(--magenta);
+}
+
+.ql-icon {
+  font-size: 1.1rem;
+  width: 24px;
+  text-align: center;
+}
+
+.ql-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.ql-arrow {
+  margin-left: auto;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  transition: transform 0.2s;
+}
+
+.ql-link:hover .ql-arrow {
+  transform: translateX(4px);
+  color: var(--magenta);
+}
+
+/* ── About block ── */
+.about-block {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-top: none;
+  padding: 28px 32px;
+}
+
+.about-body {
+  font-size: 0.92rem;
+  color: var(--text);
+  line-height: 1.8;
+}
+
+.about-body p {
+  margin-bottom: 10px;
+}
+
+.about-body strong {
+  color: var(--yellow);
+  font-weight: 600;
+}
+
+.awards-line {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* ── Footer ── */
+.home-footer {
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  padding: 14px 32px;
+  background: var(--surface);
+}
+
+.blinking-cursor {
+  animation: blink 1s step-end infinite;
+  color: var(--green);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .home { padding: 32px 0 48px; }
+  .intro { padding: 28px 20px 20px; }
+  .about-block { padding: 20px; }
+  .home-footer { padding: 12px 20px; }
+  .quick-links { flex-direction: column; }
+  .ql-link { border-right: none; border-bottom: 1px solid var(--border); }
+  .ql-link:last-child { border-bottom: none; }
+}
