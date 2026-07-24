@@ -23,9 +23,10 @@ export default function Home() {
 
   return (
     <div className="home">
-      <div className="container term-glow">
-        {/* ─── Terminal Header ─── */}
-        <div className="term-bar fade-in fade-in-1">
+      <div className="container">
+        <div className="terminal-window term-glow">
+          {/* ─── Terminal Header ─── */}
+          <div className="term-bar fade-in fade-in-1">
           <span className="term-dot" style={{ background: '#F38BA8' }} />
           <span className="term-dot" style={{ background: '#F9E2AF' }} />
           <span className="term-dot" style={{ background: '#A6E3A1' }} />
@@ -87,6 +88,7 @@ export default function Home() {
         <div className="home-footer fade-in fade-in-4">
           <span className="prompt-sign">❯</span> <span className="blinking-cursor">_</span>
         </div>
+        </div>{/* end terminal-window */}
       </div>
     </div>
   )

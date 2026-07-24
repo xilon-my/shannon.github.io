@@ -26,12 +26,12 @@ html { scroll-behavior: smooth; }
 [data-theme="light"] {
   --bg: #EFF1F5;
   --surface: #E6E9EF;
-  --border: #CCD0DA;
+  --border: #BAC2DE;
   --text: #4C4F69;
-  --text-secondary: #9CA0B0;
-  --accent: #1E66F5;
-  --accent-light: #CCD0DA;
-  --accent-dark: #04A5E5;
+  --text-secondary: #8C8FA0;
+  --accent: #40A02B;
+  --accent-light: #D4E8D0;
+  --accent-dark: #2E7D1F;
   --green: #40A02B;
   --red: #D20F39;
   --yellow: #DF8E1D;

@@ -9,6 +9,10 @@
   width: 100%;
 }
 
+.terminal-window {
+  border-radius: var(--radius);
+}
+
 /* ── Terminal bar ── */
 .term-bar {
   display: flex;

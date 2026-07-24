@@ -2,10 +2,10 @@ import { NavLink } from 'react-router-dom'
 import './Nav.css'
 
 const links = [
-  { to: '/', label: 'Home' },
-  { to: '/cv', label: 'CV' },
-  { to: '/blog', label: 'Blog' },
-  { to: '/write', label: 'Write' },
+  { to: '/', label: 'home' },
+  { to: '/cv', label: 'cv' },
+  { to: '/blog', label: 'blog' },
+  { to: '/write', label: 'write' },
 ]
 
 export default function Nav({ theme, onToggleTheme }) {
@@ -17,12 +17,15 @@ export default function Nav({ theme, onToggleTheme }) {
           <ul>
             {links.map(l => (
               <li key={l.to}>
-                <NavLink to={l.to} end={l.to === '/'}>{l.label}</NavLink>
+                <NavLink to={l.to} end={l.to === '/'}>
+                  <span className="nav-arrow">❯</span>{l.label}
+                </NavLink>
               </li>
             ))}
           </ul>
+          <span className="nav-sep">|</span>
           <button className="theme-toggle" onClick={onToggleTheme} title="Toggle theme">
-            {theme === 'dark' ? '☀' : '☾'}
+            [{theme === 'dark' ? 'light' : 'dark'}]
           </button>
         </div>
       </div>

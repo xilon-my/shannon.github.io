@@ -13,60 +13,84 @@ nav .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 60px;
+  height: 56px;
 }
 
 nav .logo {
   font-weight: 700;
-  font-size: 1.125rem;
-  color: var(--text);
+  font-size: 1rem;
+  color: var(--green);
 }
-nav .logo:hover { text-decoration: none; }
+nav .logo:hover { text-decoration: none; color: var(--green); }
 
 .nav-right {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
 nav ul {
   list-style: none;
   display: flex;
-  gap: 28px;
+  gap: 6px;
 }
 
 nav ul a {
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 500;
   transition: color 0.2s;
+  padding: 4px 10px;
+  border-radius: 4px;
 }
 
 nav ul a:hover,
 nav ul a.active {
-  color: var(--accent);
+  color: var(--green);
+  background: var(--accent-light);
   text-decoration: none;
 }
 
+.nav-arrow {
+  color: var(--green);
+  margin-right: 4px;
+  font-size: 0.7rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+nav ul a:hover .nav-arrow,
+nav ul a.active .nav-arrow {
+  opacity: 1;
+}
+
+.nav-sep {
+  color: var(--border);
+  font-size: 0.85rem;
+}
+
 .theme-toggle {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 1rem;
+  background: transparent;
+  border: none;
+  font-size: 0.8rem;
+  font-family: var(--font);
+  font-style: italic;
   cursor: pointer;
   line-height: 1;
-  transition: background 0.2s, border-color 0.2s;
-  color: var(--text);
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: color 0.2s, background 0.2s;
 }
 
 .theme-toggle:hover {
-  border-color: var(--accent);
+  color: var(--green);
   background: var(--accent-light);
 }
 
 @media (max-width: 700px) {
-  nav ul { gap: 12px; }
-  nav ul a { font-size: 0.8rem; }
-  .nav-right { gap: 10px; }
+  nav ul { gap: 4px; }
+  nav ul a { font-size: 0.75rem; padding: 4px 6px; }
+  .nav-right { gap: 8px; }
+  .nav-sep { display: none; }
 }
