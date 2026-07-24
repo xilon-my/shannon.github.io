@@ -3,9 +3,8 @@ import './Skills.css'
 const skillGroups = [
   { label: 'Languages', items: ['Python', 'TypeScript', 'Node.js', 'C/C++'] },
   { label: 'AI/ML', items: ['PyTorch', 'Transformer', 'LLM', 'RAG', 'Embedding'] },
-  { label: 'Front-End Design', items: ['React', 'HTML/CSS', 'Figma', 'Tailwind', 'Responsive Design', 'UI/UX'] },
   { label: 'Engineering', items: ['Altium Designer', 'Linux', 'Git', 'Docker'] },
-  { label: 'Tools', items: ['Origin', 'Visio', 'Adobe Illustrator', 'Vite'] },
+  { label: 'Tools', items: ['Origin', 'Visio', 'Adobe Illustrator', 'React'] },
 ]
 
 export default function Skills() {
