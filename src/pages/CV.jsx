@@ -23,43 +23,44 @@ export default function CV() {
 
         {/* ─── Timeline ─── */}
         <section className="cv-section">
+          <p className="cv-prompt"><span className="prompt-cv">❯</span> cat experience.md</p>
           <Experience />
         </section>
 
         {/* ─── Awards ─── */}
         <section className="cv-section">
-          <div className="cv-block">
-            <div className="cv-awards-block">
-              <div className="cv-award-group">
-                <h4 className="cv-award-cat">Scholarships</h4>
-                <ul className="cv-award-list">
-                  <li>National Scholarship</li>
-                  <li>Luyan Scholarship</li>
-                  <li>BYD Scholarship</li>
-                  <li>Academic Excellence Scholarship</li>
-                  <li>Academic Innovation Scholarship</li>
-                </ul>
-              </div>
-              <div className="cv-award-group">
-                <h4 className="cv-award-cat">Honors</h4>
-                <ul className="cv-award-list">
-                  <li>Outstanding Merit Student</li>
-                  <li>Outstanding Graduate</li>
-                  <li>Outstanding Graduation Design</li>
-                </ul>
-              </div>
-              <div className="cv-award-group">
-                <h4 className="cv-award-cat">Competitions</h4>
-                <ul className="cv-award-list">
-                  <li>RoboCup China Open — Basketball Champion (National First Prize)</li>
-                </ul>
-              </div>
+          <p className="cv-prompt"><span className="prompt-cv">❯</span> cat awards.md</p>
+          <div className="cv-awards-block">
+            <div className="cv-award-group">
+              <h4 className="cv-award-cat">Scholarships</h4>
+              <ul className="cv-award-list">
+                <li>National Scholarship</li>
+                <li>Luyan Scholarship</li>
+                <li>BYD Scholarship</li>
+                <li>Academic Excellence Scholarship</li>
+                <li>Academic Innovation Scholarship</li>
+              </ul>
+            </div>
+            <div className="cv-award-group">
+              <h4 className="cv-award-cat">Honors</h4>
+              <ul className="cv-award-list">
+                <li>Outstanding Merit Student</li>
+                <li>Outstanding Graduate</li>
+                <li>Outstanding Graduation Design</li>
+              </ul>
+            </div>
+            <div className="cv-award-group">
+              <h4 className="cv-award-cat">Competitions</h4>
+              <ul className="cv-award-list">
+                <li>RoboCup China Open — Basketball Champion (National First Prize)</li>
+              </ul>
             </div>
           </div>
         </section>
 
         {/* ─── Skills ─── */}
         <section className="cv-section">
+          <p className="cv-prompt"><span className="prompt-cv">❯</span> cat skills.md</p>
           <Skills />
         </section>
       </div>
