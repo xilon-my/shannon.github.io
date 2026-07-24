@@ -105,35 +105,39 @@
   flex-shrink: 0;
 }
 
-/* ── Command suggestions ── */
-.cmd-suggestions {
-  position: absolute;
-  bottom: 100%;
-  left: 28px;
-  margin-bottom: 4px;
+/* ── Command suggestions (inline, like Claude Code) ── */
+.suggestions-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 6px 32px;
+  border-top: 1px solid var(--border);
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-  z-index: 10;
-  min-width: 140px;
+  font-size: 0.78rem;
 }
 
-.cmd-suggestion {
-  padding: 5px 14px;
-  font-size: 0.78rem;
+.live-terminal.compact .suggestions-bar {
+  padding: 6px 32px;
+}
+
+.sug-item {
+  padding: 2px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-secondary);
   font-family: 'JetBrains Mono', monospace;
   font-style: italic;
-  color: var(--text);
-  cursor: pointer;
-  transition: background 0.1s;
+  transition: background 0.1s, color 0.1s;
 }
 
-.cmd-suggestion:hover,
-.cmd-suggestion.selected {
+.sug-item:hover {
+  color: var(--text);
   background: var(--accent-light);
+}
+
+.sug-item.sug-sel {
   color: var(--green);
+  background: var(--accent-light);
 }
 
 /* ── Typewriter cursor ── */
@@ -151,7 +155,9 @@
   .live-terminal.compact { margin: 0 -16px -20px; }
   .live-terminal.compact .term-output { padding: 0 16px; overflow-x: auto; }
   .live-terminal.compact .term-input-line { padding: 10px 16px; }
+  .live-terminal.compact .suggestions-bar { padding: 6px 16px; }
   .term-input { font-size: 0.75rem; line-height: 1.6; }
+  .sug-item { font-size: 0.72rem; padding: 2px 7px; }
   .live-terminal.compact .line-out pre,
   .live-terminal.compact .line-cmd pre {
     white-space: pre !important;

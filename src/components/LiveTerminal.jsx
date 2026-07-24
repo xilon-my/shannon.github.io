@@ -104,7 +104,7 @@ export default function LiveTerminal({ compact }) {
 
   const handleKeyDown = (e) => {
     if (showSuggestions && filteredSuggestions.length > 0) {
-      if (e.key === 'Tab' || (e.key === 'Enter' && filteredSuggestions.length === 1)) {
+      if (e.key === 'Enter') {
         e.preventDefault()
         setInput('/' + filteredSuggestions[selectedSuggestion] + ' ')
         setShowSuggestions(false)
@@ -120,7 +120,8 @@ export default function LiveTerminal({ compact }) {
         setSelectedSuggestion(i => Math.max(i - 1, 0))
         return
       }
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' || e.key === 'Tab') {
+        e.preventDefault()
         setShowSuggestions(false)
         return
       }
@@ -131,7 +132,7 @@ export default function LiveTerminal({ compact }) {
     }
     if (e.key === 'Enter') {
       runCommand(input)
-    } else if (e.key === 'ArrowUp') {
+    } else if (!showSuggestions && e.key === 'ArrowUp') {
       e.preventDefault()
       if (commandHistory.length === 0) return
       const newIdx = histIndex === -1 ? commandHistory.length - 1 : Math.max(0, histIndex - 1)
@@ -161,25 +162,24 @@ export default function LiveTerminal({ compact }) {
           </div>
         ))}
       </div>
-      <div className="term-input-line" style={{ position: 'relative' }}>
-        {showSuggestions && filteredSuggestions.length > 0 && (
-          <div className="cmd-suggestions">
-            {filteredSuggestions.map((cmd, i) => (
-              <div
-                key={cmd}
-                className={`cmd-suggestion ${i === selectedSuggestion ? 'selected' : ''}`}
-                onMouseDown={() => {
-                  setInput('/' + cmd + ' ')
-                  setShowSuggestions(false)
-                  inputRef.current?.focus()
-                }}
-              >
-                /{cmd}
-              </div>
-            ))}
-          </div>
-        )}
-        <span className="prompt-sign">❯ </span>
+      {showSuggestions && filteredSuggestions.length > 0 && (
+        <div className="suggestions-bar">
+          {filteredSuggestions.map((cmd, i) => (
+            <span
+              key={cmd}
+              className={`sug-item ${i === selectedSuggestion ? 'sug-sel' : ''}`}
+              onMouseDown={() => {
+                setInput('/' + cmd + ' ')
+                setShowSuggestions(false)
+                inputRef.current?.focus()
+              }}
+            >
+              /{cmd}
+            </span>
+          ))}
+        </div>
+      )}
+      <div className="term-input-line">
         <input
           ref={inputRef}
           type="text"
