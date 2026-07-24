@@ -36,7 +36,7 @@ export default function Write() {
   const [token, setToken] = useState(() => localStorage.getItem(GITHUB_TOKEN_KEY) || '')
   const [title, setTitle] = useState('')
   const [tagsInput, setTagsInput] = useState('')
-  const [body, setBody] = useState('**Start writing here...**')
+  const [body, setBody] = useState('')
   const [status, setStatus] = useState(null)
   const [publishing, setPublishing] = useState(false)
 
@@ -53,7 +53,7 @@ export default function Write() {
       setStatus({ type: 'error', message: 'Title is required.' })
       return
     }
-    if (!body.trim() || body.trim() === '**Start writing here...**') {
+    if (!body.trim()) {
       setStatus({ type: 'error', message: 'Post body is required.' })
       return
     }
@@ -116,7 +116,7 @@ export default function Write() {
       })
       setTitle('')
       setTagsInput('')
-      setBody('**Start writing here...**')
+      setBody('')
     } catch (e) {
       setStatus({ type: 'error', message: e.message })
     } finally {
