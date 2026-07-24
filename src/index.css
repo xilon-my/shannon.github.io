@@ -20,6 +20,7 @@ html { scroll-behavior: smooth; }
 body {
   font-family: var(--font);
   font-style: italic;
+  font-synthesis: none;
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
