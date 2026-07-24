@@ -25,17 +25,9 @@ export default function Home() {
       <div className="container">
         <Terminal title="shannon@shannon.zone ~ %" glow>
 
-          {/* ─── ASCII banner ─── */}
-          <div className="ascii-banner">
-            <pre>{`  ╭──────────────────────╮
-  │  shannon.zone        │
-  │  personal term & cv  │
-  ╰──────────────────────╯`}</pre>
-          </div>
-
           {/* ─── Intro ─── */}
           <div className="intro">
-            <p className="prompt prompt-hero">
+            <p className="prompt">
               <span className="prompt-sign">❯</span> whoami
             </p>
             <h1 className="name">Shannon Zhang</h1>
@@ -53,10 +45,15 @@ export default function Home() {
             <p className="prompt">
               <span className="prompt-sign">❯</span> cat contact.md
             </p>
-            <div className="about-content contact-links">
-              <a href="https://github.com/xilon-my" target="_blank" rel="noopener noreferrer">github.com/xilon-my</a>
-              <span className="contact-sep">·</span>
-              <a href="mailto:3422647204@qq.com">3422647204@qq.com</a>
+            <div className="contact-block">
+              <a href="https://github.com/xilon-my" target="_blank" rel="noopener noreferrer" className="contact-item">
+                <span className="contact-icon">❯</span>
+                github.com/xilon-my
+              </a>
+              <a href="mailto:3422647204@qq.com" className="contact-item">
+                <span className="contact-icon">❯</span>
+                3422647204@qq.com
+              </a>
             </div>
           </div>
 
@@ -69,11 +66,6 @@ export default function Home() {
               <p>Born 2003.08.24 in China · ISTP · fitness enthusiast</p>
               <p>My wish is to do interesting things.</p>
             </div>
-          </div>
-
-          {/* ─── Separator ─── */}
-          <div className="sec-sep">
-            <span className="sep-line">────</span>
           </div>
 
           {/* ─── Interactive Terminal ─── */}
