@@ -2,16 +2,18 @@ import { useState, useRef, useEffect } from 'react'
 import './LiveTerminal.css'
 
 const neofetch = `
-shannon@shannon-think
-────────────────────
-OS         Ubuntu 24.04.4 LTS x86_64
-Host       Lenovo ThinkBook 16 G6+ IMH
-Kernel     6.17.0-35-generic
-Shell      bash 5.2.21
-Terminal   Alacritty
-CPU        Intel Ultra 5 225H (14) @ 4.90 GHz
-Memory     7.12 GiB / 30.84 GiB
-Disk       27.74 GiB / 97.87 GiB
+  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡠⣤⣤⣦⣶⣶⣶⣠⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀
+  ⠀⠀⠀⠀⠀⢀⣄⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣄⠀⠀⠀⠀⠀   shannon@shannon.zone
+  ⠀⠀⠀⢀⣐⣿⣿⢿⣟⣻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣯⣭⣿⣻⣷⡄⠀⠀⠀
+  ⠀⠀⣠⣿⣿⣿⡿⣫⣷⣶⣯⣻⣿⣿⣿⣿⣿⣿⣿⣻⣾⣿⣷⡽⣿⣿⣆⢀⠀   ─────────────────────
+  ⠀⡶⣽⣿⣿⣿⡿⣿⣿⣽⣿⡷⣿⣿⣿⣿⡿⣿⣿⣿⣿⣾⣿⣏⣿⣿⣿⠵⠀   OS         human
+  ⠀⠉⠹⣿⣿⣿⣿⣽⣿⣿⣿⣿⣿⣿⢿⣿⣯⢿⣿⣿⣿⣭⣷⣿⣿⣿⠃⠀⠀   Host       Tsinghua University
+  ⠀⠀⠀⠈⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣶⣿⣿⣿⣿⣿⣿⣿⠟⠁⠀⠀⠀   Uptime  22 years
+  ⠀⠀⠀⠀⠀⠈⠙⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠁⠀⠀⠀⠀⠀   Shell      bash
+  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣭⣽⡟⠛⣿⣿⡉⢹⣅⠀⠀⠀⠀⠀⠀⠀⠀⠀   Terminal   Alacritty
+  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣽⣗⣭⣿⡶⣻⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀   CPU       brain (2 cores)
+  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠯⠻⣿⣿⡿⠟⠿⠿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀   Memory    16 GiB
+                                                                                  Status    doing interesting things
 `
 
 const responses = {
