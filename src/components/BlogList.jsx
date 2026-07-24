@@ -15,7 +15,12 @@ function parseFrontmatter(raw) {
       const key = line.slice(0, sep).trim()
       let val = line.slice(sep + 2).trim()
       if (val.startsWith('[') && val.endsWith(']')) {
-        try { val = JSON.parse(val.replace(/'/g, '"')) } catch {}
+        try {
+          val = JSON.parse(val.replace(/'/g, '"'))
+        } catch {
+          // unquoted tags like [LLM, PyTorch, AI]
+          val = val.slice(1, -1).split(',').map(v => v.trim()).filter(Boolean)
+        }
       }
       frontmatter[key] = val
     }
