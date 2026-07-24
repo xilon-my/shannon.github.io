@@ -2,17 +2,23 @@ import './Experience.css'
 
 const experiences = [
   {
+    date: '2026.06 — Present',
+    title: 'Agent Development Intern',
+    company: 'Huawei',
+    description: 'Quality & Process IT department. Developing intelligent agents for lights-out factory automation within legacy systems.',
+  },
+  {
     date: '2025.09 — Present',
     title: 'M.S. in Electronic Information',
     company: 'Tsinghua University',
-    description: 'Research focus on six-dimensional force sensors. GPA: 3.93/4.0 (top 5%).',
+    description: 'Researching six-dimensional force sensors. GPA: 3.93/4.0.',
     logo: '/images/tsinghua.webp',
   },
   {
     date: '2021.09 — 2025.06',
     title: 'B.S. in Measurement & Control Technology and Instruments',
     company: 'Xiamen University',
-    description: 'School of Aeronautics & Astronautics. Ranked 1/35. Awards: National Scholarship, Luyan Scholarship, BYD Scholarship, Academic Excellence Scholarship, Academic Innovation Scholarship. Honors: Outstanding Merit Student, Outstanding Graduate, Outstanding Graduation Design',
+    description: 'School of Aeronautics & Astronautics. Ranked 1/35. Awards: National Scholarship, Luyan Scholarship, BYD Scholarship, Academic Excellence Scholarship, Academic Innovation Scholarship. Honors: Outstanding Merit Student, Outstanding Graduate, Outstanding Graduation Design.',
     logo: '/images/xiamen.webp',
   },
   {
@@ -31,7 +37,7 @@ const experiences = [
     date: '2024.09 — 2025.01',
     title: 'Academic Peer Tutor',
     company: 'Xiamen University',
-    description: 'Provided advanced mathematics tutoring for underclassmen, helping improve learning efficiency and exam performance.',
+    description: 'Provided advanced mathematics tutoring for underclassmen.',
   },
 ]
 

@@ -118,33 +118,12 @@
   color: var(--accent);
 }
 
-/* ── Footer ── */
-.cv-footer {
-  border: 1px solid var(--border);
-  border-top: none;
-  border-radius: 0 0 var(--radius) var(--radius);
-  padding: 14px 32px;
-  background: var(--surface);
-}
-
-.blink-cv {
-  animation: blink 1s step-end infinite;
-  color: var(--green);
-  font-weight: 700;
-  font-size: 1.1rem;
-}
-
-@keyframes blink {
-  50% { opacity: 0; }
-}
-
 @media (max-width: 700px) {
   .cv-page { padding: 16px 0 48px; }
   .cv-name { padding: 16px 16px 4px; font-size: clamp(1.4rem, 5vw, 1.8rem); }
   .cv-sub { padding: 0 16px 20px; font-size: 0.8rem; }
   .cv-section { padding: 20px 16px; }
   .cv-block { padding: 16px; }
-  .cv-footer { padding: 10px 16px; }
   .cv-prompt { font-size: 0.78rem; margin-bottom: 14px; }
   .cv-award-cat { font-size: 0.8rem; }
   .cv-award-list li { font-size: 0.8rem; }
