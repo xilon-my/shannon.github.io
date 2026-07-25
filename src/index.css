@@ -66,6 +66,7 @@ body {
   font-family: var(--font);
   font-weight: 400;
   font-style: italic;
+  font-size: 0.875rem;
   font-synthesis: none;
   background: var(--bg);
   color: var(--text);
