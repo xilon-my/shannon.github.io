@@ -6,31 +6,31 @@ category: reflection
 slug: os-course-takeaways
 ---
 
-I spent a few days working through Nanjing University's Operating Systems course (2026 Spring) taught by Prof. Jiang. It is 30 lectures across three units — Virtualization, Concurrency, Persistence — plus 9 lab assignments. Here is what each lecture left with me.
+花了一段时间过完南京大学的《操作系统原理》课程（2026 春，jyy 主讲）。30 讲，横跨三大单元——虚拟化、并发、持久化，外加 9 个实验。以下是每节课我带走的东西。
 
 ---
 
-## Unit 1: Virtualization (Lectures 1-12)
+## 第一单元：虚拟化（Lect 1-12）
 
-### Lect 1 — Why Bother with OS in the AI Era?
+### Lect 1 — AI 时代为什么还要学 OS
 
-The opening lecture asks a question most courses avoid: "AI can already code, so why learn this?" The answer: **abstraction is how you manage complexity**. The OS hides hardware behind APIs so applications do not have to care. This skill — designing good abstractions — matters more in the agent age, not less.
+第一节课问了一个大多数课程不会问的问题："AI 已经能写代码了，学这个还有意义吗？"答案是：**抽象是管理复杂性的手段。** OS 把硬件藏在 API 后面，应用程序不用操心。这个能力——设计好的抽象——在 AI Agent 时代不是不重要，而是更重要了。
 
-### Lect 2 — OS from the Application's View
+### Lect 2 — 应用视角的操作系统
 
-OS = objects + API. A program is a **state machine**: initial state = `main(argc, argv)`, transition = execute one statement. This single idea becomes the foundation for everything that follows.
+OS = 对象 + API。程序就是一个**状态机**：初始状态是 `main(argc, argv)`，迁移是执行一条语句。这一个想法成了整门课的基石。
 
-### Lect 3 — OS from the Hardware's View
+### Lect 3 — 硬件视角的操作系统
 
-Hardware does not know an OS exists. It is just a state machine running instructions. CPU Reset sets a known initial state, then it is off to the races. The OS is just a C program — it has no special privileges except the ones the hardware gives it.
+硬件根本不知道有 OS。它就是无情的指令执行器。CPU Reset 设好初始状态，然后就开始跑。OS 只是个 C 程序——它没有任何特别的权限，除了硬件给它的那些。
 
-### Lect 4 — Scaling Law and Agentic AI (Hacking Day)
+### Lect 4 — Scaling Law 和 Agentic AI
 
-A detour to reflect on AI. GPT-3.5 was already answering compiler optimization questions perfectly two months after launch. The professor's comment: "Everyone was still fine-tuning BERT, and suddenly the world changed."
+插曲，反思 AI。GPT-3.5 在发布两个月后就完美回答了编译器优化问题。老师的原话："大家还在各种微调 BERT，忽然感觉世界变了。"
 
-### Lect 5 — Programs and Processes
+### Lect 5 — 程序和进程
 
-The core insight: simulate one program inside another. Like non-recursive Tower of Hanoi. A CrazyOS is just a loop:
+核心洞察：在一个程序里模拟另一个程序的执行。像非递归汉诺塔。CrazyOS 就是一个循环：
 
 ```c
 while (1) {
@@ -39,38 +39,38 @@ while (1) {
 }
 ```
 
-That is the OS main loop.
+这就是操作系统的主循环。
 
-### Lect 6 — The Process Address Space
+### Lect 6 — 进程的地址空间
 
-Three system calls define process management:
+三个系统调用定义了进程管理：
 
-- `fork()` — copy the state machine
-- `execve()` — reset the state machine
-- `_exit()` — delete the state machine
-- `waitpid()` — synchronize with a child
+- `fork()` — 复制状态机
+- `execve()` — 重置状态机
+- `_exit()` — 删除状态机
+- `waitpid()` — 和子进程同步
 
-Everything else is built on these.
+其他一切都建立在这之上。
 
-### Lect 7 — Accessing OS Objects
+### Lect 7 — 访问操作系统对象
 
-Everything is a File. Not metaphorically. The kernel defines a `struct file_operations` with read, write, ioctl — and anything can implement it. `/dev/urandom`, `/proc/pid/maps`, a pipe, a socket, a printer. **Same API, infinite applications.**
+Everything is a File。不是比喻。内核定义了一个 `struct file_operations`，包含 read、write、ioctl——**任何东西**都可以实现它。`/dev/urandom`、`/proc/pid/maps`、管道、socket、打印机。同一套 API，无限的应用。
 
-A concrete example that stuck with me:
+一个让我印象深刻的例子：
 
 ```bash
 grep -s VmRSS /proc/*[0-9]/status | awk '{sum += $2} END {print sum " kB"}'
 ```
 
-One command computes total physical memory of every process. Because every process's memory info is a "file."
+一行命令算出所有进程的总物理内存。因为每个进程的内存信息都是一个"文件"。
 
-### Lect 8 — Terminals and the UNIX Shell
+### Lect 8 — 终端和 UNIX Shell
 
-Tracing the history from typewriters to VT100 explains why we have `\r`, `\n`, `\t`, 80-column terminals, ANSI escape sequences. The terminal you open today is a software simulation of a 1978 DEC VT100 — including its limitations and quirks.
+从打字机到 VT100 的历史解释了为什么我们有 `\r`、`\n`、`\t`、80 列的终端、ANSI 转义序列。你今天打开的终端是一个 1978 年 DEC VT100 的软件模拟——包括它的局限性和怪癖。
 
-### Lect 9 — The C Standard Library (1)
+### Lect 9 — C 标准库（上）
 
-C is the bridge between high-level languages and the OS. Every language runtime (Python, Node.js, JVM) is a C program underneath. The C standard library wraps system calls into usable functions. You can also skip the library entirely and call syscalls directly with inline assembly:
+C 是高级语言和操作系统之间的桥梁。每个语言运行时（Python、Node.js、JVM）底层都是 C 程序。C 标准库把系统调用包装成更方便的函数。你也可以跳过标准库，直接内联汇编调系统调用：
 
 ```c
 void _start() {
@@ -80,55 +80,54 @@ void _start() {
 }
 ```
 
-(Yes, `_start`, not `main`, is the real entry point.)
+（是的，`_start` 而不是 `main` 才是真正的入口。）
 
-### Lect 10 — The C Standard Library (2)
+### Lect 10 — C 标准库（下）
 
-Compiling your own libc (musl-gcc) shows it is not a magical black box — it is just a C program. Debug info formats (DWARF) and source maps (`.map`) reveal how much extra data your binaries carry.
+自己编译一份 libc（musl-gcc）会发现它不是什么神秘黑盒——就是一个 C 程序。调试信息格式（DWARF）和 source map（`.map`）揭示了二进制文件携带了多少额外信息。
 
-### Lect 11 — Executable Files
+### Lect 11 — 可执行文件
 
-An executable file is **a data structure describing the initial memory layout of a process**. Not "a program" — a blueprint. ELF is complicated because it is designed for machine efficiency, not human readability. The professor's response: FLE (Funny Little Executable), a homebrew format simple enough to understand, with an AI-written converter.
+可执行文件是**一个描述了进程初始内存布局的数据结构**。不是"程序"——是"蓝图"。ELF 复杂是因为它是为机器效率设计的，不是为人类可读性设计的。老师的回应：FLE（Funny Little Executable），一种简单到自己能理解的格式，用 AI 写了个转换器。
 
-### Lect 12 — Building Application Ecosystem (Hacking Day)
+### Lect 12 — 构建应用生态（Hacking Day）
 
-The history of UNIX system calls: there was no fork() in the beginning. Shell used to close all files, open the terminal, read a command, load the new program into memory, execute it, and then re-load itself on exit. Fork was added later — 27 lines of assembly by Ken Thompson. **Do not be afraid to start with something that works poorly and improve it iteratively.** Minix showed that a teaching OS can accidentally become the most deployed OS on the planet (Intel ME).
+UNIX 系统调用的历史：一开始没有 fork()。Shell 关掉所有文件，打开终端，读命令，把新程序加载进内存，执行，然后在退出时重新加载自己。fork 是后来 Ken Thompson 用 27 行汇编加的。**不要害怕从"不好用"开始，持续改进就好了。** Minix 证明了一个教学操作系统可以阴差阳错地成为地球上限最多的操作系统（Intel ME）
 
 ---
 
-## Unit 2: Concurrency (Lectures 13-21)
+## 第二单元：并发（Lect 13-21）
 
-### Lect 13 — Multiprocessor Programming: From Entry to Exit
+### Lect 13 — 多处理器编程：从入门到放弃
 
-This lecture expands the state machine model: a multi-threaded program selects one thread and executes one statement. Simple. Then it shows you three ways the machine betrays you at once:
+这节课扩展了状态机模型：多线程程序就是每次选一个线程执行一句。简单。然后它展示了机器在三个层面同时背叛了你：
 
-1. **The scheduler** interleaves threads arbitrarily
-2. **The compiler** reorders and eliminates code (sum++ at -O1 and -O2 gave completely different results)
-3. **The CPU** has a relaxed memory model — writes are not immediately visible to other cores
+1. **调度器**随意交错线程
+2. **编译器**重排和删除代码（sum++ 在 -O1 和 -O2 下结果完全不同）
+3. **CPU** 有宽松内存模型——写操作不会立即对其他核可见
 
-The famous example:
+那个著名的例子：
 
 ```c
 int x = 0, y = 0;
-
 void T_1() { x = 1; int t = y; }
 void T_2() { y = 1; int t = x; }
 ```
 
-Naively, four results are possible: (0,0), (1,0), (0,1), (1,1). In practice with relaxed memory models, (0,0) is also possible — both writes happened but neither was visible to the other core.
+朴素地想，四种结果： (0,0)、(1,0)、(0,1)、(1,1)。在宽松内存模型下，(0,0) 也是可能的——两个写都发生了但对方核都看不到。
 
-### Lect 14 — Mutual Exclusion
+### Lect 14 — 互斥
 
-The professor's explanation of mutexes uses two analogies:
+老师讲互斥锁用了两个比喻：
 
-- **Bathroom lock**: lock the door, do your business, unlock
-- **Key on a table**: take the key, only you can go in; put it back when done
+- **厕所门锁**：锁门，做事，开门
+- **桌上的钥匙**：拿走钥匙才能进去，把钥匙放回桌上让别人进
 
-But the real content is deeper: why interrupt disabling doesn't work on multicore, why Dekker and Peterson's algorithms (pure load/store) don't work on real hardware, and why atomic instructions (`lock cmpxchg`) exist. Then why spin locks are wasteful, and why futex (kernel-assisted mutex) exists — fast path in user space, slow path in kernel.
+但真正的内容更深：为什么关中断在多核上没用、为什么 Dekker 和 Peterson 的纯 load/store 算法在真实硬件上不工作、为什么原子指令（`lock cmpxchg`）存在。然后为什么自旋锁是浪费的，以及为什么 futex（内核辅助的 mutex）存在——快路径在用户态，慢路径在内核。
 
-### Lect 15 — Synchronization and Condition Variables
+### Lect 15 — 同步与条件变量
 
-Mutex ensures mutual exclusion but not ordering. `join()` cannot be implemented with mutex alone. Condition variables fill the gap:
+互斥保证互斥但不保证顺序。光靠互斥锁实现不了 `join()`。条件变量补上了缺口：
 
 ```c
 mutex_lock(&lk);
@@ -137,11 +136,11 @@ while (!cond)
 mutex_unlock(&lk);
 ```
 
-The producer-consumer problem — 99% of concurrency problems reduce to this pattern.
+生产者-消费者问题——99% 的并发问题都可以归约到这个模式。
 
-### Lect 16 — Semaphores
+### Lect 16 — 信号量
 
-What if a mutex could have N keys instead of 1? That is a semaphore. P (acquire, take a key) and V (release, return a key). The producer-consumer problem becomes beautifully simple:
+如果一把锁可以有 N 把钥匙而不是 1 把呢？这就是信号量。P（acquire，拿走钥匙）和 V（release，放回钥匙）。生产者-消费者变得优雅到令人发指：
 
 ```c
 sem_t empty = SEM_INIT(depth);
@@ -151,169 +150,166 @@ void T_produce() { P(&empty); printf("("); V(&fill); }
 void T_consume() { P(&fill); printf(")"); V(&empty); }
 ```
 
-But semaphores are not universal — they work best when the condition is a counter. For complex conditions (OR conditions), condition variables are more natural.
+但信号量不是万能的——条件为计数器时好用，复杂条件（如 OR）下条件变量更自然。
 
-### Lect 17 — Concurrency Bugs
+### Lect 17 — 并发 Bug
 
-Two types of deadlock:
-- **AA-deadlock**: same thread locks the same mutex twice
-- **ABBA-deadlock**: thread 1 holds A waits for B, thread 2 holds B waits for A
+两类死锁：
+- **AA-死锁**：同一线程对同一 mutex 加锁两次
+- **ABBA-死锁**：线程 1 持有 A 等 B，线程 2 持有 B 等 A
 
-Four necessary conditions for deadlock: mutual exclusion, wait-for, no preemption, circular chain. Break any one and deadlock disappears. Lock ordering (always acquire locks in the same global order) is the most practical prevention.
+死锁四必要条件：互斥、持有并等待、不可抢占、循环等待。打破任何一条即可。Lock ordering（全局固定顺序加锁）是最实用的预防。
 
-Beyond deadlock: **data race** (concurrent access to same memory, one is a write, no happens-before). C/C++ data race is undefined behavior. The compiler can do anything.
+两类 bug 覆盖了 97% 的非死锁并发问题（ASPLOS'08 论文）：
+- **原子性违反（AV）**：本该一气呵成的代码被打断了
+- **顺序违反（OV）**：事件没按预期顺序发生
 
-Two categories cover 97% of non-deadlock concurrency bugs (from an ASPLOS'08 study):
-- **Atomicity violation** (AV): code that should run without interruption gets interrupted
-- **Order violation** (OV): events happen in the wrong order
+Therac-25 放射治疗机（1985-1987）——并发 bug 导致 6 人死亡。**并发 bug 能杀人。**
 
-The Therac-25 radiation machine (1985-1987) — six deaths caused by a concurrency bug where mode switching and hardware setup were not atomic. **A reminder that concurrency bugs can kill.**
+### Lect 18 — 并行算法与数据结构
 
-### Lect 18 — Parallel Algorithms and Data Structures
+互斥保证正确性但扼杀可扩展性。Sloppy counter：每个线程本地累加，攒够了再合并到全局计数器。锁争用降低数量级。
 
-Mutex ensures correctness but kills scalability. The sloppy counter pattern: each thread accumulates locally, then merges into the global counter in batches. This reduces lock contention by orders of magnitude.
+线程局部存储（C11/C++11 的 `thread_local`）给每个线程自己的变量副本。编译器通过段寄存器（x86-64 的 `%fs`）实现——不同线程映射到不同内存区域。
 
-Thread-local storage (`thread_local` in C11/C++11) gives each thread its own copy of a variable. The compiler implements this via a segment register (`%fs` on x86-64), pointing different threads to different memory areas.
+### Lect 19 — 异步编程模型
 
-### Lect 19 — Asynchronous Programming Models
+线程很贵——每个线程消耗几 MB 栈和内核资源。协程、goroutine、async/await 都把大量轻量执行流复用到少量操作系统线程上。
 
-Threads are expensive — each one consumes MB of stack and kernel resources. Coroutines, goroutines, async/await all address this by multiplexing many lightweight execution flows onto fewer OS threads.
+Go 的模型：N 个工作线程（每 CPU 核一个），M 个 goroutine 调度在它们之上。基于 channel 的通信取代共享状态和锁——本质上就是用于并发的 UNIX 管道。
 
-Go's model: N worker threads (one per CPU core), M goroutines scheduled on them. Channel-based communication ("Do not communicate by sharing memory; share memory by communicating") replaces shared state and locks with data passing — essentially UNIX pipes for concurrency.
+### Lect 20 — CPU、GPU 和 SIMT
 
-### Lect 20 — CPU, GPU and SIMT
+从指令级并行（ILP）到 SIMD 到 SIMT。关键洞察：**取指和译码消耗能量。多个执行单元共享一个取指译码单元，成本就被摊薄了。**
 
-From instruction-level parallelism (ILP) to SIMD to SIMT. The key insight: **fetching and decoding an instruction costs energy. If multiple execution units share one fetch/decode unit, the cost is amortized.**
+这就是 GPU 能塞进几千个核的原因——它们是简单的执行单元，32 个一组（warp），共享一个程序计数器。warp 里的所有线程在不同数据上执行同一指令。分支发散（warp 里的 if-else）很贵——两个分支都要执行，丢掉一个。
 
-This is why GPU can pack thousands of cores — they are simple execution units grouped in warps of 32, all sharing a single program counter. Every thread in a warp executes the same instruction on different data. Branch divergence (if-else within a warp) is expensive — both paths execute, one is discarded.
+### Lect 21 — 一个 Token 的旅程
 
-### Lect 21 — A Token's Journey
-
-The final concurrency lecture traces a single LLM request from `curl` to GPU output:
+并发单元的最后一课追踪一个 LLM 请求从 curl 到 GPU 输出的完整路径：
 
 ```
-Your terminal → DNS → routers → Load Balancer → API Gateway → Auth/Billing → Inference Cluster → GPU SIMT kernels → Token stream → Back
+你的终端 → DNS → 路由器 → Load Balancer → API 网关 → 鉴权/计费 → 推理集群 → GPU SIMT 核 → Token 流 → 返回
 ```
 
-Every concept from the course appears on this path: sockets, file descriptors, concurrent request handling, load balancing, distributed storage, GPU SIMT parallelism. The professor shows that the entire computer system stack, built over 50 years, ultimately exists to make one matrix multiply as efficient as possible.
+课程的每个概念都出现在这条路径上：socket、文件描述符、并发请求处理、负载均衡、分布式存储、GPU SIMT 并行。老师展示了整个计算机系统栈，历经 50 年搭建，最终只是为了尽可能高效地完成一次矩阵乘法。
 
 ---
 
-## Unit 3: Persistence (Lectures 22-29)
+## 第三单元：持久化（Lect 22-29）
 
-### Lect 22 — I/O Device Principles
+### Lect 22 — I/O 设备原理
 
-A device is just **a set of registers with agreed-upon functions**. CPU writes to register 0x1f2 to tell the ATA hard disk "how many sectors to read", writes to 0x1f7 to say "start reading," and reads from 0x1f0 to get the data.
+设备就是**一组约定好功能的寄存器**。CPU 写寄存器 0x1f2 告诉 ATA 硬盘"要读几个扇区"，写 0x1f7 说"开始读"，从 0x1f0 读数据。
 
-The device driver translates file operations into register operations:
+设备驱动把文件操作翻译成寄存器操作：
 
 ```c
 struct file_operations {
     ssize_t (*read)(struct file *, char __user *, size_t, loff_t *);
     ssize_t (*write)(struct file *, const char __user *, size_t, loff_t *);
     long (*unlocked_ioctl)(struct file *, unsigned int, unsigned long);
-    // ...
 };
 ```
 
-For operations that are not data transfer (changing resolution, clearing a paper jam, reading disk health), `ioctl` exists — a general-purpose control interface.
+对于不是数据传输的操作（改分辨率、清卡纸、查硬盘健康），用 `ioctl`——一个通用的控制接口。
 
-### Lect 23 — Storage Device Abstraction
+### Lect 23 — 存储设备抽象
 
-The physical storage ladder: magnetic tape (sequential only, cheap) → magnetic drum → HDD (2.5D, random access but mechanical latency) → floppy disk → optical disc (CD/DVD, cheap to duplicate) → **Flash (SSD)**.
+物理存储的梯子：磁带（只能顺序，便宜）→ 磁鼓 → HDD（2.5D，能随机但有机概延迟）→ 软盘 → 光盘（便宜易复制）→ **闪存（SSD）**。
 
-Flash is electric, not mechanical — so it is fast, parallel (more chips = faster), and shock-resistant. But it has a fatal flaw: each cell wears out after ~1000 writes (QLC). The solution: FTL (Flash Translation Layer) — a computer inside every SSD that remaps writes to spread wear evenly. **Software saving hardware's shortcomings, again.**
+闪存是电的，不是机械的——所以快、可并行（芯片越多越快）、防摔。但致命缺陷：每个单元约 1000 次写入寿命（QLC）。解决方案：FTL——每块 SSD 里都有一台计算机，把写入重新映射到不同物理位置来均匀磨损。**软件又一次挽救了硬件的短板。**
 
-The OS sees all storage as block devices: `struct block disk[NUM_BLOCKS]`.
+OS 把所有存储看作块设备：`struct block disk[NUM_BLOCKS]`。
 
-### Lect 24 — File System API (1)
+### Lect 24 — 文件系统 API（上）
 
-Block devices are raw. File systems add meaning. The core abstraction is the **directory tree** — leveraging locality of information to organize files.
+块设备是原始的。文件系统赋予它含义。核心抽象是**目录树**——利用信息的局部性来组织文件。
 
-- `mount` — graft a device's tree onto another tree
-- Hard links — multiple names for the same file (reference counted)
-- Symbolic links — a file containing a path string (can cross file systems)
-- Metadata — mode bits, owner, group, timestamps, extended attributes (xattr)
+- `mount` — 把一个设备上的树嫁接到另一个树上
+- 硬链接 — 多个名字指向同一个文件（引用计数）
+- 软链接 — 存着路径字符串的文件（可以跨文件系统）
+- 元数据 — mode、owner、group、时间戳、扩展属性（xattr）
 
-### Lect 25 — File System API (2)
+### Lect 25 — 文件系统 API（下）
 
-Beyond basic CRUD:
+超出基本 CRUD 的能力：
 
-- **inotify** — get notified when files change (no polling)
-- **Git** as a persistent data structure — blob, tree, commit (random read + append-only write = any data structure)
-- **OverlayFS** — stack multiple directories: read from top, write to top. This is how Docker layers work
-- **FUSE** — implement a file system as a user-space program. Suddenly everything is a file: remote servers (sshfs), databases (dbfs), JSON (ffs)
+- **inotify**——文件变化时主动通知（不用轮询）
+- **Git** 作为一个持久化数据结构——blob、tree、commit（随机读 + 追加写 = 任意数据结构）
+- **OverlayFS**——多层目录堆叠，读从上往下，写在最上层。Docker 层镜像就是这么工作的
+- **FUSE**——在用户态实现文件系统。突然之间一切都是文件了：远程服务器（sshfs）、数据库（dbfs）、JSON（ffs）
 
-### Lect 26 — File System Implementation
+### Lect 26 — 文件系统实现
 
-File data must live on disk blocks. Two approaches:
+文件数据得存在磁盘块上。两种方法：
 
-- **FAT** (old, simple): a global array acting like a linked list of blocks. Sequential access, poor random access.
-- **inode** (UNIX): store block pointers in each file's inode. 12 direct pointers (fast for small files), plus indirect pointers for larger files.
+- **FAT**（古老而简单）：全局数组当链表用。顺序访问还行，随机访问糟糕。
+- **inode**（UNIX）：每个文件记录块指针。12 个直接指针（小文件秒速），再加间接指针对付大文件。
 
-The crash consistency problem: writing data, bitmap, and inode involves three separate block writes. If the power fails after any subset, the file system is inconsistent.
+崩溃一致性问题：写数据、写 bitmap、写 inode 是三个独立的块写入。如果掉电发生在任意两步之间，文件系统就不一致了。
 
-Solutions:
-- **FSCK** — scan the entire disk on boot and fix up inconsistencies. Slow.
-- **Journaling (WAL)** — write a log before writing data. If power fails, replay the log on recovery. This is what ext4 does.
+解决方案：
+- **FSCK**——启动时扫描整个磁盘修复不一致。慢。
+- **Journaling（WAL）**——写数据前先记日志。掉电后恢复时回放日志。ext4 就这么干。
 
-Application-level lesson: `write()` does not reach the disk — it goes to the page cache. `fsync()` forces it to disk.
+应用层教训：`write()` 没写到磁盘——它到 page cache 就停了。`fsync()` 才强制刷到磁盘。
 
-### Lect 27 — Database Systems
+### Lect 27 — 数据库系统
 
-File systems give you bytes and paths. Databases give you **ACID transactions and queries**. The relational model (Codd, 1970) says "Everything is a table." SQL lets you declare what you want; the database figures out how to get it.
+文件系统给你字节和路径。数据库给你**ACID 事务和查询**。关系模型（Codd，1970）说"一切都是表"。SQL 让你声明要什么，数据库自己找到怎么拿。
 
-From traditional SQL to NoSQL (sacrifice queries for scalability) to vector databases for AI embeddings. The common thread: each layer exists because the layer below is not enough for the use case.
+从传统 SQL 到 NoSQL（牺牲查询能力换可扩展性）再到 AI 嵌入的向量数据库。共同点：每一层都存在是因为下一层满足不了上面的需求。
 
-### Lect 28 — Computer System Security
+### Lect 28 — 计算机系统安全
 
-CIA: Confidentiality, Integrity, Availability.
+CIA：保密性、完整性、可用性。
 
-Access control: OS uses uid/gid/mode bits to decide "who can access what." But numbers leak through side channels — timing, electromagnetic radiation, cache timing (Meltdown/Spectre/Downfall).
+访问控制：OS 用 uid/gid/mode 决定"谁能访问什么"。但数字从旁通道泄露——时序、电磁辐射、缓存时序（Meltdown/Spectre/Downfall）。
 
-Real-world cautionary tales: the Therac-25 (again!), the xz-utils backdoor (a 2-3 year supply chain attack), cold boot attacks (freeze RAM to read encryption keys). **No system is perfectly secure.** Defense in depth.
+真实世界的警示故事：Therac-25（又一次！）、xz-utils 后门（耗时 2-3 年的供应链攻击）、冷启动攻击（冷冻内存条读密钥）。**没有完美的安全系统。** 纵深防御。
 
-### Lect 29 — Virtual Machines and Containers
+### Lect 29 — 虚拟机和容器
 
-Two approaches to virtualization:
+两类虚拟化：
 
-- **Full system (VMware)**: simulate an entire hardware stack. Can run any OS. Heavyweight.
-- **OS-level (containers)**: use Linux Namespaces to virtualize OS objects (PID, mount, network, user) and cgroups to limit resources. Lightweight, but shares the host kernel.
+- **全系统（VMware）**：模拟整台硬件。能跑任何 OS。重。
+- **操作系统级（容器）**：用 Linux Namespaces 虚拟化 OS 对象（PID、mount、网络、用户），用 cgroups 限制资源。轻量，但共享宿主机内核。
 
-Docker = Namespaces + cgroups + OverlayFS (layered images). Kubernetes takes containers and adds orchestration — auto-scaling, self-healing, declarative config.
+Docker = Namespaces + cgroups + OverlayFS（分层镜像）。Kubernetes 再加编排——自动伸缩、自愈、声明式配置。
 
-The professor's commentary: "VMware led humanity down the wrong path. FreeBSD Jails (2000) had container-like isolation before VMware existed. But VMware made more money."
-
----
-
-## The Labs
-
-Nine labs mapped to the lectures:
-
-- **M1 labyrinth** — CLI argument parsing, getopt_long, error handling
-- **M2 pstree** — reading /proc filesystem, traversing process trees
-- **M3 sperf** — performance profiling with signals and timers
-- **M4 crepl** — fork, execve, dynamic linking, implementing a C REPL
-- **M5 mymalloc** — implementing malloc, per-thread memory pools
-- **M6 gpt.c** — parallelizing GPT-2 matrix multiply with threads/OpenMP
-- **M7 httpd** — socket, epoll, concurrent HTTP server
-- **M8 fsrecov** — recovering data from a corrupted ext2 filesystem
-- **M9 libkvdb** — LSM-tree based key-value store with WAL
-
-Each one gave me a tactile understanding of an OS concept that reading alone could not provide.
+老师的评论："VMware 带歪了人类。FreeBSD Jails（2000）在 VMware 之前就有类似容器的隔离了。但 VMware 更赚钱。"
 
 ---
 
-## Final Thought
+## 实验
 
-The professor ended the course with two questions:
+九个实验跟课程对应：
 
-> "We can score well on exams. But when scores are no longer the metric, do we know what to do?"
+- **M1 labyrinth** — CLI 参数解析、getopt_long、错误处理
+- **M2 pstree** — 读 /proc 文件系统、遍历进程树
+- **M3 sperf** — 用信号和定时器做性能分析
+- **M4 crepl** — fork、execve、动态链接、实现 C REPL
+- **M5 mymalloc** — 实现 malloc、per-thread 内存池
+- **M6 gpt.c** — 用线程/OpenMP 并行化 GPT-2 矩阵乘法
+- **M7 httpd** — socket、epoll、并发 HTTP 服务器
+- **M8 fsrecov** — 从损坏的 ext2 文件系统恢复数据
+- **M9 libkvdb** — 基于 LSM-Tree 的键值数据库 + WAL
 
-and
+每个实验都给了我对 OS 概念的手感，这是纯读书给不了的。
 
-> "The old guard's university system is about to collapse. Are you ready?"
+---
 
-The OS course is not about memorizing syscalls. It is about learning to see the layers, to understand why each one exists, and to design better ones yourself. That skill — **abstraction design** — is what lasts beyond any exam.
+## 最后想说的
 
-The course materials (lectures, labs, source code) are all open source at jyywiki.cn. If you are building systems, AI agents, or just want to understand what happens when you press the power button, I cannot recommend it enough.
+老师用两个问题结束了课程：
+
+> "考试能考好。但分数不再是衡量标准的时候，你还知道该做什么吗？"
+
+以及
+
+> "老登统治的大学系统就要完蛋了。你准备好了吗？"
+
+学操作系统不是背系统调用。是学会看到这些层、理解每一层为什么存在、然后自己设计更好的。这个能力——**抽象层的设计与设计**——是超越任何考试的。
+
+所有课程材料（讲义、实验、代码）都在 jyywiki.cn 开源。如果你在做系统、AI Agent，或者只是想按下电源键后到底发生了什么，强烈推荐。
