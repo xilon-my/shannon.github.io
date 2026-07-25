@@ -47,6 +47,8 @@
   max-height: 360px;
   font-size: 0.82rem;
   line-height: 1.6;
+  font-family: 'JetBrains Mono', 'Noto Sans SC', monospace;
+  font-style: italic;
 }
 
 .term-output::-webkit-scrollbar {
@@ -87,7 +89,7 @@
   border: none;
   outline: none;
   color: var(--text);
-  font-family: inherit;
+  font-family: 'JetBrains Mono', 'Noto Sans SC', monospace;
   font-size: 0.82rem;
   font-style: italic;
   flex: 1;
@@ -113,4 +115,13 @@
 
 @keyframes blink {
   50% { opacity: 0; }
+}
+
+@media (max-width: 700px) {
+  .live-terminal { font-size: 0.75rem; }
+  .live-terminal.compact { margin: 0 -16px -32px; }
+  .live-terminal.compact .term-output { padding: 0 16px; }
+  .live-terminal.compact .term-input-line { padding: 10px 16px; }
+  .term-input { font-size: 0.75rem; }
+  .line-out pre { white-space: pre; overflow-x: auto; }
 }
