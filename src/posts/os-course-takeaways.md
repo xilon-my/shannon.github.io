@@ -1,12 +1,12 @@
 ---
-title: "操作系统原理 2026: 30 Lectures, 9 Labs, One Changed Perspective"
+title: "NJU OS by Jyy "
 date: 2026-07-25
 tags: [OS, Systems, Learning, Course Review]
 category: reflection
 slug: os-course-30-lectures
 ---
 
-I spent the past semester working through Nanjing University's Operating Systems course (2026 Spring) taught by Prof. Jiang. It is 30 lectures across three units — Virtualization, Concurrency, Persistence — plus 9 lab assignments. Here is what each lecture left with me.
+I spent a few days working through Nanjing University's Operating Systems course (2026 Spring) taught by Prof. Jiang. It is 30 lectures across three units — Virtualization, Concurrency, Persistence — plus 9 lab assignments. Here is what each lecture left with me.
 
 ---
 
