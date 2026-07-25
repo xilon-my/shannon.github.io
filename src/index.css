@@ -5,7 +5,7 @@ html { scroll-behavior: smooth; }
 /* ── KaiTi Web Font ── */
 @font-face {
   font-family: 'KaiTi Web';
-  src: url('/fonts/KaiTi.ttf') format('truetype');
+  src: local('KaiTi'), local('STKaiti'), url('/fonts/KaiTi.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
