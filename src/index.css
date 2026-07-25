@@ -6,7 +6,7 @@ html { scroll-behavior: smooth; }
 @font-face {
   font-family: 'JetBrains Mono Web';
   src: url('/fonts/JetBrainsMono-800-italic.woff2') format('woff2');
-  font-weight: 800;
+  font-weight: 600;
   font-style: italic;
   font-display: swap;
 }
@@ -64,7 +64,7 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font);
-  font-weight: 800;
+  font-weight: 600;
   font-style: italic;
   font-synthesis: none;
   background: var(--bg);
