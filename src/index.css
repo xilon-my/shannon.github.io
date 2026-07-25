@@ -5,13 +5,13 @@ html { scroll-behavior: smooth; }
 /* ── JetBrains Mono self-hosted ── */
 @font-face {
   font-family: 'JetBrains Mono Web';
-  src: url('/fonts/JetBrainsMono-800-italic.woff2') format('woff2');
-  font-weight: 600;
+  src: url('/fonts/JetBrainsMono-400-italic.woff2') format('woff2');
+  font-weight: 400;
   font-style: italic;
   font-display: swap;
 }
 
-/* ── KaiTi via jsDelivr (no local() to avoid breaking unicode-range) ── */
+/* ── KaiTi via CDN (Chinese kaiti/cursive for CJK only) ── */
 @font-face {
   font-family: 'KaiTi Web';
   src: url('https://cdn.jsdelivr.net/gh/pjobson/Microsoft-365-Fonts@main/K/KaiTi.ttf') format('truetype');
@@ -64,7 +64,7 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font);
-  font-weight: 600;
+  font-weight: 400;
   font-style: italic;
   font-synthesis: none;
   background: var(--bg);
