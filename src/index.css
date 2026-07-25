@@ -19,8 +19,8 @@ html { scroll-behavior: smooth; }
   --nav-bg: rgba(30, 30, 46, 0.85);
   --radius: 10px;
   --max-w: 820px;
-  --font: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  --mono: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'Noto Serif SC', 'STSong', 'SimSun', serif;
+  --mono: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'Noto Serif SC', 'STSong', 'SimSun', serif;
 }
 
 [data-theme="light"] {
