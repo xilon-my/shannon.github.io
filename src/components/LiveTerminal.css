@@ -1,0 +1,96 @@
+.live-terminal {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  cursor: text;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.live-terminal:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 16px rgba(137, 180, 250, 0.06);
+}
+
+[data-theme="light"] .live-terminal:hover {
+  box-shadow: 0 0 16px rgba(64, 160, 43, 0.08);
+}
+
+.term-output {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  min-height: 200px;
+  max-height: 360px;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.term-output::-webkit-scrollbar {
+  width: 4px;
+}
+.term-output::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.line-cmd {
+  color: var(--text);
+  display: flex;
+  gap: 6px;
+  word-break: break-word;
+}
+
+.line-out {
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  word-break: break-word;
+}
+
+.line-out pre {
+  color: var(--text-secondary);
+}
+
+.term-input-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+
+.term-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-style: italic;
+  flex: 1;
+  caret-color: var(--green);
+}
+
+.term-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+.prompt-sign {
+  color: var(--green);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ── Typewriter cursor ── */
+.type-cursor {
+  animation: blink 1s step-end infinite;
+  color: var(--green);
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}

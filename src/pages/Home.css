@@ -205,6 +205,25 @@
   50% { opacity: 0; }
 }
 
+.term-live-section {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-top: none;
+  padding: 24px 32px 32px;
+}
+
+.term-hover-glow {
+  transition: box-shadow 0.3s ease;
+}
+
+.term-hover-glow:hover {
+  box-shadow: 0 0 30px rgba(137, 180, 250, 0.1), 0 0 80px rgba(137, 180, 250, 0.04);
+}
+
+[data-theme="light"] .term-hover-glow:hover {
+  box-shadow: 0 0 30px rgba(64, 160, 43, 0.1), 0 0 80px rgba(64, 160, 43, 0.04);
+}
+
 /* ── Responsive ── */
 @media (max-width: 700px) {
   .home { padding: 16px 0 32px; min-height: auto; }
