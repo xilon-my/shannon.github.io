@@ -9,15 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tiptap/extension-bubble-menu": "^3.28.0",
-    "@tiptap/extension-placeholder": "^3.28.0",
-    "@tiptap/react": "^3.28.0",
-    "@tiptap/starter-kit": "^3.28.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-markdown": "^10.1.0",
-    "react-router-dom": "^7.5.0",
-    "turndown": "^7.2.4"
+    "react-router-dom": "^7.5.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.4.1",

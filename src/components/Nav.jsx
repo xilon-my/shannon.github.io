@@ -5,7 +5,6 @@ const links = [
   { to: '/', label: 'home' },
   { to: '/cv', label: 'cv' },
   { to: '/blog', label: 'blog' },
-  { to: '/write', label: 'write' },
 ]
 
 export default function Nav({ theme, onToggleTheme }) {
