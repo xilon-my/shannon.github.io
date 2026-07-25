@@ -19,8 +19,8 @@ html { scroll-behavior: smooth; }
   --nav-bg: rgba(30, 30, 46, 0.85);
   --radius: 10px;
   --max-w: 820px;
-  --font: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'Noto Serif SC', 'STSong', 'SimSun', serif;
-  --mono: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'Noto Serif SC', 'STSong', 'SimSun', serif;
+  --font: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'LXGW WenKai', 'LXGW WenKai Mono', 'STKaiti', 'KaiTi', serif;
+  --mono: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'LXGW WenKai', 'LXGW WenKai Mono', 'STKaiti', 'KaiTi', serif;
 }
 
 [data-theme="light"] {
@@ -45,9 +45,8 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font);
-  font-weight: 400;
+  font-weight: 800;
   font-style: italic;
-  font-variation-settings: 'wght' 700;
   font-synthesis: none;
   background: var(--bg);
   color: var(--text);
