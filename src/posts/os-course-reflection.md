@@ -1,7 +1,7 @@
 ---
 title: NJU OS by Jyy
-date: 2026-07-25
-tags: [OS, Systems, Learning]
+date: 2026-07-26 04:03
+tags: [Reward hecking]
 category: Course Review
 slug: os-course-reflection
 ---

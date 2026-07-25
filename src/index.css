@@ -9,6 +9,7 @@ html { scroll-behavior: smooth; }
   font-weight: 400;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+4E00-9FFF, U+3400-4DBF, U+2F00-2FDF, U+3000-303F, U+FF00-FFEF;
 }
 
 /* ── Catppuccin Themes ── */
