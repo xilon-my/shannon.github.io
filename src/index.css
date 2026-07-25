@@ -10,13 +10,6 @@ html { scroll-behavior: smooth; }
   font-style: italic;
   font-display: swap;
 }
-@font-face {
-  font-family: 'JetBrains Mono Web';
-  src: url('/fonts/JetBrainsMono-800-normal.woff2') format('woff2');
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
-}
 
 /* ── KaiTi via jsDelivr (no local() to avoid breaking unicode-range) ── */
 @font-face {
