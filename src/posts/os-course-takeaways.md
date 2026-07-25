@@ -1,9 +1,9 @@
 ---
-title: "NJU OS by Jyy "
+title: "NJU OS by Jyy"
 date: 2026-07-25
 tags: [OS, Systems, Learning, Course Review]
 category: reflection
-slug: os-course-30-lectures
+slug: os-course-takeaways
 ---
 
 I spent a few days working through Nanjing University's Operating Systems course (2026 Spring) taught by Prof. Jiang. It is 30 lectures across three units — Virtualization, Concurrency, Persistence — plus 9 lab assignments. Here is what each lecture left with me.
