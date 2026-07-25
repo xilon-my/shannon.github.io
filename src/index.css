@@ -2,7 +2,23 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
-/* ── KaiTi Web Font ── */
+/* ── JetBrains Mono via jsDelivr ── */
+@font-face {
+  font-family: 'JetBrains Mono Web';
+  src: url('https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5/files/jetbrains-mono-latin-800-italic.woff2') format('woff2');
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono Web';
+  src: url('https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5/files/jetbrains-mono-latin-800-normal.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── KaiTi via jsDelivr ── */
 @font-face {
   font-family: 'KaiTi Web';
   src: local('KaiTi'), local('STKaiti'),
@@ -31,8 +47,8 @@ html { scroll-behavior: smooth; }
   --nav-bg: rgba(30, 30, 46, 0.85);
   --radius: 10px;
   --max-w: 820px;
-  --font: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'KaiTi Web', '楷体', 'STKaiti', 'KaiTi', 'Noto Serif SC', serif;
-  --mono: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'KaiTi Web', '楷体', 'STKaiti', 'KaiTi', 'Noto Serif SC', serif;
+  --font: 'JetBrains Mono Web', 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'KaiTi Web', '楷体', 'STKaiti', 'KaiTi', serif;
+  --mono: 'JetBrains Mono Web', 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'KaiTi Web', '楷体', 'STKaiti', 'KaiTi', serif;
 }
 
 [data-theme="light"] {
