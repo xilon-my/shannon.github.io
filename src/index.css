@@ -5,7 +5,9 @@ html { scroll-behavior: smooth; }
 /* ── KaiTi Web Font ── */
 @font-face {
   font-family: 'KaiTi Web';
-  src: local('KaiTi'), local('STKaiti'), url('/fonts/KaiTi.ttf') format('truetype');
+  src: local('KaiTi'), local('STKaiti'),
+       url('https://cdn.jsdelivr.net/gh/pjobson/Microsoft-365-Fonts@main/K/KaiTi.ttf') format('truetype'),
+       url('/fonts/KaiTi.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -55,9 +57,8 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font);
-  font-weight: 400;
+  font-weight: 800;
   font-style: italic;
-  font-variation-settings: 'wght' 800;
   font-synthesis: none;
   background: var(--bg);
   color: var(--text);
