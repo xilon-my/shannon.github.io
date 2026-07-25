@@ -53,6 +53,10 @@
   padding: 32px;
 }
 
+.cv-section:last-of-type {
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
 .prompt-cv {
   color: var(--green);
   font-weight: 700;
