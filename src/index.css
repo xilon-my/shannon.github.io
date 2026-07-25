@@ -29,8 +29,8 @@ html { scroll-behavior: smooth; }
   --nav-bg: rgba(30, 30, 46, 0.85);
   --radius: 10px;
   --max-w: 820px;
-  --font: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'KaiTi Web', 'LXGW WenKai', '楷体', 'STKaiti', 'KaiTi', serif;
-  --mono: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'KaiTi Web', 'LXGW WenKai', '楷体', 'STKaiti', 'KaiTi', serif;
+  --font: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'KaiTi Web', '楷体', 'STKaiti', 'KaiTi', 'Noto Serif SC', serif;
+  --mono: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'KaiTi Web', '楷体', 'STKaiti', 'KaiTi', 'Noto Serif SC', serif;
 }
 
 [data-theme="light"] {
