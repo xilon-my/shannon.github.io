@@ -2,6 +2,15 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
+/* ── KaiTi Web Font ── */
+@font-face {
+  font-family: 'KaiTi Web';
+  src: url('/fonts/KaiTi.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ── Catppuccin Themes ── */
 :root, [data-theme="dark"] {
   --bg: #1E1E2E;
@@ -19,8 +28,8 @@ html { scroll-behavior: smooth; }
   --nav-bg: rgba(30, 30, 46, 0.85);
   --radius: 10px;
   --max-w: 820px;
-  --font: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', '楷体', 'STKaiti', 'KaiTi', serif;
-  --mono: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', '楷体', 'STKaiti', 'KaiTi', serif;
+  --font: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'KaiTi Web', '楷体', 'STKaiti', 'KaiTi', serif;
+  --mono: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'KaiTi Web', '楷体', 'STKaiti', 'KaiTi', serif;
 }
 
 [data-theme="light"] {
