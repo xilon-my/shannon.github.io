@@ -148,7 +148,7 @@ export default function Write() {
 
   return (
     <div className="write-page">
-      <Terminal title="shannon@personal-site ~ %">
+      <Terminal title="shannon@shannon.zone ~ %">
       <div className="write-meta">
         <div className="write-field">
           <input

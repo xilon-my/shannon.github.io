@@ -29,7 +29,7 @@ export default function Home() {
           <span className="term-dot" style={{ background: '#F38BA8' }} />
           <span className="term-dot" style={{ background: '#F9E2AF' }} />
           <span className="term-dot" style={{ background: '#A6E3A1' }} />
-          <span className="term-title">shannon@personal-site ~ %</span>
+          <span className="term-title">shannon@shannon.zone ~ %</span>
         </div>
 
         {/* ─── Intro ─── */}

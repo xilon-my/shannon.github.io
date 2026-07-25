@@ -9,7 +9,7 @@ export default function BlogPage() {
   return (
     <div className="blog-page">
       <div className="container">
-        <Terminal title="shannon@personal-site ~ %">
+        <Terminal title="shannon@shannon.zone ~ %">
           <div className="blog-header">
             <p className="blog-prompt"><span className="prompt-cv">❯</span> <span className="typewriter">ls posts/</span></p>
             <p className="blog-sub">Projects, notes, and things I've learned.</p>
