@@ -60,7 +60,7 @@ RoboCup China Open — Basketball Champion`,
 ╚══════════════════════════════╝`,
 }
 
-export default function LiveTerminal() {
+export default function LiveTerminal({ compact }) {
   const [history, setHistory] = useState([
     { type: 'output', text: responses.banner },
     { type: 'output', text: 'Type "help" to see available commands.' },
@@ -121,7 +121,7 @@ export default function LiveTerminal() {
   }
 
   return (
-    <div className="live-terminal" onClick={() => inputRef.current?.focus()}>
+    <div className={"live-terminal" + (compact ? " compact" : "")} onClick={() => inputRef.current?.focus()}>
       <div className="term-output" ref={scrollRef}>
         {history.map((entry, i) => (
           <div key={i} className={entry.type === 'command' ? 'line-cmd' : 'line-out'}>

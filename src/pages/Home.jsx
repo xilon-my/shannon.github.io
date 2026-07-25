@@ -65,7 +65,7 @@ export default function Home() {
             </a>
           </div>
 
-          {/* ─── About / Live Terminal ─── */}
+          {/* ─── About ─── */}
           <div className="about-block fade-in fade-in-4">
             <p className="prompt">
               <span className="prompt-sign">❯</span> <Typewriter text="cat about.md" speed={40} delay={600} onDone={() => setShowAbout(true)} />
@@ -82,17 +82,9 @@ export default function Home() {
             )}
           </div>
 
-          {/* ─── Live Terminal ─── */}
-          <div className="term-live-section fade-in fade-in-5">
-            <p className="prompt">
-              <span className="prompt-sign">❯</span> <span>./interactive.sh</span>
-            </p>
-            <LiveTerminal />
-          </div>
-
-          {/* ─── Footer ─── */}
-          <div className="home-footer fade-in fade-in-5">
-            <span className="prompt-sign">❯</span> <span className="blinking-cursor">_</span>
+          {/* ─── Terminal (replaces footer, no separate frame) ─── */}
+          <div className="home-terminal-section fade-in fade-in-5">
+            <LiveTerminal compact />
           </div>
         </div>
       </div>

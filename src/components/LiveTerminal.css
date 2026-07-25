@@ -4,10 +4,26 @@
   border-radius: 8px;
   padding: 16px;
   cursor: text;
-  min-height: 280px;
   display: flex;
   flex-direction: column;
   transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.live-terminal.compact {
+  border: none;
+  border-radius: 0;
+  padding: 20px 32px 24px;
+  min-height: auto;
+  background: transparent;
+}
+
+.live-terminal.compact .term-output {
+  min-height: 160px;
+  max-height: 260px;
+}
+
+.live-terminal.compact .term-input-line {
+  border-top-color: var(--border);
 }
 
 .live-terminal:hover {

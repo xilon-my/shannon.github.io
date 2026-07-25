@@ -205,11 +205,8 @@
   50% { opacity: 0; }
 }
 
-.term-live-section {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-top: none;
-  padding: 24px 32px 32px;
+.home-terminal-section {
+  border-top: 1px solid var(--border);
 }
 
 .term-hover-glow {
