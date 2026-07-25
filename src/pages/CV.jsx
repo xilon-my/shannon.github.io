@@ -52,7 +52,7 @@ export default function CV() {
             <div className="cv-award-group">
               <h4 className="cv-award-cat">Competitions</h4>
               <ul className="cv-award-list">
-                <li>RoboCup China Open — Basketball Champion (National First Prize)</li>
+                <li>RoboCup China Open — Basketball Champion - National First Prize</li>
                   <li>15th National College Mathematics Competition — Fujian First Prize</li>
               </ul>
             </div>
