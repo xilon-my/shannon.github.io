@@ -252,20 +252,11 @@
 
 .blog-post-content blockquote {
   margin: 20px 0;
-  padding: 0 0 0 20px;
-  color: var(--green);
+  padding: 0;
+  padding-left: 16px;
+  color: var(--text-secondary);
   font-style: normal;
-  position: relative;
-}
-
-.blog-post-content blockquote::before {
-  content: '> ';
-  position: absolute;
-  left: 0;
-  top: 0;
-  color: var(--green);
-  font-weight: 700;
-  font-family: var(--mono);
+  border-left: 2px solid var(--border);
 }
 
 .blog-post-content table {
