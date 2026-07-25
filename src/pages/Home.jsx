@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Terminal from '../components/Terminal.jsx'
 import Typewriter from '../components/Typewriter.jsx'
 import LiveTerminal from '../components/LiveTerminal.jsx'
 import './Home.css'
@@ -25,17 +26,9 @@ export default function Home() {
   return (
     <div className="home">
       <div className="container">
-        <div className="terminal-window term-glow term-hover-glow">
-          {/* ─── Terminal Header ─── */}
-          <div className="term-bar fade-in fade-in-1">
-            <span className="term-dot" style={{ background: '#F38BA8' }} />
-            <span className="term-dot" style={{ background: '#F9E2AF' }} />
-            <span className="term-dot" style={{ background: '#A6E3A1' }} />
-            <span className="term-title">shannon@shannon.zone ~ %</span>
-          </div>
-
+        <Terminal title="shannon@shannon.zone ~ %" glow>
           {/* ─── Intro ─── */}
-          <div className="intro fade-in fade-in-2">
+          <div className="intro">
             <p className="prompt">
               <span className="prompt-sign">❯</span> whoami
             </p>
@@ -51,7 +44,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* ─── Quick Links (fade in after typewriter) ─── */}
+          {/* ─── Quick Links ─── */}
           <div className={`quick-links ${showQuickLinks ? 'fade-in' : ''}`} style={showQuickLinks ? {} : { display: 'none' }}>
             <a href="https://github.com/xilon-my" target="_blank" rel="noopener noreferrer" className="ql-link">
               <span className="ql-icon">❯</span>
@@ -66,27 +59,21 @@ export default function Home() {
           </div>
 
           {/* ─── About ─── */}
-          <div className="about-block fade-in fade-in-4">
+          <div className="about-section">
             <p className="prompt">
               <span className="prompt-sign">❯</span> <Typewriter text="cat about.md" speed={40} delay={600} onDone={() => setShowAbout(true)} />
             </p>
             {showAbout && (
-              <div className="about-body fade-in">
-                <p>
-                  Born 2003.08.24 in China · ISTP · fitness enthusiast
-                </p>
-                <p>
-                  My wish is to do interesting things.
-                </p>
+              <div className="about-content fade-in">
+                <p>Born 2003.08.24 in China · ISTP · fitness enthusiast</p>
+                <p>My wish is to do interesting things.</p>
               </div>
             )}
           </div>
 
-          {/* ─── Terminal (replaces footer, no separate frame) ─── */}
-          <div className="home-terminal-section fade-in fade-in-5">
-            <LiveTerminal compact />
-          </div>
-        </div>
+          {/* ─── Interactive Terminal ─── */}
+          <LiveTerminal compact />
+        </Terminal>
       </div>
     </div>
   )

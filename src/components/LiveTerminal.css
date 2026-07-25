@@ -12,18 +12,23 @@
 .live-terminal.compact {
   border: none;
   border-radius: 0;
-  padding: 20px 32px 24px;
+  padding: 16px 0 0;
   min-height: auto;
   background: transparent;
+  margin: 0 -32px;
 }
 
 .live-terminal.compact .term-output {
-  min-height: 160px;
-  max-height: 260px;
+  min-height: auto;
+  max-height: 200px;
+  padding: 0 32px;
 }
 
 .live-terminal.compact .term-input-line {
-  border-top-color: var(--border);
+  border-top: 1px solid var(--border);
+  padding: 12px 32px;
+  margin-top: 4px;
+  background: var(--surface);
 }
 
 .live-terminal:hover {
