@@ -3,11 +3,9 @@ import './Home.css'
 
 const taglines = [
   'six-dimensional force sensors',
-  'measurement & control technology',
-  'National Scholarship & Outstanding Graduate',
   'CLI agents & LLMs',
   'half marathon runner (1:56:08)',
-  'Tsinghua University · Xiamen University',
+  'open source & building things',
 ]
 
 export default function Home() {
