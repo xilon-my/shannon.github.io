@@ -5,3 +5,10 @@ footer {
   font-size: 0.85rem;
   border-top: 1px solid var(--border);
 }
+
+.build-time {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  margin-top: 4px;
+  opacity: 0.6;
+}
