@@ -18,12 +18,10 @@ html { scroll-behavior: smooth; }
   font-display: swap;
 }
 
-/* ── KaiTi via jsDelivr ── */
+/* ── KaiTi via jsDelivr (no local() to avoid breaking unicode-range) ── */
 @font-face {
   font-family: 'KaiTi Web';
-  src: local('KaiTi'), local('STKaiti'),
-       url('https://cdn.jsdelivr.net/gh/pjobson/Microsoft-365-Fonts@main/K/KaiTi.ttf') format('truetype'),
-       url('/fonts/KaiTi.ttf') format('truetype');
+  src: url('https://cdn.jsdelivr.net/gh/pjobson/Microsoft-365-Fonts@main/K/KaiTi.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
