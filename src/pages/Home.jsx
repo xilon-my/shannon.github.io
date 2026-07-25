@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import Terminal from '../components/Terminal.jsx'
-import Typewriter from '../components/Typewriter.jsx'
 import LiveTerminal from '../components/LiveTerminal.jsx'
 import './Home.css'
 
@@ -13,8 +12,6 @@ const taglines = [
 
 export default function Home() {
   const [tagIndex, setTagIndex] = useState(0)
-  const [showQuickLinks, setShowQuickLinks] = useState(false)
-  const [showAbout, setShowAbout] = useState(false)
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -32,9 +29,7 @@ export default function Home() {
             <p className="prompt">
               <span className="prompt-sign">❯</span> whoami
             </p>
-            <h1 className="name">
-              <Typewriter text="Shannon Zhang" speed={50} delay={200} onDone={() => setShowQuickLinks(true)} />
-            </h1>
+            <h1 className="name">Shannon Zhang</h1>
             <p className="desc">
               M.S. in Electronic Information @ Tsinghua University · B.S. @ Xiamen University
             </p>
@@ -45,7 +40,7 @@ export default function Home() {
           </div>
 
           {/* ─── Quick Links ─── */}
-          <div className={`quick-links ${showQuickLinks ? 'fade-in' : ''}`} style={showQuickLinks ? {} : { display: 'none' }}>
+          <div className="quick-links">
             <a href="https://github.com/xilon-my" target="_blank" rel="noopener noreferrer" className="ql-link">
               <span className="ql-icon">❯</span>
               <span className="ql-label">github</span>
@@ -61,14 +56,12 @@ export default function Home() {
           {/* ─── About ─── */}
           <div className="about-section">
             <p className="prompt">
-              <span className="prompt-sign">❯</span> <Typewriter text="cat about.md" speed={40} delay={600} onDone={() => setShowAbout(true)} />
+              <span className="prompt-sign">❯</span> cat about.md
             </p>
-            {showAbout && (
-              <div className="about-content fade-in">
-                <p>Born 2003.08.24 in China · ISTP · fitness enthusiast</p>
-                <p>My wish is to do interesting things.</p>
-              </div>
-            )}
+            <div className="about-content">
+              <p>Born 2003.08.24 in China · ISTP · fitness enthusiast</p>
+              <p>My wish is to do interesting things.</p>
+            </div>
           </div>
 
           {/* ─── Interactive Terminal ─── */}
