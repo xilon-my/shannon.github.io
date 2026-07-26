@@ -25,6 +25,7 @@
 /* ── Output ── */
 .term-out {
   overflow-y: auto;
+  overflow-x: auto;
   font-size: 0.82rem;
   line-height: 1.6;
   font-family: 'JetBrains Mono', 'Noto Sans SC', monospace;
