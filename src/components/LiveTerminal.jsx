@@ -53,8 +53,8 @@ Outstanding Graduate  ·  Outstanding Merit Student
 RoboCup China Open — Basketball Champion`,
 
   banner: `╔══════════════════════════╗
-║    shannon@shannon.zone    ║
-║  ❯ type /help for commands ║
+║   shannon@shannon.zone    ║
+║ ❯ type /help for commands ║
 ╚══════════════════════════╝`,
 }
 

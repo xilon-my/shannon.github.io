@@ -9,6 +9,7 @@ html { scroll-behavior: smooth; }
   font-weight: 400;
   font-style: italic;
   font-display: swap;
+  size-adjust: 88%;
 }
 
 /* ── KaiTi via CDN (Chinese kaiti/cursive for CJK only) ── */
