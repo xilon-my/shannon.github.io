@@ -42,8 +42,8 @@
 .l-cmd { display: flex; gap: 6px; }
 .l-out { margin-bottom: 4px; }
 
-.p-cmd { margin: 0; font-family: inherit; font-size: inherit; white-space: pre; color: var(--text); }
-.p-out { margin: 0; font-family: inherit; font-size: inherit; white-space: pre; color: var(--text-secondary); }
+.p-cmd { margin: 0; font-family: inherit; font-size: inherit; white-space: pre-wrap; color: var(--text); }
+.p-out { margin: 0; font-family: inherit; font-size: inherit; white-space: pre-wrap; color: var(--text-secondary); }
 .p-green { color: var(--green); font-weight: 700; flex-shrink: 0; }
 
 /* ── Hints ── */
