@@ -41,6 +41,7 @@
 
 .l-cmd { display: flex; gap: 6px; }
 .l-out { margin-bottom: 4px; }
+.l-banner { margin-bottom: 4px; width: fit-content; }
 
 .p-cmd { margin: 0; font-family: inherit; font-size: inherit; white-space: pre; color: var(--text); }
 .p-out { margin: 0; font-family: inherit; font-size: inherit; white-space: pre; color: var(--text-secondary); }
