@@ -28,7 +28,7 @@
   overflow-x: auto;
   font-size: 0.82rem;
   line-height: 1.6;
-  font-family: 'JetBrains Mono', 'Noto Sans SC', monospace;
+  font-family: 'JetBrains Mono', monospace, 'Noto Sans SC';
   font-style: italic;
 }
 
@@ -84,7 +84,7 @@
   border: none;
   outline: none;
   color: var(--text);
-  font-family: 'JetBrains Mono', 'Noto Sans SC', monospace;
+  font-family: 'JetBrains Mono', monospace, 'Noto Sans SC';
   font-size: 0.82rem;
   font-style: italic;
   flex: 1;
