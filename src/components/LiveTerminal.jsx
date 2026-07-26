@@ -52,10 +52,10 @@ BYD Scholarship  ·  Academic Excellence
 Outstanding Graduate  ·  Outstanding Merit Student
 RoboCup China Open — Basketball Champion`,
 
-  banner: `╔══════════════════════════════╗
-║    shannon@shannon.zone      ║
-║  ❯ type /help for commands   ║
-╚══════════════════════════════╝`,
+  banner: `╔══════════════════════════╗
+║    shannon@shannon.zone    ║
+║  ❯ type /help for commands ║
+╚══════════════════════════╝`,
 }
 
 const CMD_NAMES = Object.keys(CMD).filter(k => k !== 'banner').sort()
