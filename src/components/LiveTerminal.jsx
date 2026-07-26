@@ -54,7 +54,7 @@ RoboCup China Open — Basketball Champion`,
 
   banner: `╔══════════════════════════╗
 ║   shannon@shannon.zone    ║
-║ ❯ type /help for commands ║
+║ > type /help               ║
 ╚══════════════════════════╝`,
 }
 
