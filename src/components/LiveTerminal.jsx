@@ -72,7 +72,7 @@ function StreamText({ text, speed = 8, onDone }) {
 
 export default function LiveTerminal({ compact }) {
   const [history, setHistory] = useState([
-    { type: 'banner', text: CMD.banner },
+    { type: 'out', text: CMD.banner },
     { type: 'out', text: 'Type /help to see available commands.' },
   ])
   const [streamId, setStreamId] = useState(null)
@@ -150,7 +150,7 @@ export default function LiveTerminal({ compact }) {
     <div className={"live-terminal" + (compact ? " compact" : "")} onClick={() => inputRef.current?.focus()}>
       <div className="term-out" ref={scrollRef}>
         {history.map((entry, i) => (
-          <div key={i} className={entry.type === 'cmd' ? 'l-cmd' : entry.type === 'banner' ? 'l-banner' : 'l-out'}>
+          <div key={i} className={entry.type === 'cmd' ? 'l-cmd' : 'l-out'}>
             {entry.type === 'cmd' && <span className="p-green">❯ </span>}
             {entry.type === 'stream' ? (
               <pre className="p-out">
