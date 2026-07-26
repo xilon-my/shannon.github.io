@@ -2,14 +2,13 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
-/* ── JetBrains Mono self-hosted (size-adjust shrinks only English) ── */
+/* ── JetBrains Mono self-hosted ── */
 @font-face {
   font-family: 'JetBrains Mono Web';
   src: url('/fonts/JetBrainsMono-400-italic.woff2') format('woff2');
   font-weight: 400;
   font-style: italic;
   font-display: swap;
-  size-adjust: 88%;
 }
 
 /* ── KaiTi via CDN (Chinese kaiti/cursive for CJK only) ── */
