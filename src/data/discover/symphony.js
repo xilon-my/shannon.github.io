@@ -25,10 +25,10 @@ Symphony 想解决的问题就是这个——它不做代码补全，它做的�
 一个 Issue 的生命周期大概是这样：
 
 \`\`\`
-Todo ──▶ In Progress ──▶ Human Review ──▶ Merging ──▶ Done
-                              │
-                              ▼
-                            Rework ──▶ In Progress
+Todo -> In Progress -> Human Review -> Merging -> Done
+                        |
+                        v
+                      Rework -> In Progress
 \`\`\`
 
 Symphony 每 5 秒轮询一次 Linear，发现 Todo 状态的 Issue 就 Claim 过来，然后：
