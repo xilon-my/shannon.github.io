@@ -1,7 +1,6 @@
 import { useParams, Link } from 'react-router-dom'
 import Markdown from 'react-markdown'
 import rehypeHighlight from 'rehype-highlight'
-import yaml from 'highlight.js/lib/languages/yaml'
 import Terminal from '../components/Terminal.jsx'
 import projects from '../data/discover-projects.js'
 import './Discover.css'
@@ -74,7 +73,7 @@ export default function DiscoverDetail() {
             <p className="discover-detail-desc">{project.description}</p>
 
             <div className="discover-detail-content">
-              <Markdown rehypePlugins={[[rehypeHighlight, { languages: { yaml } }]]}>{project.detail}</Markdown>
+              <Markdown rehypePlugins={[[rehypeHighlight]]}>{project.detail}</Markdown>
             </div>
 
             {project.takeaway && (
