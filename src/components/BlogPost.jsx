@@ -68,7 +68,7 @@ export default function BlogPost() {
   if (!post) {
     return (
       <div className="blog-post-page">
-        <Link to="/blog" className="blog-post-back">&larr; Back to blog</Link>
+        <Link to="/blog" className="blog-post-back">&larr; cd ..</Link>
         <div className="blog-empty">
           <div className="icon">&#128533;</div>
           <h3>Post not found</h3>
@@ -80,7 +80,7 @@ export default function BlogPost() {
 
   return (
     <article className="blog-post-page">
-      <Link to="/blog" className="blog-post-back">&larr; Back to blog</Link>
+      <Link to="/blog" className="blog-post-back">&larr; cd ..</Link>
       <header className="blog-post-header">
         <h1>{post.title}</h1>
         <div className="blog-post-meta">
