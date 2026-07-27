@@ -208,6 +208,39 @@ pre code .hljs-bullet { color: #A6E3A1; }
 pre code .hljs-link { color: #89B4FA; text-decoration: underline; }
 pre code .hljs-emphasis { font-style: italic; }
 pre code .hljs-strong { font-weight: 700; }
+pre code .hljs-symbol { color: #FAB387; }
+
+[data-theme="light"] pre code .hljs-keyword { color: #8839EF; }
+[data-theme="light"] pre code .hljs-string { color: #40A02B; }
+[data-theme="light"] pre code .hljs-number { color: #FE640B; }
+[data-theme="light"] pre code .hljs-comment { color: #9CA0B0; font-style: italic; }
+[data-theme="light"] pre code .hljs-literal { color: #FE640B; }
+[data-theme="light"] pre code .hljs-built_in { color: #1E66F5; }
+[data-theme="light"] pre code .hljs-attr { color: #1E66F5; }
+[data-theme="light"] pre code .hljs-attribute { color: #04A5E5; }
+[data-theme="light"] pre code .hljs-selector-class { color: #EA76CB; }
+[data-theme="light"] pre code .hljs-title { color: #1E66F5; }
+[data-theme="light"] pre code .hljs-title.class_ { color: #EA76CB; }
+[data-theme="light"] pre code .hljs-title.function_ { color: #1E66F5; }
+[data-theme="light"] pre code .hljs-section { color: #DF8E1D; font-weight: 700; }
+[data-theme="light"] pre code .hljs-type { color: #DF8E1D; }
+[data-theme="light"] pre code .hljs-meta { color: #FE640B; }
+[data-theme="light"] pre code .hljs-meta .hljs-keyword { color: #FE640B; }
+[data-theme="light"] pre code .hljs-meta .hljs-string { color: #FE640B; }
+[data-theme="light"] pre code .hljs-addition { color: #40A02B; }
+[data-theme="light"] pre code .hljs-deletion { color: #D20F39; }
+[data-theme="light"] pre code .hljs-tag { color: #1E66F5; }
+[data-theme="light"] pre code .hljs-name { color: #1E66F5; }
+[data-theme="light"] pre code .hljs-selector-tag { color: #8839EF; }
+[data-theme="light"] pre code .hljs-selector-id { color: #D20F39; }
+[data-theme="light"] pre code .hljs-selector-attr { color: #04A5E5; }
+[data-theme="light"] pre code .hljs-params { color: #D20F39; }
+[data-theme="light"] pre code .hljs-doctag { color: #9CA0B0; }
+[data-theme="light"] pre code .hljs-variable { color: #D20F39; }
+[data-theme="light"] pre code .hljs-template-variable { color: #D20F39; }
+[data-theme="light"] pre code .hljs-bullet { color: #40A02B; }
+[data-theme="light"] pre code .hljs-link { color: #1E66F5; text-decoration: underline; }
+[data-theme="light"] pre code .hljs-symbol { color: #FE640B; }
 
 /* ── Mobile ── */
 @media (max-width: 700px) {
