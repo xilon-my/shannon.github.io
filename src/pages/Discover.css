@@ -264,7 +264,16 @@
   text-indent: 0;
 }
 
-.discover-detail-content ul {
+.discover-detail-content ol {
+  margin: 12px 0;
+  padding-left: 24px;
+}
+
+.discover-detail-content ol li {
+  margin-bottom: 6px;
+  line-height: 1.7;
+  padding-left: 4px;
+}
   margin: 12px 0;
   padding-left: 24px;
   list-style: none;
