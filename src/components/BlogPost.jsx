@@ -1,7 +1,35 @@
 import { Link, useParams } from 'react-router-dom'
 import Markdown from 'react-markdown'
-import rehypeHighlight from 'rehype-highlight'
+import hljs from 'highlight.js'
 import './Blog.css'
+
+function CodeBlock({ className, children }) {
+  const lang = className?.replace('language-', '') || ''
+  const code = String(children).replace(/\n$/, '')
+
+  if (lang === 'markdown') {
+    const fm = code.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/)
+    if (fm) {
+      const yamlHtml = hljs.highlight(fm[1], { language: 'yaml' }).value
+      const mdHtml = hljs.highlight(fm[2], { language: 'markdown' }).value
+      return (
+        <pre><code className={className} dangerouslySetInnerHTML={{
+          __html: `---\n${yamlHtml}\n---\n\n${mdHtml}`
+        }} /></pre>
+      )
+    }
+  }
+
+  if (lang && hljs.getLanguage(lang)) {
+    return (
+      <pre><code className={className} dangerouslySetInnerHTML={{
+        __html: hljs.highlight(code, { language: lang }).value
+      }} /></pre>
+    )
+  }
+
+  return <pre><code className={className}>{children}</code></pre>
+}
 
 const postModules = import.meta.glob('../posts/*.md', { query: '?raw', import: 'default', eager: true })
 
@@ -74,7 +102,7 @@ export default function BlogPost() {
         </div>
       </header>
       <div className="blog-post-content">
-        <Markdown rehypePlugins={[[rehypeHighlight]]}>{post.content}</Markdown>
+        <Markdown components={{ code: CodeBlock }}>{post.content}</Markdown>
       </div>
     </article>
   )
