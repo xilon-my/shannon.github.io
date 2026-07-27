@@ -133,7 +133,7 @@ Labels: {{ issue.labels }}
 - \`Rework\` → address feedback
 \`\`\`
 
-Symphony 启动时读这个文件，`workflow.ex` 解析 YAML frontmatter 拿到配置，`prompt_builder.ex` 把 Issue 的标题、描述、标签等信息塞进模板生成最终 prompt，然后发给 Codex。
+Symphony 启动时读这个文件，\`workflow.ex\` 解析 YAML frontmatter 拿到配置，\`prompt_builder.ex\` 把 Issue 的标题、描述、标签等信息塞进模板生成最终 prompt，然后发给 Codex。
 
 改工作流就是改这个文件提 PR，跟改代码一个流程。这个思路跟 OKF 的 YAML frontmatter 异曲同工——都是把元数据和内容放在一起，人可读、Agent 也可读。
 
