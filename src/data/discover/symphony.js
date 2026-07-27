@@ -14,11 +14,11 @@ Symphony 想解决的问题就是这个——它不做代码补全，它做的�
 
 ## 参考实现为什么用 Elixir
 
-官方参考实现选择了 **Elixir**（跑在 Erlang/BEAM 虚拟机上）。Elixir 的杀手锏是 Actor 模型和超轻量进程——每个进程几微秒的创建开销、独立内存、靠消息通信不共享状态。这对于 Symphony 这种需要同时管理多个 Agent 会话、每个会话有独立状态和生命周期的场景来说非常自然。
+官方参考实现用的 **Elixir**，这门语言跑在 Erlang 的 BEAM 虚拟机上。BEAM 的设计哲学是一个进程管一件事，进程之间靠消息通信，不共享内存。创建进程的开销极低（微秒级），所以你可以随手开几千个进程。
 
-一个 Agent 就是一个进程，Issue 的状态流转就是进程间的消息传递，出问题了进程崩了不影响其他 Agent。如果用 Python/Node 做同样的事情，得自己搓事件循环和状态机。
+这对 Symphony 来说很合适——每个 Agent 会话就是一个进程，各自管各自的状态，一个挂了不影响其他的。如果用 Python 写这套东西，你得自己搓事件循环和状态机。
 
-不过 SPEC.md 是语言无关的，README 也说了"让你喜欢的 coding agent 按规范用任何语言实现"，所以你不必学 Elixir 也能理解 Symphony。
+当然 SPEC.md 是语言无关的，README 也说了"让你喜欢的 coding agent 按规范用任何语言实现"，所以不用学 Elixir 也能看懂。
 
 ## 怎么工作的
 
@@ -67,16 +67,9 @@ symphony/
 
 ### SPEC.md 里到底写了什么
 
-81KB 的规范文件，分了 8 章，每章都讲一个子系统：
+81KB 的规范文件，分 8 章讲清楚了整个系统：
 
-1. **Problem Statement** — 为什么需要 Symphony，解决哪四个运维问题
-2. **Goals and Non-Goals** — 明确做什么和不做什么
-3. **System Overview** — 8 大组件（Workflow Loader、Orchestrator、Workspace Manager、Agent Runner……）和 6 层抽象
-4. **Core Domain Model** — Issue、Workflow Definition、Workspace、Run Attempt、Retry Entry 等实体的完整定义
-5. **Workflow Specification** — WORKFLOW.md 的文件格式、YAML schema、prompt 模板契约、验证规则（最长的章节）
-6. **Configuration Specification** — 配置解析管线、动态重载、调度前校验
-7. **Dispatch & Retry** — 派发策略、并发控制、指数退避、死信处理
-8. **Observability** — 结构化日志、状态面板、指标暴露
+前两章讲为什么要有 Symphony（问题 + 目标范围），第三章画整体架构图和 8 个组件，第四章把 Issue、Workspace、Run Attempt 这些实体定义清楚，第五章是最长的——完整定义了 WORKFLOW.md 的格式和 schema。后面三章讲配置解析、派发重试策略、和日志监控。
 
 Elixir 实现只是这套规范的一种具体化，顺着 SPEC.md 用任何语言都能重写。
 
@@ -118,12 +111,6 @@ You are working on a Linear ticket \`{{ issue.identifier }}\`
 Issue context:
 Title: {{ issue.title }}
 Description: {{ issue.description }}
-Labels: {{ issue.labels }}
-
-## Step 1: Start execution
-- Determine current ticket state
-- Find or create a Codex Workpad comment
-- ...
 
 ## Status map
 - \`Todo\` → move to In Progress
@@ -185,56 +172,32 @@ gh auth setup-git
 
 **Round 1 — SHA-5: 多语言实现 two-sum**
 
-先用最简单的场景测试 Symphony 能不能正常 pick Issue 和调度 Codex。我在 Linear 上创建了一个 Issue，Symphony 自动 pick 后在 Workspace 里启动了 Codex。实际代码是我自己提交的，但这轮验证了 Symphony 的调度链路是通的——从轮询 Linear、创建 Workspace、启动 Codex app-server 到 prompt 注入都没问题。
-
-产出目录结构：
-
-\`\`\`
-two-sum/
-├── python/two_sum.py + test_two_sum.py
-├── javascript/twoSum.js + testTwoSum.js
-├── go/two_sum.go + two_sum_test.go
-├── rust/src/lib.rs + Cargo.toml
-├── java/TwoSum.java
-├── cpp/two_sum.cpp + two_sum.h + test_two_sum.cpp
-└── README.md
-\`\`\`
-
-6 种语言、15 个文件、248 行代码。每种实现都保持了统一的 API 签名 \`twoSum(nums, target) -> indices\`，附了测试。
+先跑个最简单的验证 Symphony 能不能正常 pick Issue 和调度 Codex。在 Linear 上创建 Issue 后 Symphony 确实 pick 了，Workspace 创建了，Codex 也启动了，调度链路是通的。实际代码是我自己提交的，但这轮本来的目的就是测链路，不是测 Codex 写代码。
 
 **Round 2 — SHA-6: 添加 GitHub Actions CI**
 
-我想测试点更实用的东西——给仓库加 CI。Issue 内容是创建 GitHub Actions 工作流 + Makefile，让所有语言的测试能一键跑。
+想测点更实用的——给仓库加 CI。Issue 内容是创建 GitHub Actions 工作流 + Makefile，让所有语言的测试能一键跑。
 
 但这轮就没那么顺利了：
 
+第一次跑 Codex 把 CI 文件和 Makefile 都创建好了，但 git commit 时报错：
 \`\`\`
-▶ 第一次尝试：Codex 创建了 CI 文件和 Makefile，
-  但 git commit 时报错：
-  fatal: Unable to create '.git/index.lock': Read-only file system
-
-  原因是 Codex 0.142.2 的 app-server 模式默认把 .git
-  设成只读，而 Symphony 生成的默认 turn_sandbox_policy
-  是 workspaceWrite，没有覆盖这个限制。
-
-▶ 排查后发现需要显式配置 turn_sandbox_policy。
-  改了 WORKFLOW.md 之后重启。
-
-▶ 第二次尝试：Codex 重新运行，
-  这次成功 commit → push → 创建 PR #1。
-  但 WORKFLOW.md 要求 CI 通过后才能移 Human Review，
-  Codex 只能反复轮询 CI 状态，白白消耗了 500 万 token。
+fatal: Unable to create '.git/index.lock': Read-only file system
 \`\`\`
 
-最终 PR 在这里：https://github.com/xilon-my/symphony-test/pull/1
+查了一下是 Codex 的 app-server 模式把 .git 目录设成了只读，Symphony 生成的默认 sandbox 策略没覆盖这个限制。折腾了一轮改了 WORKFLOW.md 里的 \`turn_sandbox_policy\` 配置才解决。
+
+重启后第二次跑总算走通了——commit、push、建 PR 一气呵成。但 WORKFLOW.md 要求 CI 通过了才能移到 Human Review，Codex 只能一遍遍轮询 GitHub Actions 的状态，白白烧了 500 万 token。
+
+最终 PR：https://github.com/xilon-my/symphony-test/pull/1
 
 ![Linear Issue](/discover/linear.png)
 
-两轮跑下来最大的感受是：Symphony 本身的设计很清晰，但真实环境的工程细节才是真正的耗时点。光解决 sandbox 权限问题就折腾了两次。
+两轮跑下来最大的感受：Symphony 的设计很清晰，但真实环境里工程细节才是真正的耗时点。光一个 sandbox 权限就折腾了两轮。
 
 ## Symphony 适合什么
 
-它最适合的场景是**高信任度、小粒度、无外部依赖的任务**：
+最适合**高信任度、小粒度、无外部依赖的任务**：
 
 - ✅ 批量 Bug 修复（相互独立，互不阻塞）
 - ✅ 文档生成 / 翻译
@@ -242,9 +205,7 @@ two-sum/
 - ❌ 跨多模块的复杂功能（没有 DAG 编排，Issue 之间没有依赖管理）
 - ❌ 需求模糊的任务（没有意图提取层，需要人来拆解）
 
-Elixir 参考实现还带了一个 Phoenix LiveView 仪表盘，能实时看到每个 Issue 的状态、Agent 的输出、Workspace 路径。启动后访问 \`localhost:4000\` 就能看。
-
-如果把 Symphony 和 Multica 放在一起看就很清晰了——Multica 做"理解与规划"（把需求拆成任务 DAG），Symphony 做"执行与编排"（调度 Agent 逐个执行），两个合起来才接近完整的自主开发流程。`,
+Elixir 参考实现还带了一个 Phoenix LiveView 仪表盘，启动后访问 \`localhost:4000\` 就能实时看到每个 Issue 的状态。如果把 Symphony 和 Multica 放在一起看就很清晰了——Multica 做"理解与规划"（把需求拆成任务），Symphony 做"执行与编排"（调度 Agent 逐个执行），两个合起来才接近完整的自主开发流程。`,
   takeaway: 'Symphony 本质上就是个调度器——它不写代码，但它让 Agent 自己写代码。真正的门槛不在 Symphony 本身，而在下游工具链的兼容性：Codex 协议、bwrap 沙箱、git 认证，这些工程基础设施的问题比 Agent 架构的问题更难缠。如果你也在搭类似的东西，先把工具链跑通再谈编排。',
 }
 
