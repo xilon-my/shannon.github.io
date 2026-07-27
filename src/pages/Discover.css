@@ -257,6 +257,31 @@
   margin-bottom: 12px;
 }
 
+.discover-detail-content ul {
+  margin: 12px 0;
+  padding-left: 24px;
+  list-style: none;
+}
+
+.discover-detail-content ul li {
+  margin-bottom: 6px;
+  line-height: 1.7;
+  position: relative;
+}
+
+.discover-detail-content ul li::before {
+  content: '>';
+  color: var(--green);
+  font-weight: 700;
+  position: absolute;
+  left: -18px;
+  font-family: var(--mono);
+}
+
+.discover-detail-content strong {
+  font-weight: 700;
+}
+
 /* ── Detail Images ── */
 .discover-detail-images {
   display: flex;

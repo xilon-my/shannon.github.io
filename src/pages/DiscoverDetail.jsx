@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
+import Markdown from 'react-markdown'
 import Terminal from '../components/Terminal.jsx'
 import projects from '../data/discover-projects.js'
 import './Discover.css'
@@ -26,8 +27,6 @@ export default function DiscoverDetail() {
       </div>
     )
   }
-
-  const detailLines = project.detail.trim().split('\n')
 
   return (
     <div className="discover-page">
@@ -73,10 +72,7 @@ export default function DiscoverDetail() {
             <p className="discover-detail-desc">{project.description}</p>
 
             <div className="discover-detail-content">
-              {detailLines.map((line, i) => {
-                if (line === '') return <br key={i} />
-                return <p key={i}>{line}</p>
-              })}
+              <Markdown>{project.detail}</Markdown>
             </div>
 
             {project.images && project.images.length > 0 && (

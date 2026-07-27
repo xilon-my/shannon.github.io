@@ -11,14 +11,14 @@ const project = {
 
 核心功能包括：
 
-• **Agent** —— 配置了指令、工具、护栏和转交能力的 LLM
-• **Sandbox Agent** —— 在容器内运行的预配置代理，适合需要文件检查、命令执行或打补丁的长时间任务
-• **Agent 转交与工具调用** —— 代理可以将子任务委派给其他代理，或使用工具（函数、MCP、托管工具）
-• **Guardrails（护栏）** —— 可配置的输入/输出安全检查
-• **Human-in-the-Loop** —— 内置人工介入机制
-• **会话管理** —— 跨运行自动追踪对话历史
-• **Tracing（追踪）** —— 内置可观测性，用于调试和优化工作流
-• **Realtime Agent** —— 基于 WebSocket 的语音/多模态代理，由 gpt-realtime-2.1 驱动
+- **Agent** —— 配置了指令、工具、护栏和转交能力的 LLM
+- **Sandbox Agent** —— 在容器内运行的预配置代理，适合需要文件检查、命令执行或打补丁的长时间任务
+- **Agent 转交与工具调用** —— 代理可以将子任务委派给其他代理，或使用工具（函数、MCP、托管工具）
+- **Guardrails（护栏）** —— 可配置的输入/输出安全检查
+- **Human-in-the-Loop** —— 内置人工介入机制
+- **会话管理** —— 跨运行自动追踪对话历史
+- **Tracing（追踪）** —— 内置可观测性，用于调试和优化工作流
+- **Realtime Agent** —— 基于 WebSocket 的语音/多模态代理，由 gpt-realtime-2.1 驱动
 
 技术栈上，要求 Python 3.10+，核心依赖包括 Pydantic、Requests、MCP Python SDK。可选的 extras 包括语音（voice）、Redis 会话（redis）和 Docker 沙箱（docker）。项目采用 MIT 许可证，文档完善，配套有 JS/TS 版本（openai/openai-agents-js）。
 
