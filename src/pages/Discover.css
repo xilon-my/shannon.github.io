@@ -255,6 +255,11 @@
 
 .discover-detail-content p {
   margin-bottom: 12px;
+  text-indent: 2em;
+}
+
+.discover-detail-content li p {
+  text-indent: 0;
 }
 
 .discover-detail-content ul {
