@@ -2,7 +2,7 @@ const project = {
   slug: 'okf',
   name: 'Open Knowledge Format (OKF)',
   url: 'https://github.com/GoogleCloudPlatform/knowledge-catalog',
-  description: '一个供应商中立的开放知识格式，用 Markdown 文件加 YAML 前置元数据来表示知识。设计为人可读、AI 代理也可消费。',
+  description: '开放知识格式，用 Markdown 文件加 YAML 前置元数据来表示知识。设计为人可读、AI 代理也可消费。',
   tags: ['Specification', 'Knowledge', 'Markdown'],
   stars: '7.8k+',
   author: 'Google Cloud',
@@ -107,7 +107,17 @@ sources:
 
 还有一个 Attested Computation 类型 —— 不只说"收入是多少"，而是把"收入应该怎么算"写成 SQL 定死，Agent 只能填参数不能改逻辑。跑完有 attester 来验。财务合规场景很实用。
 
-反正核心思路就是：不搞特权格式，人用什么 AI 就用什么。`,
+实践中怎么用？
+
+最简单的：在你的项目里建一个 \`kb/\` 目录，开始写 .md 文件。不需要装任何东西，不需要跑任何服务。type 字段随便填，能区分概念就行。配合 Git，团队成员可以 PR 来 PR 去地 review 知识变更。
+
+如果需要从已有数据源批量生成，跑 \`reference_agent enrich\` 连 BigQuery，或者用 toolbox/mdcode 做双向同步。
+
+用了之后最直接的变化：Agent 不再需要人喂上下文了。你告诉它 "去看 kb/tables/orders.md"，它自己就能读。而且每一条知识都有可信度标记 —— Agent 可以判断这条信息是机器生成的还是人审过的、有没有过期。
+
+相比之下，现在常见的做法是在 prompt 里塞一堆上下文，或者让 Agent 自己去爬文档 —— 前者不可持续，后者不可控。
+
+至于要不要做个实验对比？如果是为了说服团队引入，可以做。但 OKF 本质上就是个文件组织规范，不是个新技术 —— 对比实验的意义不大，就像你没法"实验对比"用 Git 和不用 Git。`,
 }
 
 export default project
