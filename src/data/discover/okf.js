@@ -6,7 +6,6 @@ const project = {
   tags: ['Specification', 'Knowledge', 'Markdown'],
   stars: '7.8k+',
   author: 'Google Cloud',
-  license: 'Apache-2.0',
   detail: `Open Knowledge Format (OKF) is a specification for representing knowledge as self-contained bundles of Markdown files. It was originally published by Google Cloud in June 2026 as part of the knowledge-catalog repository, but the format itself is completely vendor-neutral — no Google APIs or services required.
 
 The core idea is simple: a Knowledge Bundle is a directory of .md files, each with YAML frontmatter containing at minimum a type field. Files can link to each other via standard Markdown links, creating a graph of concepts that's navigable by both humans (in any Markdown viewer) and AI agents (programmatically). Optional fields include title, description, resource, tags, and timestamp.

@@ -6,7 +6,6 @@ const project = {
   tags: ['Go', 'AI Agents', 'DevTools'],
   stars: '42k+',
   author: 'multica-ai',
-  license: 'Apache-2.0',
   detail: `Multica is an open-source platform that transforms AI coding agents into real teammates. Instead of copy-pasting prompts into a terminal, you create issues on a board and assign them to agents — they autonomously write code, run tests, report blockers, and update their status in real time.
 
 Built with a Go backend and Next.js 16 frontend, it supports multiple agent CLIs including Claude Code, Codex, CodeBuddy, and GitHub Copilot CLI — making it vendor-neutral. The core innovation is the Squads system: groups of agents and humans led by a leader agent that delegates work, enabling parallel execution at scale.

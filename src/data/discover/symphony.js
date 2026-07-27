@@ -6,7 +6,6 @@ const project = {
   tags: ['Elixir', 'AI Agents', 'Automation'],
   stars: '26k+',
   author: 'OpenAI',
-  license: 'Apache-2.0',
   detail: `Symphony is OpenAI's low-key engineering preview for autonomous software development. It turns project management tasks into isolated, autonomous implementation runs: an agent picks up an issue, creates an isolated workspace, implements the change, runs CI, solicits code review, records a walkthrough video, and only then submits a PR for merging.
 
 The reference implementation is written in Elixir, but the project is intentionally language-agnostic — the real value is the specification pattern. The README explicitly invites you to implement Symphony in any language using the provided spec.

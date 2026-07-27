@@ -51,7 +51,6 @@ export default function DiscoverDetail() {
             </div>
             <div className="discover-detail-info">
               {project.author && <span><span className="detail-label">author</span> {project.author}</span>}
-              {project.license && <span><span className="detail-label">license</span> {project.license}</span>}
               {project.stars && <span><span className="detail-label">stars</span> {project.stars}</span>}
             </div>
           </div>
