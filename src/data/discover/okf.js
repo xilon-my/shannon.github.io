@@ -79,19 +79,40 @@ viz.html 是把整个知识包渲染成交互式图谱的工具。用 Cytoscape.
 
 这个 viz 是通过 \`reference_agent visualize --bundle ./bundles/acme_retail\` 生成的，本身也是一个 OKF consumer 的参考实现。
 
-除了 bundles，仓库里还有两套参考实现：
+除了 bundles，仓库里还带了两套参考实现，把整个"从数据源到知识包"的流程跑通：
+
+**1. reference_agent（Python + Google ADK）**
+
+两阶段 Producer Agent，自动从数据源生成 OKF 知识包：
 
 \`\`\`
-okf/src/reference_agent/    # Python: Producer agent + 可视化工具
-  ├── agent.py              # 核心 Agent 逻辑
-  ├── sources/bigquery.py   # 从 BigQuery 读取元数据
-  ├── tools/                # Agent 工具（搜索、爬虫、写入）
-  └── viewer/               # 生成 viz.html 的代码
+第一阶段：BQ pass
+  从 BigQuery 读表结构（列名、类型、描述），为每张表写一个 OKF 概念文件
 
-toolbox/mdcode/             # TypeScript: Markdown <-> 数据目录双向同步
+第二阶段：Web pass
+  给 Agent 一组 seed URL（比如 GA4 官方文档链接），它会自己去爬、
+  判断哪些页面能补充已有的概念，把有用的信息写进对应的 .md 文件里。
+  有页面数量上限和域名限制，不会爬疯。
+
+跑完后自动生成 index.md 目录清单。
+
+命令：
+reference-agent enrich --source bq --dataset project.dataset \\
+  --web-seed-file seeds.txt --out ./bundles/my-bundle
+
+还带一个 visualize 子命令，把知识包渲染成交互式 HTML 图谱。
+
+**2. toolbox/mdcode（TypeScript）**
+
+做的是反向的事情：把你的知识包和数据目录保持双向同步。
+
+\`\`\`
+mdcode init --bigquery-dataset project.dataset    # 从 BQ 初始化
+mdcode pull                                        # 从数据目录拉最新结构
+mdcode push                                        # 把本地的改动推回去
 \`\`\`
 
-Producer agent 可以做两件事：从 BigQuery 读表结构写 OKF 文件，再从官方文档爬详细信息补进去。同步工具负责把你的数据目录和 OKF 格式保持同步。
+相比于 reference_agent 用 Agent 来自动写文档，mdcode 更像个数据同步 CLI —— 它读你的数据目录结构（Dataplex Entry Group、BigQuery 数据集、Knowledge Base），生成 Manifest，然后做双向 sync。适合已经用了 Google 数据目录产品的团队。`
 
 v0.2 还加了一套可信度机制 —— 每条知识可以记录谁写的（人还是 Agent）、谁核验过、什么时候过期、来源是啥、来源活不活跃。
 
