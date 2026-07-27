@@ -80,39 +80,19 @@ viz.html 是把整个知识包渲染成交互式图谱的工具。用 Cytoscape.
 这个 viz 是通过 \`reference_agent visualize --bundle ./bundles/acme_retail\` 生成的，本身也是一个 OKF consumer 的参考实现。
 
 除了 bundles，仓库里还带了两套参考实现，把整个"从数据源到知识包"的流程跑通：
-
-**1. reference_agent（Python + Google ADK）**
-
-两阶段 Producer Agent，自动从数据源生成 OKF 知识包：
-
 \`\`\`
-第一阶段：BQ pass
-  从 BigQuery 读表结构（列名、类型、描述），为每张表写一个 OKF 概念文件
+okf/src/reference_agent/    # Python: Producer agent + 可视化
+  ├── agent.py              核心 Agent 逻辑
+  ├── sources/bigquery.py   从 BigQuery 读表结构
+  ├── tools/                Agent 工具（搜索、爬虫、写入）
+  └── viewer/               生成 viz.html
 
-第二阶段：Web pass
-  给 Agent 一组 seed URL（比如 GA4 官方文档链接），它会自己去爬、
-  判断哪些页面能补充已有的概念，把有用的信息写进对应的 .md 文件里。
-  有页面数量上限和域名限制，不会爬疯。
-
-跑完后自动生成 index.md 目录清单。
-
-命令：
-reference-agent enrich --source bq --dataset project.dataset \\
-  --web-seed-file seeds.txt --out ./bundles/my-bundle
-
-还带一个 visualize 子命令，把知识包渲染成交互式 HTML 图谱。
-
-**2. toolbox/mdcode（TypeScript）**
-
-做的是反向的事情：把你的知识包和数据目录保持双向同步。
-
+toolbox/mdcode/             # TypeScript: 数据目录双向同步
+  ├── init                  从 BQ / Dataplex 初始化清单
+  ├── pull                  从服务端拉最新数据
+  └── push                  把本地改动推回去
 \`\`\`
-mdcode init --bigquery-dataset project.dataset    # 从 BQ 初始化
-mdcode pull                                        # 从数据目录拉最新结构
-mdcode push                                        # 把本地的改动推回去
-\`\`\`
-
-相比于 reference_agent 用 Agent 来自动写文档，mdcode 更像个数据同步 CLI —— 它读你的数据目录结构（Dataplex Entry Group、BigQuery 数据集、Knowledge Base），生成 Manifest，然后做双向 sync。适合已经用了 Google 数据目录产品的团队。
+reference_agent 分两阶段跑：先读 BigQuery 元数据为每张表写概念文件，再给 Agent 一组 seed URL 去爬官方文档补充细节。mdcode 则反过来，把你的知识包和数据目录保持双向同步。
 
 v0.2 还加了一套可信度机制 —— 每条知识可以记录谁写的（人还是 Agent）、谁核验过、什么时候过期、来源是啥、来源活不活跃。
 
@@ -128,19 +108,13 @@ sources:
 
 还有一个 Attested Computation 类型 —— 不只说"收入是多少"，而是把"收入应该怎么算"写成 SQL 定死，Agent 只能填参数不能改逻辑。跑完有 attester 来验。财务合规场景很实用。
 
-实践中怎么用？
+实践中怎么用？建一个 \`kb/\` 目录开始写 .md。需要批量生成的话跑 \`reference_agent enrich\` 或者用 toolbox/mdcode。Agent 不需要人喂上下文了，直接指向文件就能读。
 
-在你的项目里建一个 \`kb/\` 目录，开始写 .md 文件。不需要装任何东西，不需要跑任何服务。type 字段随便填，能区分概念就行。配合 Git，团队成员可以 PR 来 PR 去地 review 知识变更。
-
-如果需要从已有数据源批量生成，跑 \`reference_agent enrich\` 连 BigQuery，或者用 toolbox/mdcode 做双向同步。
-
-用了之后最直接的变化：Agent 不再需要人喂上下文了。你告诉它 "去看 kb/tables/orders.md"，它自己就能读。而且每一条知识都有可信度标记 —— Agent 可以判断这条信息是机器生成的还是人审过的、有没有过期。
-
-相比之下，现在常见的做法是在 prompt 里塞一堆上下文，或者让 Agent 自己去爬文档 —— 前者不可持续，后者不可控。
-
-> **Takeaway**
+\`\`\`
+> Takeaway
 >
-> OKF 本质上不是什么新技术，就是个文件组织规范。它的核心观点是：软件工程里管代码的那套（Markdown + Git + PR）直接拿来管知识就够了，不需要给 AI 搞特权格式。如果你发现你的 Agent 每次都要重新搞清楚同一个东西，可能就是缺了一个 \`kb/\` 目录。`,
+> OKF 本质上不是什么新技术，就是个文件组织规范。它的核心观点是：软件工程里管代码的那套（Markdown + Git + PR）直接拿来管知识就够了，不需要给 AI 搞特权格式。如果你发现你的 Agent 每次都要重新搞清楚同一个东西，可能就是缺了一个 kb/ 目录。
+\`\`\``,
 }
 
 export default project
