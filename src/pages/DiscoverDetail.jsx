@@ -1,0 +1,92 @@
+import { useParams, Link } from 'react-router-dom'
+import Terminal from '../components/Terminal.jsx'
+import projects from '../data/discover-projects.js'
+import './Discover.css'
+
+export default function DiscoverDetail() {
+  const { slug } = useParams()
+  const project = projects.find(p => p.slug === slug)
+
+  if (!project) {
+    return (
+      <div className="discover-page">
+        <div className="container">
+          <Terminal title="shannon@shannon.zone ~/discover %">
+            <div className="discover-empty">
+              <p className="discover-prompt" style={{ marginBottom: 12 }}>
+                <span className="prompt-cv">❯</span> cat projects-i-like/{slug}.md
+              </p>
+              <p style={{ color: 'var(--red)' }}>project not found: {slug}</p>
+              <p style={{ marginTop: 16 }}>
+                <Link to="/discover" className="discover-back-link">← back to list</Link>
+              </p>
+            </div>
+          </Terminal>
+        </div>
+      </div>
+    )
+  }
+
+  const detailLines = project.detail.trim().split('\n')
+
+  return (
+    <div className="discover-page">
+      <div className="container">
+        <Terminal title="shannon@shannon.zone ~/discover %">
+          {/* ── Back link ── */}
+          <Link to="/discover" className="discover-detail-back">← cd ..</Link>
+
+          {/* ── Header ── */}
+          <div className="discover-detail-header">
+            <p className="discover-prompt">
+              <span className="prompt-cv">❯</span> cat projects-i-like/{project.slug}.md
+            </p>
+          </div>
+
+          {/* ── Project meta ── */}
+          <div className="discover-detail-meta">
+            <h1 className="discover-detail-name">{project.name}</h1>
+            <div className="discover-card-tags" style={{ marginTop: 8 }}>
+              {project.tags.map(t => <span key={t}>{t}</span>)}
+            </div>
+            <div className="discover-detail-info">
+              {project.author && <span><span className="detail-label">author</span> {project.author}</span>}
+              {project.license && <span><span className="detail-label">license</span> {project.license}</span>}
+              {project.stars && <span><span className="detail-label">stars</span> {project.stars}</span>}
+            </div>
+          </div>
+
+          {/* ── GitHub link ── */}
+          <div className="discover-detail-links">
+            <a
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="discover-detail-gh-link"
+            >
+              <span className="prompt-cv">❯</span> github.com/{project.url.replace('https://github.com/', '')}
+              <span className="discover-card-arrow"> ↗</span>
+            </a>
+          </div>
+
+          {/* ── Description ── */}
+          <div className="discover-detail-body">
+            <p className="discover-detail-desc">{project.description}</p>
+
+            <div className="discover-detail-content">
+              {detailLines.map((line, i) => {
+                if (line === '') return <br key={i} />
+                return <p key={i}>{line}</p>
+              })}
+            </div>
+          </div>
+
+          {/* ── Personal note ── */}
+          <div className="discover-detail-footer">
+            <p className="discover-card-note">{project.note}</p>
+          </div>
+        </Terminal>
+      </div>
+    </div>
+  )
+}

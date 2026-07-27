@@ -1,0 +1,273 @@
+/* ── Discover Page ── */
+.discover-page {
+  padding: 80px 0 64px;
+}
+
+.discover-header {
+  margin-bottom: 40px;
+}
+
+.discover-prompt {
+  font-size: 0.85rem;
+  color: var(--green);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.discover-sub {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  max-width: 520px;
+  margin-top: 4px;
+}
+
+/* ── Project Grid ── */
+.discover-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+/* ── Project Card ── */
+.discover-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.discover-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-color: var(--accent);
+}
+
+.discover-card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.discover-card-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.discover-card-name:hover {
+  color: var(--magenta);
+  text-decoration: none;
+}
+
+.discover-card-name::before {
+  content: '❯';
+  color: var(--green);
+  font-size: 0.75rem;
+}
+
+.discover-card-arrow {
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.discover-card-name:hover .discover-card-arrow {
+  opacity: 1;
+}
+
+/* ── Tags ── */
+.discover-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.discover-card-tags span {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  padding: 1px 8px;
+  border-radius: 4px;
+  background: var(--accent-light);
+  color: var(--accent-dark);
+  font-weight: 500;
+}
+
+/* ── Description ── */
+.discover-card-desc {
+  font-size: 0.88rem;
+  color: var(--text);
+  line-height: 1.7;
+  margin-bottom: 8px;
+  font-style: normal;
+}
+
+/* ── Personal Note ── */
+.discover-card-note {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-style: italic;
+  border-left: 2px solid var(--border);
+  padding-left: 12px;
+  margin-top: 4px;
+}
+
+.discover-card-note::before {
+  content: '// ';
+  color: var(--border);
+}
+
+/* ── Empty state ── */
+.discover-empty {
+  text-align: center;
+  padding: 60px 0;
+  color: var(--text-secondary);
+}
+
+/* ── Desktop: 2 columns at 600px ── */
+@media (min-width: 600px) {
+  .discover-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ── Clickable card ── */
+.discover-card-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.discover-card-link:hover {
+  text-decoration: none;
+}
+
+/* ── Detail Page ── */
+.discover-detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-family: var(--mono);
+  margin-bottom: 24px;
+  transition: color 0.2s;
+}
+
+.discover-detail-back:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.discover-detail-header {
+  margin-bottom: 24px;
+}
+
+.discover-detail-meta {
+  margin-bottom: 20px;
+}
+
+.discover-detail-name {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 0;
+}
+
+.discover-detail-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 12px;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.detail-label {
+  color: var(--border);
+  margin-right: 4px;
+}
+
+/* ── GitHub link button ── */
+.discover-detail-links {
+  margin-bottom: 24px;
+}
+
+.discover-detail-gh-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--accent);
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.discover-detail-gh-link:hover {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  text-decoration: none;
+  color: var(--accent);
+}
+
+.discover-detail-gh-link .discover-card-arrow {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.discover-detail-gh-link:hover .discover-card-arrow {
+  opacity: 1;
+}
+
+/* ── Body content ── */
+.discover-detail-body {
+  margin-bottom: 24px;
+}
+
+.discover-detail-desc {
+  font-size: 1rem;
+  color: var(--text);
+  line-height: 1.8;
+  margin-bottom: 16px;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.discover-detail-content {
+  font-size: 0.92rem;
+  line-height: 1.9;
+  color: var(--text);
+  font-style: normal;
+}
+
+.discover-detail-content p {
+  margin-bottom: 12px;
+}
+
+.discover-detail-footer {
+  padding-top: 8px;
+}
+
+.discover-detail-footer .discover-card-note {
+  margin-top: 0;
+}

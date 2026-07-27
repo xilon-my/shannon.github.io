@@ -6,6 +6,8 @@ import Home from './pages/Home.jsx'
 import BlogPage from './pages/Blog.jsx'
 import BlogPost from './components/BlogPost.jsx'
 import CV from './pages/CV.jsx'
+import Discover from './pages/Discover.jsx'
+import DiscoverDetail from './pages/DiscoverDetail.jsx'
 
 export default function App() {
   const [theme, setTheme] = useState(() => {
@@ -30,6 +32,8 @@ export default function App() {
           <Route path="/cv" element={<CV />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/discover" element={<Discover />} />
+          <Route path="/discover/:slug" element={<DiscoverDetail />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
