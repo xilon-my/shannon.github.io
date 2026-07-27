@@ -78,6 +78,14 @@ export default function DiscoverDetail() {
                 return <p key={i}>{line}</p>
               })}
             </div>
+
+            {project.images && project.images.length > 0 && (
+              <div className="discover-detail-images">
+                {project.images.map((img, i) => (
+                  <img key={i} src={img} alt={`${project.name} screenshot ${i + 1}`} className="discover-detail-img" loading="lazy" />
+                ))}
+              </div>
+            )}
           </div>
         </Terminal>
       </div>
