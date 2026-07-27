@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import Markdown from 'react-markdown'
+import rehypeHighlight from 'rehype-highlight'
 import './Blog.css'
 
 const postModules = import.meta.glob('../posts/*.md', { query: '?raw', import: 'default', eager: true })
@@ -73,7 +74,7 @@ export default function BlogPost() {
         </div>
       </header>
       <div className="blog-post-content">
-        <Markdown>{post.content}</Markdown>
+        <Markdown rehypePlugins={[rehypeHighlight]}>{post.content}</Markdown>
       </div>
     </article>
   )
