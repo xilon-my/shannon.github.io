@@ -313,11 +313,12 @@
   color: var(--code-text);
   padding: 16px 20px;
   border-radius: var(--radius);
-  overflow-x: auto;
   margin: 16px 0;
-  font-size: 0.82rem;
-  line-height: 1.6;
-  font-family: var(--mono);
+  font-size: 0.92rem;
+  line-height: 1.8;
+  font-family: var(--font);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 }
 
 .discover-detail-content pre code {
