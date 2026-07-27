@@ -26,8 +26,9 @@ Symphony 想解决的问题就是这个——它不做代码补全，它做的�
 
 \`\`\`
 Todo ──▶ In Progress ──▶ Human Review ──▶ Merging ──▶ Done
-                  │                            │
-                  └── Rework ◀──────────────────┘
+                              │
+                              ▼
+                            Rework ──▶ In Progress
 \`\`\`
 
 Symphony 每 5 秒轮询一次 Linear，发现 Todo 状态的 Issue 就 Claim 过来，然后：
