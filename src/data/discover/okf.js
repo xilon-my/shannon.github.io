@@ -17,7 +17,7 @@ OKF 的解法很粗暴：就用 Markdown。
 
 具体到每个文件长这样：
 
-\`\`\`yaml
+\`\`\`markdown
 ---
 type: BigQuery Table
 title: Customer Orders
@@ -26,9 +26,6 @@ tags: [sales, orders]
 resource: https://console.cloud.google.com/bigquery?p=acme&d=sales&t=orders
 generated: { by: reference_agent/gemini-2.5-pro, at: 2026-06-20T14:30:00Z }
 ---
-\`\`\`
-
-\`\`\`markdown
 
 # Schema
 
