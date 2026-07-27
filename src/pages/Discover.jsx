@@ -36,7 +36,6 @@ export default function Discover() {
                       {p.tags.map(t => <span key={t}>{t}</span>)}
                     </div>
                     <p className="discover-card-desc">{p.description}</p>
-                    <p className="discover-card-note">{p.note}</p>
                   </article>
                 </Link>
               ))}
