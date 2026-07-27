@@ -234,9 +234,10 @@
 }
 
 .blog-post-content pre {
+  position: relative;
   background: var(--code-bg);
   color: var(--code-text);
-  padding: 20px 24px;
+  padding: 24px 24px 20px;
   border-radius: var(--radius);
   margin-bottom: 24px;
   font-size: 1.05rem;
@@ -245,6 +246,25 @@
   white-space: pre-wrap;
   overflow-wrap: break-word;
 }
+
+.blog-post-content pre:has(code[class*="language-"])::before {
+  position: absolute;
+  top: 4px;
+  right: 10px;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.7;
+}
+
+.blog-post-content pre:has(code.language-yaml)::before { content: "yaml"; color: var(--accent); }
+.blog-post-content pre:has(code.language-markdown)::before { content: "md"; color: var(--magenta); }
+.blog-post-content pre:has(code.language-bash)::before,
+.blog-post-content pre:has(code.language-sh)::before { content: "bash"; color: var(--green); }
+.blog-post-content pre:has(code.language-diff)::before { content: "diff"; color: var(--yellow); }
+.blog-post-content pre:has(code.language-json)::before { content: "json"; color: var(--yellow); }
 
 .blog-post-content pre code {
   background: none;
