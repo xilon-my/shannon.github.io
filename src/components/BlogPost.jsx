@@ -12,23 +12,19 @@ function CodeBlock({ className, children }) {
     if (fm) {
       const yamlHtml = hljs.highlight(fm[1], { language: 'yaml' }).value
       const mdHtml = hljs.highlight(fm[2], { language: 'markdown' }).value
-      return (
-        <pre><code className={className} dangerouslySetInnerHTML={{
-          __html: `---\n${yamlHtml}\n---\n\n${mdHtml}`
-        }} /></pre>
-      )
+      return <code className={className} dangerouslySetInnerHTML={{
+        __html: `---\n${yamlHtml}\n---\n\n${mdHtml}`
+      }} />
     }
   }
 
   if (lang && hljs.getLanguage(lang)) {
-    return (
-      <pre><code className={className} dangerouslySetInnerHTML={{
-        __html: hljs.highlight(code, { language: lang }).value
-      }} /></pre>
-    )
+    return <code className={className} dangerouslySetInnerHTML={{
+      __html: hljs.highlight(code, { language: lang }).value
+    }} />
   }
 
-  return <pre><code className={className}>{children}</code></pre>
+  return <code className={className}>{children}</code>
 }
 
 const postModules = import.meta.glob('../posts/*.md', { query: '?raw', import: 'default', eager: true })
