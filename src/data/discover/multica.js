@@ -3,7 +3,6 @@ const project = {
   name: 'Multica',
   url: 'https://github.com/multica-ai/multica',
   description: 'An open-source managed agents platform. Assign issues to AI coding agents like you\'d assign to a colleague — agents autonomously write code, report blockers, and update progress.',
-  note: 'The most well-designed open-source agent orchestration platform I\'ve seen. Treating agents as first-class teammates on a Kanban board is a genuinely new paradigm.',
   tags: ['Go', 'AI Agents', 'DevTools'],
   stars: '42k+',
   author: 'multica-ai',

@@ -3,7 +3,6 @@ const project = {
   name: 'Open Knowledge Format (OKF)',
   url: 'https://github.com/GoogleCloudPlatform/knowledge-catalog',
   description: 'A vendor-neutral, open format for representing knowledge as Markdown files with YAML frontmatter. Designed to be both human-readable and AI-agent-consumable.',
-  note: 'A rare example of Google publishing a genuinely open spec without tying it to their cloud. The simplicity is the point: just Markdown files in a directory, but with enough structure for agents to navigate.',
   tags: ['Specification', 'Knowledge', 'Markdown'],
   stars: '7.8k+',
   author: 'Google Cloud',

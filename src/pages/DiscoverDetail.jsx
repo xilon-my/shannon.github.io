@@ -80,11 +80,6 @@ export default function DiscoverDetail() {
               })}
             </div>
           </div>
-
-          {/* ── Personal note ── */}
-          <div className="discover-detail-footer">
-            <p className="discover-card-note">{project.note}</p>
-          </div>
         </Terminal>
       </div>
     </div>

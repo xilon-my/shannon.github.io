@@ -3,7 +3,6 @@ const project = {
   name: 'Symphony',
   url: 'https://github.com/openai/symphony',
   description: 'OpenAI\'s reference implementation for autonomous coding automation. Monitors issue trackers, spawns AI agents to implement tasks, and requires proof-of-work before merging.',
-  note: 'The "harness engineering" philosophy is fascinating — design your codebase so agents can work autonomously, then let them go. A spec worth studying regardless of implementation language.',
   tags: ['Elixir', 'AI Agents', 'Automation'],
   stars: '26k+',
   author: 'OpenAI',

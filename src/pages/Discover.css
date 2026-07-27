@@ -115,22 +115,6 @@
   flex: 1;
 }
 
-/* ── Personal Note ── */
-.discover-card-note {
-  font-size: 0.78rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
-  font-style: italic;
-  border-left: 2px solid var(--border);
-  padding-left: 12px;
-  margin-top: 4px;
-}
-
-.discover-card-note::before {
-  content: '// ';
-  color: var(--border);
-}
-
 /* ── Empty state ── */
 .discover-empty {
   text-align: center;
@@ -271,12 +255,4 @@
 
 .discover-detail-content p {
   margin-bottom: 12px;
-}
-
-.discover-detail-footer {
-  padding-top: 8px;
-}
-
-.discover-detail-footer .discover-card-note {
-  margin-top: 0;
 }
