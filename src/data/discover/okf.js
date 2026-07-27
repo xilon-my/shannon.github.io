@@ -22,7 +22,7 @@ OKF 的方案极其简单：**把知识写成 Markdown 文件 + YAML 头，放�
 
 **1. 极简规范**
 
-整个格式只规定一件事：每个 `.md` 文件必须有一个 YAML frontmatter，里面至少有一个 `type` 字段。其他全部可选 —— title、description、tags、resource，都是建议。
+整个格式只规定一件事：每个 \`.md\` 文件必须有一个 YAML frontmatter，里面至少有一个 \`type\` 字段。其他全部可选 —— title、description、tags、resource，都是建议。
 
 没有 schema registry，没有中央权威，不需要 SDK。
 
@@ -132,8 +132,5 @@ generated: { by: reference_agent/gemini-2.5-pro, at: 2026-06-20T14:30:00Z }
 
 就是这么简单 —— 一个 Markdown 文件，人能读，Agent 也能读。所有东西放 Git 里，改就是 PR，历史就是 git log。`,
 }
-
-export default project
-
 
 export default project
