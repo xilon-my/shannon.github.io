@@ -112,7 +112,7 @@ mdcode pull                                        # 从数据目录拉最新结
 mdcode push                                        # 把本地的改动推回去
 \`\`\`
 
-相比于 reference_agent 用 Agent 来自动写文档，mdcode 更像个数据同步 CLI —— 它读你的数据目录结构（Dataplex Entry Group、BigQuery 数据集、Knowledge Base），生成 Manifest，然后做双向 sync。适合已经用了 Google 数据目录产品的团队。`
+相比于 reference_agent 用 Agent 来自动写文档，mdcode 更像个数据同步 CLI —— 它读你的数据目录结构（Dataplex Entry Group、BigQuery 数据集、Knowledge Base），生成 Manifest，然后做双向 sync。适合已经用了 Google 数据目录产品的团队。
 
 v0.2 还加了一套可信度机制 —— 每条知识可以记录谁写的（人还是 Agent）、谁核验过、什么时候过期、来源是啥、来源活不活跃。
 
