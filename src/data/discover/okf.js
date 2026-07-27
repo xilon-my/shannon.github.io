@@ -7,6 +7,7 @@ const project = {
   stars: '7.8k+',
   author: 'Google Cloud',
   images: [],
+  takeaway: 'OKF 本质上不是什么新技术，就是个文件组织规范。它的核心观点是：软件工程里管代码的那套（Markdown + Git + PR）直接拿来管知识就够了，不需要给 AI 搞特权格式。如果你发现你的 Agent 每次都要重新搞清楚同一个东西，可能就是缺了一个 kb/ 目录。',
   detail:
 `现在 Agent 越来越多了，但每个 Agent 的知识都锁在不同的系统里 —— 数据血缘在 Dataplex，指标定义在 Wiki，SQL 在代码库。各有各的 API，谁也读不懂谁。
 
@@ -79,18 +80,10 @@ viz.html 是把整个知识包渲染成交互式图谱的工具。用 Cytoscape.
 
 这个 viz 是通过 \`reference_agent visualize --bundle ./bundles/acme_retail\` 生成的，本身也是一个 OKF consumer 的参考实现。
 
-除了 bundles，仓库里还带了两套参考实现，把整个"从数据源到知识包"的流程跑通：
+除了 bundles，仓库里还带了两套参考实现：
 \`\`\`
 okf/src/reference_agent/    # Python: Producer agent + 可视化
-  ├── agent.py              核心 Agent 逻辑
-  ├── sources/bigquery.py   从 BigQuery 读表结构
-  ├── tools/                Agent 工具（搜索、爬虫、写入）
-  └── viewer/               生成 viz.html
-
 toolbox/mdcode/             # TypeScript: 数据目录双向同步
-  ├── init                  从 BQ / Dataplex 初始化清单
-  ├── pull                  从服务端拉最新数据
-  └── push                  把本地改动推回去
 \`\`\`
 reference_agent 分两阶段跑：先读 BigQuery 元数据为每张表写概念文件，再给 Agent 一组 seed URL 去爬官方文档补充细节。mdcode 则反过来，把你的知识包和数据目录保持双向同步。
 
@@ -108,13 +101,7 @@ sources:
 
 还有一个 Attested Computation 类型 —— 不只说"收入是多少"，而是把"收入应该怎么算"写成 SQL 定死，Agent 只能填参数不能改逻辑。跑完有 attester 来验。财务合规场景很实用。
 
-实践中怎么用？建一个 \`kb/\` 目录开始写 .md。需要批量生成的话跑 \`reference_agent enrich\` 或者用 toolbox/mdcode。Agent 不需要人喂上下文了，直接指向文件就能读。
-
-\`\`\`
-> Takeaway
->
-> OKF 本质上不是什么新技术，就是个文件组织规范。它的核心观点是：软件工程里管代码的那套（Markdown + Git + PR）直接拿来管知识就够了，不需要给 AI 搞特权格式。如果你发现你的 Agent 每次都要重新搞清楚同一个东西，可能就是缺了一个 kb/ 目录。
-\`\`\``,
+实践中怎么用？建一个 \`kb/\` 目录开始写 .md。需要批量生成的话跑 \`reference_agent enrich\` 或者用 toolbox/mdcode。Agent 不需要人喂上下文了，直接指向文件就能读。`,
 }
 
 export default project

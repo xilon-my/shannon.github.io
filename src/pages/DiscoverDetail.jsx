@@ -75,6 +75,15 @@ export default function DiscoverDetail() {
               <Markdown>{project.detail}</Markdown>
             </div>
 
+            {project.takeaway && (
+              <div className="discover-takeaway">
+                <p className="discover-prompt">
+                  <span className="prompt-cv">❯</span> Takeaway
+                </p>
+                <p className="discover-takeaway-text">{project.takeaway}</p>
+              </div>
+            )}
+
             {project.images && project.images.length > 0 && (
               <div className="discover-detail-images">
                 {project.images.map((img, i) => (

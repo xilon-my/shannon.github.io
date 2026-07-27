@@ -338,3 +338,17 @@
   border-radius: var(--radius);
   border: 1px solid var(--border);
 }
+
+.discover-takeaway {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.discover-takeaway-text {
+  margin-top: 6px;
+  font-size: 0.92rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  text-indent: 0;
+}
