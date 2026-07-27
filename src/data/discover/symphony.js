@@ -12,7 +12,13 @@ const project = {
 
 Symphony 想解决的问题就是这个——它不做代码补全，它做的是**无人值守的编码调度**。你只管往 Linear 里扔 Issue，Symphony 会自动 Claim、分配 Workspace、启动 Agent、等 Agent 写完代码跑完测试、最后提交 PR。整个过程不需要人盯着 Codex 的会话窗口。
 
-参考实现用 Elixir 写，但项目核心是一份语言无关的 SPEC.md，README 里直接说"让你喜欢的 coding agent 按规范用任何语言实现"。
+## 参考实现为什么用 Elixir
+
+官方参考实现选择了 **Elixir**（跑在 Erlang/BEAM 虚拟机上）。Elixir 的杀手锏是 Actor 模型和超轻量进程——每个进程几微秒的创建开销、独立内存、靠消息通信不共享状态。这对于 Symphony 这种需要同时管理多个 Agent 会话、每个会话有独立状态和生命周期的场景来说非常自然。
+
+一个 Agent 就是一个进程，Issue 的状态流转就是进程间的消息传递，出问题了进程崩了不影响其他 Agent。如果用 Python/Node 做同样的事情，得自己搓事件循环和状态机。
+
+不过 SPEC.md 是语言无关的，README 也说了"让你喜欢的 coding agent 按规范用任何语言实现"，所以你不必学 Elixir 也能理解 Symphony。
 
 ## 怎么工作的
 
@@ -59,11 +65,28 @@ symphony/
 └── .github/                # CI + 演示视频封面
 \`\`\`
 
-SPEC.md 是真正的核心，81KB、8 个章节，把整个系统的组件划分、状态机、错误处理、重试策略全写清楚了。Elixir 实现只是参考，你想用 Python/Rust/Go 重写都行，照着 SPEC.md 来就好。
+### SPEC.md 里到底写了什么
+
+81KB 的规范文件，分了 8 章，每章都讲一个子系统：
+
+1. **Problem Statement** — 为什么需要 Symphony，解决哪四个运维问题
+2. **Goals and Non-Goals** — 明确做什么和不做什么
+3. **System Overview** — 8 大组件（Workflow Loader、Orchestrator、Workspace Manager、Agent Runner……）和 6 层抽象
+4. **Core Domain Model** — Issue、Workflow Definition、Workspace、Run Attempt、Retry Entry 等实体的完整定义
+5. **Workflow Specification** — WORKFLOW.md 的文件格式、YAML schema、prompt 模板契约、验证规则（最长的章节）
+6. **Configuration Specification** — 配置解析管线、动态重载、调度前校验
+7. **Dispatch & Retry** — 派发策略、并发控制、指数退避、死信处理
+8. **Observability** — 结构化日志、状态面板、指标暴露
+
+Elixir 实现只是这套规范的一种具体化，顺着 SPEC.md 用任何语言都能重写。
 
 ## WORKFLOW.md：Agent 的行为契约
 
-这是 Symphony 里我最喜欢的设计。Agent 的行为规范不是写在代码里的，而是作为一个 **WORKFLOW.md** 放在仓库根目录：
+这是 Symphony 里最巧妙的设计。Agent 的行为规范不硬编码在代码里，而是作为一个 **WORKFLOW.md** 放在仓库根目录，跟着版本走。
+
+文件分两部分：
+
+**YAML frontmatter** 定义调度参数：
 
 \`\`\`yaml
 tracker:
@@ -75,18 +98,44 @@ polling:
   interval_ms: 5000
 workspace:
   root: ~/code/symphony-workspaces
-agent:
-  max_concurrent_agents: 10
-  max_turns: 20
+hooks:
+  after_create: |
+    git clone --depth 1 https://github.com/me/my-repo.git .
 codex:
   command: codex --sandbox danger-full-access app-server
   approval_policy: never
   thread_sandbox: danger-full-access
+agent:
+  max_concurrent_agents: 10
+  max_turns: 20
 \`\`\`
 
-frontmatter 定义调度参数（轮询间隔、并发数、哪些状态算 active），正文写 Agent 的 prompt。改工作流就是改这个文件提 PR，跟着代码版本走。这个思路跟 OKF 的 YAML frontmatter 异曲同工——都是把元数据和内容放在一起，人可读、Agent 也可读。
+**Markdown 正文**是 Agent 的 prompt 模板，用 Liquid 风格的插值注入 Issue 数据：
 
-正文 prompt 定义了 Agent 在不同状态下的行为，比如到了 Human Review 就停下来等人审批，到了 Merging 就跑 land 流程合入代码。
+\`\`\`
+You are working on a Linear ticket \`{{ issue.identifier }}\`
+
+Issue context:
+Title: {{ issue.title }}
+Description: {{ issue.description }}
+Labels: {{ issue.labels }}
+
+## Step 1: Start execution
+- Determine current ticket state
+- Find or create a Codex Workpad comment
+- ...
+
+## Status map
+- \`Todo\` → move to In Progress
+- \`In Progress\` → continue execution
+- \`Human Review\` → wait for approval
+- \`Merging\` → run land skill
+- \`Rework\` → address feedback
+\`\`\`
+
+Symphony 启动时读这个文件，`workflow.ex` 解析 YAML frontmatter 拿到配置，`prompt_builder.ex` 把 Issue 的标题、描述、标签等信息塞进模板生成最终 prompt，然后发给 Codex。
+
+改工作流就是改这个文件提 PR，跟改代码一个流程。这个思路跟 OKF 的 YAML frontmatter 异曲同工——都是把元数据和内容放在一起，人可读、Agent 也可读。
 
 ## 我本地的实际测试
 
@@ -136,12 +185,14 @@ gh auth setup-git
 
 **Round 1 — SHA-5: 多语言实现 two-sum**
 
-最基础的测试。在 Linear 上创建了一个 Issue，Symphony 自动 pick 后 Codex 开始干活。产出：
+先用最简单的场景测试 Symphony 能不能正常 pick Issue 和调度 Codex。我在 Linear 上创建了一个 Issue，Symphony 自动 pick 后在 Workspace 里启动了 Codex。实际代码是我自己提交的，但这轮验证了 Symphony 的调度链路是通的——从轮询 Linear、创建 Workspace、启动 Codex app-server 到 prompt 注入都没问题。
+
+产出目录结构：
 
 \`\`\`
 two-sum/
 ├── python/two_sum.py + test_two_sum.py
-├── javascript/twoSum.js + test_twoSum.js
+├── javascript/twoSum.js + testTwoSum.js
 ├── go/two_sum.go + two_sum_test.go
 ├── rust/src/lib.rs + Cargo.toml
 ├── java/TwoSum.java
@@ -149,7 +200,7 @@ two-sum/
 └── README.md
 \`\`\`
 
-6 种语言、15 个文件、248 行代码，自动 commit 并 push。每种实现都保持了统一的 API 签名 \`twoSum(nums, target) -> indices\`，附了测试。这轮很顺畅，没出什么幺蛾子。
+6 种语言、15 个文件、248 行代码。每种实现都保持了统一的 API 签名 \`twoSum(nums, target) -> indices\`，附了测试。
 
 **Round 2 — SHA-6: 添加 GitHub Actions CI**
 
