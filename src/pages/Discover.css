@@ -266,26 +266,13 @@
 
 .discover-detail-content ol {
   margin: 12px 0;
-  padding-left: 0;
-  list-style: none;
-  counter-reset: item;
+  padding-left: 2em;
+  list-style-position: inside;
 }
 
 .discover-detail-content ol li {
-  counter-increment: item;
   margin-bottom: 6px;
   line-height: 1.7;
-  padding-left: 2.6em;
-  position: relative;
-}
-
-.discover-detail-content ol li::before {
-  content: counter(item) ".";
-  position: absolute;
-  left: 0;
-  width: 2em;
-  text-align: right;
-  color: var(--text);
 }
 
 .discover-detail-content ul {
