@@ -234,11 +234,10 @@
 }
 
 .blog-post-content pre {
-  background: #11111B;
-  color: #CDD6F4;
-  padding: 20px 24px 20px 20px;
-  border-radius: 0 var(--radius) var(--radius) 0;
-  border-left: 3px solid var(--green);
+  background: var(--code-bg);
+  color: var(--code-text);
+  padding: 20px 24px;
+  border-radius: var(--radius);
   overflow-x: auto;
   margin-bottom: 24px;
   font-size: 0.85rem;

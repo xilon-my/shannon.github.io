@@ -309,11 +309,10 @@
 }
 
 .discover-detail-content pre {
-  background: #11111B;
-  color: #CDD6F4;
-  padding: 14px 18px 14px 16px;
-  border-radius: 0 var(--radius) var(--radius) 0;
-  border-left: 3px solid var(--green);
+  background: var(--code-bg);
+  color: var(--code-text);
+  padding: 16px 20px;
+  border-radius: var(--radius);
   overflow-x: auto;
   margin: 16px 0;
   font-size: 0.82rem;
