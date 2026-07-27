@@ -1,5 +1,6 @@
 const project = {
   slug: 'okf',
+  date: '2026-07-27 10:52',
   name: 'Open Knowledge Format (OKF)',
   url: 'https://github.com/GoogleCloudPlatform/knowledge-catalog',
   description: '开放知识格式，用 Markdown 文件加 YAML 前置元数据来表示知识。设计为人可读、AI 代理也可消费。',

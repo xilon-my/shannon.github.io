@@ -1,5 +1,6 @@
 const project = {
   slug: 'symphony',
+  date: '2026-07-28 03:56',
   name: 'Symphony',
   url: 'https://github.com/openai/symphony',
   description: 'OpenAI 的自主编码自动化参考实现。监控 Linear 面板，自动派发 AI 代理实现任务，要求提供工作量证明后才能合入代码。',

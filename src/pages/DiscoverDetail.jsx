@@ -74,6 +74,7 @@ export default function DiscoverDetail() {
               {project.tags.map(t => <span key={t}>{t}</span>)}
             </div>
             <div className="discover-detail-info">
+              {project.date && <span><span className="detail-label">date</span> {project.date}</span>}
               {project.author && <span><span className="detail-label">author</span> {project.author}</span>}
               {project.stars && <span><span className="detail-label">stars</span> {project.stars}</span>}
             </div>
