@@ -214,6 +214,8 @@
   color: var(--accent);
   text-decoration: none;
   transition: background 0.2s, border-color 0.2s;
+  word-break: break-all;
+  max-width: 100%;
 }
 
 .discover-detail-gh-link:hover {
