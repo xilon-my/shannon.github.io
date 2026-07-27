@@ -131,6 +131,8 @@ Symphony 启动时读这个文件，\`workflow.ex\` 解析 YAML frontmatter 拿�
 
 ![Symphony TUI](/discover/symphony_tui.png)
 
+不过说实话这个 TUI 的信息量很有限——只能看到 Agent 跑在第几轮、花了多少 token，具体在干嘛完全不知道。Event 列显示的都是 \`item completed: reasoning\` 这类模糊状态，你想知道它卡在哪一步、在读哪个文件、写了什么代码，统统看不到。仪表盘也是同样的问题，只有宏观状态没有微观进度。对于调试来说体验不太好。
+
 架构是这样的：
 
 \`\`\`
