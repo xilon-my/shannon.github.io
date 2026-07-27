@@ -287,6 +287,8 @@
   text-align: right;
   color: var(--text);
 }
+
+.discover-detail-content ul {
   margin: 12px 0;
   padding-left: 24px;
   list-style: none;
