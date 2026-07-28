@@ -7,7 +7,7 @@ const project = {
   tags: ['TypeScript', 'Agent Harness', 'CLI'],
   stars: '79.5k+',
   author: 'earendil-works',
-  images: ['/discover/pi-agent.png'],
+  images: [],
   detail:
 `Agent 框架现在多到数不过来，每个都在往里面塞东西——加 MCP、加子 Agent、加权限弹窗、加 Plan Mode。功能越堆越多，留给用户自己发挥的空间就越小。
 
