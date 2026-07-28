@@ -36,7 +36,9 @@ Skills 的设计也挺聪明。每个 skill 是一个目录，里面有 \`SKILL.
 
 现在大家比 Agent 都是比"能不能写代码"、"能调几个 tool"，但其实有两个更深层的能力在悄悄决定这些框架的上限。
 
-**Formal ability**
+### Formal ability
+
+Formal ability 说的是 Agent 跟外部系统打交道的方式有多"正式"。它的反面是"在 prompt 里写一段自然语言来描述怎么调用"——这在早期 Agent 里很常见。Formal 意味着用结构化的 schema 替代自然语言、用可验证的协议替代约定、用类型约束替代运行时检查。Formal ability 越高，Agent 的行为就越可组合、可替换、可验证。
 
 最早期的 Agent 就是调 API 然后解析字符串，错误处理靠 prompt 里写"如果出错了就重试"。OpenAI 的 function calling 是一个转折点——模型的输出终于有 schema 约束了。
 
@@ -46,9 +48,9 @@ Skills 的设计也挺聪明。每个 skill 是一个目录，里面有 \`SKILL.
 
 下一站在学术界已经能看到苗头了——形式化验证。[有人在做的研究](https://arxiv.org/abs/2605.23951)让 Agent 的接口协议可静态检查、可证明正确，Agent 调一个 tool 之前不是"试试看"，而是先验证调用是否在允许集内。还很早期，但方向是清楚的。
 
-**Representational ability**
+### Representational ability
 
-这个能力说的是 Agent 内部怎么表示知识和状态——不是 UI 好不好看，是它脑子里有没有一张"地图"。
+如果说 formal 解决的是"怎么跟外面说话"，representational 解决的就是"自己怎么想事情"。这个能力说的是 Agent 内部怎么表示知识和状态——不是 UI 好不好看，是它脑子里有没有一张"地图"。
 
 最早期的 LLM Agent 本质上没有表征能力，给它一段文本它生成下一段文本，不"理解"自己在做什么。Function calling 和结构化输出让表示从自由文本变成了 schema，这是一次跃迁。但问题是这些表示是"用完即弃"的——每次对话都是新的，Agent 不维护对世界状态的持续表示。
 
