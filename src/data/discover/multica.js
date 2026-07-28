@@ -6,7 +6,6 @@ const project = {
   tags: ['Go', 'AI Agents', 'DevTools'],
   stars: '42k+',
   author: 'multica-ai',
-  images: [],
   detail: `Multica 是一个将 AI 编程代理变成真正队友的开源平台。你不再需要在终端里复制粘贴 Prompt —— 只需在看板上创建 Issue 并分配给代理，它们会自动写代码、跑测试、报告阻塞，并实时更新状态。
 
 后端用 Go 编写，前端是 Next.js 16，支持多种 Agent CLI（Claude Code、Codex、CodeBuddy、GitHub Copilot CLI 等），保持厂商中立。核心创新在于 Squad（小队）系统：多个代理和人类组成一队，由 leader 代理分配任务，实现大规模的并行执行。

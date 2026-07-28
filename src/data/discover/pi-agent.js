@@ -1,13 +1,12 @@
 const project = {
   slug: 'pi',
-  date: '2026-07-28',
+  date: '2026-07-28 22:51',
   name: 'Pi Agent Harness',
   url: 'https://github.com/earendil-works/pi',
   description: '一个极简 AI Agent 工具包。统一的多供应商 LLM 接口，带差分渲染的 TUI，可扩展的 Agent 运行时，和自解释的编码 Agent CLI。',
   tags: ['TypeScript', 'Agent Harness', 'CLI'],
   stars: '79.5k+',
   author: 'earendil-works',
-  images: [],
   detail:
 `Agent 框架现在多到数不过来，每个都在往里面塞东西——加 MCP、加子 Agent、加权限弹窗、加 Plan Mode。功能越堆越多，留给用户自己发挥的空间就越小。
 

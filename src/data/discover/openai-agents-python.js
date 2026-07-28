@@ -6,7 +6,6 @@ const project = {
   tags: ['Python', 'AI Agents', 'SDK'],
   stars: '28k+',
   author: 'OpenAI',
-  images: [],
   detail: `OpenAI Agents SDK 是 OpenAI 官方的多智能体工作流框架。如其名所示，它是一个轻量但功能强大的工具包，用于构建、编排和部署 AI 代理。虽然由 OpenAI 发布，但它是供应商中立的 —— 除了 OpenAI 自己的 API，还通过集成支持 100+ 其他大语言模型。
 
 核心功能包括：

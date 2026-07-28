@@ -7,7 +7,6 @@ const project = {
   tags: ['Elixir', 'AI Agents', 'Automation'],
   stars: '26k+',
   author: 'OpenAI',
-  images: [],
   detail:
 `Agent 写代码已经不算新鲜了，但每次都要人盯着、手动给 prompt、手动提 PR，本质上还是把 Agent 当高级补全在用。
 
