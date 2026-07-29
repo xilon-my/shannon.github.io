@@ -18,24 +18,6 @@ OpenAI Agents SDK 就是 OpenAI 给的答案。
 
 首先要搞清楚定位。Claude Code 和 Codex 是**终端产品**——你装好就能直接对话，帮你写代码。OpenAI Agents SDK 是**框架**——你拿它搭自己的 Agent 系统。
 
-| | Claude Code | Codex | OpenAI Agents SDK |
-|---|---|---|---|
-| 本质 | 终端产品 | 终端产品 | Python 框架 |
-| 怎么用 | 对话 | 对话 | 写 Python |
-| 用户 | 开发者 | 开发者 | 搭 Agent 的人 |
-| 供应商 | Anthropic | OpenAI | 100+ LLM |
-
-我用 DeepSeek 试了一下，一行代码切模型：
-
-\`\`\`python
-model = OpenAIChatCompletionsModel(
-    model="deepseek-v4-flash",
-    openai_client=AsyncOpenAI(base_url="https://api.deepseek.com/v1"),
-)
-\`\`\`
-
-直接跑通了。这说明它虽然是 OpenAI 出的，但供应商锁定并不严重。
-
 ## 核心概念的用法
 
 Agent 是最小的单位——给它指令、工具、跑起来：
