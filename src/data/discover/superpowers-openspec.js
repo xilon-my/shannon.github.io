@@ -155,15 +155,6 @@ cd your-project && openspec init
 
 第一次用的话，建议跑 \`openspec init\` 之后去它的 dogfooding 目录看看——OpenSpec 自己就用 OpenSpec 开发，\`openspec/specs/\` 里有 35 个 spec 文件，\`openspec/changes/archive/\` 里有 80+ 个已归档 change。装完之后看一眼就知道怎么写了。
 
-工作流是 slash command 驱动的：
-
-\`\`\`
-/opsx:explore       → 跟 AI 无压力讨论方案（不产生任何 artifact）
-/opsx:propose name  → AI 生成 proposal + delta specs + design + tasks
-/opsx:apply         → AI 逐项实施，打勾完成
-/opsx:archive       → delta specs 合并进主 specs，change 移到 archive/
-\`\`\`
-
 ### Change 里的四个文件
 
 当你跑 \`/opsx:propose\` 时，AI 会生成一个完整的 change 目录。这四个文件各管各的事，而且有明确的上下游依赖关系。
@@ -224,13 +215,7 @@ Archive 时这些 delta 合并到主 \`openspec/specs/\` 里——新增的追�
 
 这四个文件的依赖路径是：proposal → specs → design → tasks。每一层都依赖前一层的输出才能写好，但任何时候都可以回头改。它们告诉 AI 三件事：**做什么、做成什么样、按什么顺序干**。
 
-### Delta Spec 是关键
-
-大部分 spec 框架要求你先写完整系统文档再开始改代码。这对绿地上的项目可能行，但对几十万行的已有代码库来说不现实。OpenSpec 的解法是 Delta：在每个 change 里只写"新增了什么 requirement"、"修改了什么"、"删除了什么"。Archive 时这些 delta 自动合并到主 spec 里。
-
-每条 requirement 后面附了具体的 Given/When/Then scenario。Archive 后的文件结构就是一份精确的变更历史——哪天改了哪条 requirement，为什么改，谁批准的。
-
-这就是它跟 GitHub Spec Kit 和 Kiro 最大的区别。不是让你先写全再开工，而是让你一边改一边积累 spec。项目已经存在五年了，你从今天开始用 OpenSpec，只需要为你这次 change 涉及的行为写 spec——不用补之前五年的文档。
+这就是 OpenSpec 跟 GitHub Spec Kit 和 Kiro 最大的区别——不是让你先写完整份系统文档再开工，而是**每次 change 只写 delta**。项目已经存在五年了，你从今天开始用 OpenSpec，只需要为你这次改动的行为写 spec，不用补之前五年的文档。Archive 之后的 \`openspec/specs/\` 就是一份精确的变更历史：哪天改了哪条 requirement，为什么改，谁批准的。
 
 ### "Enablers, not gates"
 
