@@ -177,6 +177,24 @@ Claude 和 GPT 系列在这方面的支持最好，LangGraph 的大部分高级�
 
 相比之下，Superpowers 的依赖就简单得多——它只要模型能读 Markdown 文件。OpenSpec 也一样——只要模型能读 spec 文件。这两者不需要 tool calling，不需要 structured output，对模型的要求只有一条：能理解文本指令。
 
+## 不好用
+
+上面列的问题只是技术层面的。真正让人挫败的是另一个问题：**这东西不好用。**
+
+LangGraph 的 Studio UI 是唯一的官方交互界面，但它默认显示的是 Experiment 视图（批量跑 benchmark 用的），想单次运行要自己摸索切换到 Thread 视图。Supervisor 模式的 Tutorial 代码用 Claude + Tavily，换成 DeepSeek 就踩了一串兼容坑。\`create_react_agent\` 是个黑盒——你传一个 prompt 给它，它自己决定调几次 tool、什么时候停，出问题你只能靠猜。文档写得很全，但信息分散在概念指南、how-to、API 参考三套之间，找一个具体问题的答案经常要翻三个页面。
+
+这些体验问题叠加起来让一个本来清晰的概念（图即程序）变得很难用出来。如果你用的模型不是 Claude 或 GPT，如果你不想学 LangChain 那套抽象层，如果 Studio UI 让你觉得还不如写代码舒服——那 LangGraph 给你的不是确定性，是更多的调试时间。
+
+## 还是在定义 Agent 角色
+
+回到 Supervisor 模式本身。一个 supervisor、一个 researcher、一个 coder——这不就是定义角色然后派活吗？
+
+跟 OpenAI Agents SDK 的 Handoff 没有本质区别，跟 Multica 的 Squad 也没有。你还是在说"这是谁、它管什么、什么时候交给谁"。LangGraph 的不同只在于"谁交给谁"这一步是用图画的，不是用代码写的——但在架构层面，走的还是"定义 Agent 角色 → 分配任务 → 路由结果"的老路。
+
+图的价值不在"定义角色"这一步——定义角色是任何多 Agent 系统都要做的事。图的价值在"不确定的流程"上：条件分支、动态循环、跨子图的状态共享。如果你的 Agent 流程是线性的（A → B → C），用图是杀鸡用牛刀。如果你的流程里有你不知道什么时候会触发、触发多少次的条件逻辑，图就比线性编排合适得多。
+
+所以问题不在"是不是在定义角色"，在"你的流程需要图吗"。
+
 ## LangGraph 适合什么
 
 - ✅ 需要精确控制 Agent 执行拓扑的场景——任何两个节点之间的连接方式都要由代码规定
@@ -186,7 +204,7 @@ Claude 和 GPT 系列在这方面的支持最好，LangGraph 的大部分高级�
 - ❌ 使用的模型 tool calling 不稳定——LangGraph 的优势建立在稳定的 tool calling 之上
 
 回到 Superpowers 那篇文章的结尾：Superpowers 从外部约束 Agent 的行为，OpenSpec 从内部约束 Agent 的目标。LangGraph 提供了另一种约束方式——从结构上约束。但它的约束需要底层模型配合，不是纯文本能搞定的。三个工具放在一起，选择哪个不取决于谁更好，取决于你信任模型什么能力。`,
-  takeaway: 'LangGraph 用图结构替代 prompt 约束来做 Agent 编排——节点之间的路是编译时定死的，不是运行时靠 prompt 说服模型配合的。但这是双刃剑：图越精确，对模型 tool calling 能力的要求越高。如果你用的模型 tool calling 稳定（Claude、GPT），LangGraph 给的是确定性；如果模型不够稳定，确定性就变成了死板，不如 Superpowers 那种"用 Markdown 文件引导"的方式灵活。选哪个不取决于谁更好，取决于你信任模型什么能力。',
+  takeaway: 'LangGraph 用图结构替代 prompt 约束来做 Agent 编排——节点之间的路是编译时定死的，不是运行时靠 prompt 说服模型配合的。但这是双刃剑：图越精确，对模型 tool calling 能力的要求越高，如果模型不够稳定，确定性就变成了死板。Studio UI 难用、create_react_agent 是黑盒、文档分散，这些问题让上手门槛比预期的高。更关键的是，Supervisor 模式本质上还是在定义 Agent 角色然后路由，跟其他多 Agent 框架没有区别——图的价值在不确定的流程上，不在线性链里。选 LangGraph 之前先问自己：你的流程真的需要图吗？',
 }
 
 export default project
