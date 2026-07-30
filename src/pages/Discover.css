@@ -442,7 +442,7 @@
   width: auto;
   max-width: 320px;
   display: block;
-  margin-left: 0;
+  margin: 24px auto;
 }
 
 /* ── Tables ── */
