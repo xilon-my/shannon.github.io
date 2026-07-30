@@ -133,16 +133,6 @@ Superpowers 是一个能约束 Agent 行为的方法论。但方法论管的是"
 
 反过来也一样。OpenSpec 给了一份漂亮的 spec 文档，但如果没有 Superpowers 那样的流程约束，Agent 可能在写了三行代码之后就跑偏了，或者跳过了测试，或者做了 scope creep——spec 还在那里，但代码已经不是 spec 的样子了。
 
-<pre class="discover-diagram"><code>        Superpowers                    OpenSpec
-    ┌────────────────────┐      ┌────────────────────┐
-    │   brainstorming    │      │    proposal.md     │
-    │   writing-plans    │      │   specs/ (delta)   │
-    │        TDD         │      │     design.md      │
-    │    code-review     │      │      tasks.md      │
-    │  finishing-branch  │      │      archive       │
-    └────────────────────┘      └────────────────────┘
-                行为框架                          契约框架</code></pre>
-
 一个解决"Agent 怎么写代码"，一个解决"Agent 写的是什么"。
 
 社区里已经有人在串这两个项目了。有一个叫 **SpecPilot** 的扩展把 OpenSpec 和 Superpowers 接成了一条五阶段流水线：先用 OpenSpec 把需求写进 spec（\`/opsx:propose\`），再触发 Superpowers 的 SDD 流程去执行，执行完回到 OpenSpec 做 \`/opsx:verify\` 验证一致性，最后 \`/opsx:archive\` 归档。还有个叫 **spec-superflow** 的项目更进一步——把两个项目在源层面融合成了一套 9-skill、8-state 引擎，加上了 intent-lock 和 SHA256 hash 校验，保证 spec 不会被改掉而不被发现。

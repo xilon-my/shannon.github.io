@@ -438,31 +438,6 @@
   border: 1px solid var(--border);
 }
 
-/* ── ASCII diagram: render exactly as source ── */
-.discover-detail-content .discover-diagram {
-  display: block;
-  background: var(--code-bg);
-  color: var(--code-text);
-  border-radius: var(--radius);
-  margin: 16px 0;
-  padding: 16px;
-  font-size: 0.85rem;
-  line-height: 1.15;
-  font-family: 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  white-space: pre;
-  overflow-x: auto;
-  overflow-wrap: normal;
-}
-
-.discover-detail-content .discover-diagram code {
-  background: none;
-  padding: 0;
-  color: inherit;
-  font-family: inherit;
-  font-size: inherit;
-  white-space: inherit;
-}
-
 /* ── Tables ── */
 .discover-detail-content table {
   width: calc(100% - 48px);
