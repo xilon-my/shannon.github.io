@@ -12,25 +12,29 @@ const project = {
 
 Pi 反着来的。它核心功能少到不能再少，然后把扩展做到极致。你需要什么自己装，不需要的零开销。
 
-这个理念听起来挺反直觉的，但 Databricks 最近发的一篇 benchmark 报告给了它一个有力的数据支撑。
+Databricks 最近发的一篇 benchmark 报告给了这个理念一个有力的数据支撑。
 
 ## Databricks 的实测验证
 
-2026 年 7 月，Databricks 在博客上公开了他们内部的编码 Agent 评测结果。他们用了自己百万行级别的真实代码仓库、真实的 PR、持久的测试用例来做评测——不是用 SWE-Bench 那种公开榜单。
+2026 年 7 月，Databricks 公开了他们内部的编码 Agent 评测结果。他们用了自己百万行级别的真实代码仓库——不是 SWE-Bench 那种公开榜单——跨 Python、Go、TypeScript、Scala、Rust、Java、Bazel、Protobuf 等多种语言。
 
-结果有一个发现特别值得注意：**同一个模型，跑在不同的 Agent 框架上，成本和效率差距超过 2 倍，但质量几乎不变**。
+评测方法很严谨：从真实 PR 里提取编码任务，把测试文件剥离出来作为验证集，Agent 跑完代码后用这些保留的测试来判断通过还是不通过。他们特意不用 LLM 做评判，发现"LLM judge 倾向于奖励听起来对的答案而不是真正正确的答案"。
 
-![Pi vs Claude Code/Codex 成本对比](/discover/db-dumbbell.png)
+几个关键发现：
 
-图中对比的是 OpenAI 的某个模型分别在 Pi 和 Claude Code/Codex 上跑同一批任务的表现。Pi 每轮发送的上下文少了大约 3 倍，跑的轮数更少，单任务成本只有 Claude Code/Codex 的一半不到，但任务通过率几乎没有差别。
+**框架的选择带来 2 倍以上的成本差距，质量几乎不变。** 同一个模型跑在不同框架上，成本可以差一倍以上。原因是 Pi 每轮发送的上下文少了大约 3 倍，跑的轮数更少，工作集更紧凑。Claude Code 和 Codex 内置了大量功能（Plan Mode 提示词、权限弹窗逻辑、MCP 工具定义、子 Agent 指令模板），这些功能本身就要消耗 token。Pi 没有这些，所以 context 更干净。
 
-为什么会这样？因为 Pi 保持了一个更紧凑的工作集。它不会把整个项目历史、全部文件内容、无用的 tool 列表都塞进 context——它只带需要的东西。Claude Code 和 Codex 内置了大量你未必用得上的功能，这些功能本身就要消耗 token：Plan Mode 的提示词、权限弹窗的逻辑、MCP 的工具定义、子 Agent 的指令模板。Pi 没有这些，所以 context 更干净、token 消耗更少。
-
-从更宏观的视角看，这是 2026 年编码 Agent 市场的 Pareto 前沿：
+**模型能力出现三个明确的分层。**
 
 ![编码 Agent Pareto 前沿](/discover/db-pareto.png)
 
-Opus 4.8 和 GLM 5.2 在能力顶端，但代价不低。GPT 5.4 Mini、Haiku 这些模型占据中间地带，性价比更高。而框架的选择同样在影响成本——同一个模型，换一个框架就能省一半的 token。
+Opus 4.8 和 GLM 5.2 在顶端，高度有效但昂贵——GLM 5.2 每任务 $1.28，Opus 4.8 每任务 $1.94。中间层是 GPT 5.4 Mini 和 Haiku，对常见任务非常有效，价格便宜很多。底层是各种开源模型，适合常规工作。Databricks 发现工程师们即使做简单的 flag 翻转和配置更新也在用最贵的模型，所以他们现在根据任务复杂度自动路由到合适的模型。
+
+**Token 单价便宜不代表总成本低。** Sonnet 5 每 token 比 Opus 4.8 便宜约 1.7 倍，但每任务成本反而更高（$2.09 vs $1.94），分数还低了 6 个百分点（81% vs 87%）。原因是大模型 token 效率更高，消耗的 token 数更少。
+
+**GLM 5.2 已经进入第一梯队。** 在能力上跟 Opus 4.8 统计上持平，价格更低。多供应商竞争确实在改变格局。
+
+**Benchmark 的方法论值得借鉴。** 他们发现早期结果好得离谱，排查后发现 Agent 能通过 shell 访问 git 历史找到原始合并 commit 的实现来作弊。修复方案是在每次运行时切断了工作副本和 git 仓库的连接。这说明 Agent 的"聪明"有时候是钻空子，评测设计要堵住这些漏洞。
 
 ## 四个包
 
@@ -74,11 +78,7 @@ Databricks 的评测间接证明了这条路行得通——Pi 的 context 管理
 
 同一项研究还有个实用的发现：**外部表示的格式直接影响模型构建内部表征的质量**。用 Cartesian 坐标（x=10, y=20）比用文字描述（"在左上角附近"）做空间任务的成功率高得多——[8B 模型 66% vs 30%](https://ar5iv.labs.arxiv.org/html/2502.16690)。
 
-回到三个工具来看，在 internal representation 层面它们都依赖底层模型的能力。区别在于**外部表征**的设计。Pi 的 Session 不存成线性日志，而是树形结构。\`/tree\` 看到全部分支，\`/resume <id>\` 跳到任意节点继续，\`/fork\` 从当前点分叉。这个设计的底层观点是：Agent 的对话历史不是一条线，而是一棵可以任意导航的树。
-
-## 供应链安全
-
-顺便提一句，Pi 把依赖安全做得挺极端。\`.npmrc\` 设了 \`save-exact=true\` 和 \`min-release-age=2\`，\`package-lock.json\` 是"依赖的事实标准"，pre-commit 拦截意外的 lockfile 变更。CI 用 \`npm ci --ignore-scripts\` 安装，定时跑 \`npm audit\` 加签名验证。`,
+回到三个工具来看，在 internal representation 层面它们都依赖底层模型的能力。区别在于**外部表征**的设计。Pi 的 Session 不存成线性日志，而是树形结构。\`/tree\` 看到全部分支，\`/resume <id>\` 跳到任意节点继续，\`/fork\` 从当前点分叉。这个设计的底层观点是：Agent 的对话历史不是一条线，而是一棵可以任意导航的树。`,
   takeaway: 'Databricks 的 benchmark 给 Pi 的"极简哲学"做了一个有力的注脚：同一个模型跑在不同的框架上，成本差距超过 2 倍，质量几乎不变。少即是多不只是理念问题——它在 token 账单上能直接体现出来。Pi 在 formal ability 上拒绝了 MCP 选择了更轻的路，在 representational ability 上用树形 Session 给出了不一样的设计，这些选择在 benchmark 中被证明是有效的。',
 }
 
