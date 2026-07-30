@@ -385,6 +385,7 @@
   white-space: pre;
   overflow-x: auto;
   overflow-wrap: normal;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
 }
 
 .discover-detail-content pre code {
