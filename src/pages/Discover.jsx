@@ -47,7 +47,7 @@ export default function Discover() {
               <p>No projects with tag &lsquo;{activeTag}&rsquo;.</p>
             </div>
           ) : (
-            <div className="discover-grid">
+            <div className="discover-grid" key={activeTag || 'all'}>
               {filtered.map((p, i) => (
                 <Link key={p.slug} to={`/discover/${p.slug}`} className="discover-card-link">
                   <article className={`discover-card fade-in fade-in-${Math.min(i + 1, 5)}`}>
