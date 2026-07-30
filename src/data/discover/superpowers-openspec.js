@@ -105,6 +105,66 @@ openspec/
 /opsx:archive       → delta specs 合并进主 specs，change 移到 archive/
 \`\`\`
 
+### Change 里的四个文件
+
+当你跑 \`/opsx:propose\` 时，AI 会生成一个完整的 change 目录。这四个文件各管各的事，而且有明确的上下游依赖关系。
+
+**proposal.md——为什么干和干什么**
+
+这是 change 的第一份文档，用来锁定方向和范围。不谈具体怎么实现，只回答：当前有什么问题、改的范围是多大、不改什么东西、跟现有的 spec 和设计有什么关系。如果准备砍 scope 或发现依赖关系也要写在这里。
+
+目的就是让你和 AI 在"要不要做"上达成一致。如果这里就谈不拢，下面的都不用写了。审查者（human）看完 proposal 就能决定是否批准整个 change，不需要读代码。
+
+实际内容有点像 RFC 的摘要——几百字，说清楚"不做这个会怎样"和"做了会怎样"就够了。跑 \`/opsx:explore\` 出来的讨论结果可以当素材直接贴进来。
+
+**specs/——具体改了什么行为**
+
+这是 change 的核心。里面按能力域组织文件（\`specs/cli-init/spec.md\`），每个文件只写 delta——新增、修改、删除了哪些 requirement。
+
+每条 requirement 用 SHALL 句式定义行为：
+
+\`\`\`markdown
+### Requirement: 支持 help 子命令
+
+The system SHALL display usage info when \`openspec --help\` is invoked.
+
+#### Scenario: 正确输入显示帮助
+- **WHEN** user runs \`openspec --help\`
+- **THEN** system prints the usage text
+- **AND** exits with code 0
+
+#### Scenario: 短参数 -h 等效
+- **WHEN** user runs \`openspec -h\`
+- **THEN** the output is identical to \`--help\`
+\`\`\`
+
+Archive 时这些 delta 合并到主 \`openspec/specs/\` 里——新增的追加进去、修改的替换原版、删除的移除。Archive 之后的历史就是一份精确的 changelog：哪天改了哪条 requirement，为什么。
+
+**design.md——怎么实现**
+
+你决定做、也知道改什么行为了，接下来就是技术方案怎么写。design.md 用来记录：架构怎么调整、依赖怎么加、数据流怎么走、有没有兼容性风险。不写具体代码量，写思路。
+
+这个文件是可选的。如果你的 change 改的就是换一个字符串常量，不写 design.md 完全 OK。但如果涉及数据结构变更或第三方服务交互，最好写清楚，方便以后的人（包括 AI）看 spec 的时候知道为什么要这么实现。
+
+"Enablers, not gates" 在这里体现得很明显：proposal 没写完也能开始写 design，design 和 specs 互相独立，谁先写都行。
+
+**tasks.md——实施清单**
+
+这是给 Agent 执行的。其他文件是给人看的，这个是给 AI 逐项打勾用的。
+
+每项 task 对应一个具体的代码改动，格式是 checklist：
+
+\`\`\`markdown
+- [ ] 读取当前配置，确定 help 命令尚未实现
+- [ ] 在 cli/index.ts 中注册 --help 子命令
+- [ ] 实现 help 文本输出函数
+- [ ] 测试：分别测试 --help 和 -h
+\`\`\`
+
+每项 task 尽量拆到 5 分钟以内。不设 TODO 或"以后再做"。Agent 按顺序执行，每完成一项打一个勾。如果中间会话超时了，重开之后 \`/opsx:apply\` 会从第一个未完成的 task 继续，不丢进度。
+
+这四个文件的依赖路径是：proposal → specs → design → tasks。每一层都依赖前一层的输出才能写好，但任何时候都可以回头改。它们告诉 AI 三件事：**做什么、做成什么样、按什么顺序干**。
+
 ### Delta Spec 是关键
 
 大部分 spec 框架要求你先写完整系统文档再开始改代码。这对绿地上的项目可能行，但对几十万行的已有代码库来说不现实。OpenSpec 的解法是 Delta：在每个 change 里只写"新增了什么 requirement"、"修改了什么"、"删除了什么"。Archive 时这些 delta 自动合并到主 spec 里。
