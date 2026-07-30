@@ -8,7 +8,7 @@ const project = {
   stars: '42k+',
   author: 'multica-ai',
   detail:
-`用 Symphony 的时候我就在想一个问题：你有了能写代码的 Agent，但你总不能每次都手动分配任务、手动检查进度、手动跟踪谁在干什么。人多了需要 Jira，Agent 多了也需要一个 Jira。
+`用 Symphony 的时候会想到一个问题：你有了能写代码的 Agent，但你总不能每次都手动分配任务、手动检查进度、手动跟踪谁在干什么。人多了需要 Jira，Agent 多了也需要一个 Jira。
 
 Multica 就是干这个的。
 
@@ -34,7 +34,7 @@ Agent 拿到 Issue 后的生命周期：接单 → 拉代码 → 分析 → 编�
 
 ## 跟 Symphony 的对比
 
-我在 Symphony 那篇文章里提到 Multica 做"理解与规划"，Symphony 做"执行与编排"。
+Symphony 那篇文章里提到 Multica 做"理解与规划"，Symphony 做"执行与编排"。
 
 Symphony 盯 Linear 面板，自动派 Codex 去干活。它假设你已经有了一套项目管理流程，只负责"把 Issue 变成代码"这一段。Multica 覆盖的范围更广——它自己就是项目管理平台，不挑 Agent 类型，Claude Code、Codex、Pi 都支持。
 
@@ -44,7 +44,7 @@ Squad 的模型是"先定义谁负责什么，再分配任务"——前端 Agent
 
 另一种思路是：只有一个 runtime，不预设角色。主 Agent 接到任务后自己判断怎么拆，需要的时候动态召子 Agent，传当前阶段需要的上下文，用完就丢。子 Agent 是函数式的——调一个子 Agent 就像调一个函数，输入参数，拿回结果。
 
-我说完发现这不就是 Symphony 的思路吗——背后一个 runtime，WORKFLOW.md 定义行为，Agent 按状态流转。只不过我对 WORKFLOW.md 的要求更高：不只是写一段 prompt，而是能定义"什么情况下召子 Agent"、"上下文怎么传"、"状态怎么流转"——声明式的规则，Agent 自己读自己执行。
+这不就是 Symphony 的思路吗——背后一个 runtime，WORKFLOW.md 定义行为，Agent 按状态流转。只不过 WORKFLOW.md 还可以做得更：不只是写一段 prompt，而是能定义"什么情况下召子 Agent"、"上下文怎么传"、"状态怎么流转"——声明式的规则，Agent 自己读自己执行。
 
 两种模型没有绝对对错。Squad 适合分工明确的场景，单 runtime + 增强版 WORKFLOW.md 适合任务边界模糊、需要灵活应变的场景。
 

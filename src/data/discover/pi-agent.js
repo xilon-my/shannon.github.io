@@ -18,7 +18,7 @@ Pi 反着来的。它核心功能少到不能再少，然后把扩展做到极�
 
 Pi 是四个包组成的 monorepo。@earendil-works/pi-ai 管统一 LLM 接口（15+ 供应商），@earendil-works/pi-agent-core 管 Agent 运行时和 tool calling，@earendil-works/pi-coding-agent 是面向用户的 CLI，@earendil-works/pi-tui 是终端 UI 组件库。TypeScript + Bun 写的。
 
-用起来就是设个环境变量就能切模型。我之前设过 \`DEEPSEEK_API_KEY\`，\`/model\` 里直接出现 deepseek-v4-flash，不需要配供应商。
+用起来就是设个环境变量就能切模型。设过 \`DEEPSEEK_API_KEY\` 的话，\`/model\` 里直接出现 deepseek-v4-flash，不需要配供应商。
 
 ## 少了什么比多了什么更重要
 

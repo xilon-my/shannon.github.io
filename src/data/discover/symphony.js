@@ -125,13 +125,13 @@ Symphony 启动时读这个文件，\`workflow.ex\` 解析 YAML frontmatter 拿�
 
 改工作流就是改这个文件提 PR，跟改代码一个流程。这个思路跟 OKF 的 YAML frontmatter 异曲同工——都是把元数据和内容放在一起，人可读、Agent 也可读。
 
-## 我本地的实际测试
+## 本地实际测试
 
-我在本地搭了一套环境，Symphony 的终端面板长这样：
+本地搭了一套环境，Symphony 的终端面板长这样：
 
 ![Symphony TUI](/discover/symphony_tui.png)
 
-不过说实话这个 TUI 的信息量很有限——只能看到 Agent 跑在第几轮、花了多少 token，具体在干嘛完全不知道。Event 列显示的都是 \`item completed: reasoning\` 这类模糊状态，你想知道它卡在哪一步、在读哪个文件、写了什么代码，统统看不到。仪表盘也是同样的问题，只有宏观状态没有微观进度。对于调试来说体验不太好。
+不过这个 TUI 的信息量很有限——只能看到 Agent 跑在第几轮、花了多少 token，具体在干嘛完全不知道。Event 列显示的都是 \`item completed: reasoning\` 这类模糊状态，你想知道它卡在哪一步、在读哪个文件、写了什么代码，统统看不到。仪表盘也是同样的问题，只有宏观状态没有微观进度。对于调试来说体验不太好。
 
 架构是这样的：
 
@@ -171,11 +171,11 @@ gh auth setup-git
 
 ### 实测：两轮 Issue
 
-我一共跑了两个 Issue，过程挺折腾的。
+一共跑了两个 Issue，过程挺折腾的。
 
 **Round 1 — SHA-5: 多语言实现 two-sum**
 
-先跑个最简单的验证 Symphony 能不能正常 pick Issue 和调度 Codex。在 Linear 上创建 Issue 后 Symphony 确实 pick 了，Workspace 创建了，Codex 也启动了，调度链路是通的。实际代码是我自己提交的，但这轮本来的目的就是测链路，不是测 Codex 写代码。
+先跑个最简单的验证 Symphony 能不能正常 pick Issue 和调度 Codex。在 Linear 上创建 Issue 后 Symphony 确实 pick 了，Workspace 创建了，Codex 也启动了，调度链路是通的。实际代码是手动提交的，但这轮本来的目的就是测链路，不是测 Codex 写代码。
 
 **Round 2 — SHA-6: 添加 GitHub Actions CI**
 
@@ -196,7 +196,7 @@ fatal: Unable to create '.git/index.lock': Read-only file system
 
 ![Linear Issue](/discover/linear.png)
 
-两轮跑下来最大的感受：Symphony 的设计很清晰，但真实环境里工程细节才是真正的耗时点。光一个 sandbox 权限就折腾了两轮。
+两轮跑下来的结论：Symphony 的设计很清晰，但真实环境里工程细节才是真正的耗时点。光一个 sandbox 权限就折腾了两轮。
 
 ## Symphony 适合什么
 

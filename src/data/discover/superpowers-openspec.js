@@ -8,14 +8,14 @@ const project = {
   stars: '9.2k+ / 12k+',
   author: 'Obra (Prime Radiant) / Fission AI',
   detail:
-`我最近一直在想一个问题：AI Agent 写代码的能力已经很强了，但你用起来还是觉得不稳——不是它写不出来，是它写出来的东西你不知道靠不靠谱，它自己也不知道。
+`AI Agent 写代码的能力已经很强了，但用起来还是觉得不稳——不是它写不出来，是它写出来的东西不知道靠不靠谱，它自己也不知道。
 
-两个项目在帮我理清这件事，而且正好是从两个方向来的。
+两个项目正好从两个方向在理清这件事。
 
 Superpowers 管行为——给 Agent 一套强制的工作流程，不让你跳过步骤。
 OpenSpec 管契约——把"要做什么"写成明文，人和 AI 对着同一个东西做事。
 
-一个从外面框住 Agent 的行为，一个从里面框住 Agent 的目标。我琢磨了一段时间之后发现，只用一个总觉得差点意思。
+一个从外面框住 Agent 的行为，一个从里面框住 Agent 的目标。只用一个总觉得差点意思。
 
 ## Superpowers：Agent 的纪律
 
@@ -31,7 +31,7 @@ Superpowers 是一组 skill 文件，让 Agent 启动后自动走一套完整的
 brainstorming → 用 worktree 隔离 → 写计划 → 子 Agent 驱动开发 → TDD → 代码审查 → 收尾
 \`\`\`
 
-每个步骤都是强制的。bootstrap skill 里有个"Red Flags"表，列出了 Agent 可能用来跳过流程的常见借口——"这个很简单"、"我先看看代码"、"我知道那个意思"——然后每条后面写"不行，你必须走"。我在本地跑 Claude Code 的时候试过，确实绕不过去。
+每个步骤都是强制的。bootstrap skill 里有个"Red Flags"表，列出了 Agent 可能用来跳过流程的常见借口——"这个很简单"、"我先看看代码"、"我知道那个意思"——然后每条后面写"不行，你必须走"。在本地跑 Claude Code 的时候试过，确实绕不过去。
 
 最有意思的设计是 Subagent-Driven Development（SDD）：主 Agent 把任务拆成小块，每块传一个干净的子 Agent 去执行。子 Agent 不继承会话历史，只拿到当前任务的上下文，执行完了还有两轮审查（先查是否满足 spec，再查代码质量）。5 轮上限，超了主 Agent 介入仲裁。
 
@@ -47,7 +47,7 @@ Superpowers 目前支持 11 个平台：Claude Code、Cursor、Codex、Gemini CL
 
 底层逻辑是：Methodology 应该跟平台无关。你在 Claude Code 上学到的纪律，换到 Codex 上应该一样成立。
 
-但我本地试下来有一些摩擦。Claude Code 的 plugin 系统天然支持 hook 注入，体验最好。Pi 需要安装 extension，Cursor 走的是不同的 hooks 格式（key 是 lowerCamelCase 不是 kebab-case）。跨平台维护一套行为规范是好事，但每次换平台都要确认工具映射是对的——这可能是 Superpowers 后续需要解决的开发者体验问题。
+不过实际用下来有一些摩擦。Claude Code 的 plugin 系统天然支持 hook 注入，体验最好。Pi 需要安装 extension，Cursor 走的是不同的 hooks 格式（key 是 lowerCamelCase 不是 kebab-case）。跨平台维护一套行为规范是好事，但每次换平台都要确认工具映射是对的——这可能是 Superpowers 后续需要解决的开发者体验问题。
 
 ## OpenSpec：Agent 的蓝图
 
@@ -87,7 +87,7 @@ openspec/
 /opsx:archive            → 变更归档，specs 更新
 \`\`\`
 
-我本地试了一下 \`openspec init\`，它帮你生成 openspec/ 目录结构和 config.yaml。跑完之后感觉……确实轻。没有 Schema Registry，没有中央服务器，没有 SDK 依赖——就一个 CLI 加一个目录。
+试了一下 \`openspec init\`，它帮你生成 openspec/ 目录结构和 config.yaml。跑完之后感觉……确实轻。没有 Schema Registry，没有中央服务器，没有 SDK 依赖——就一个 CLI 加一个目录。
 
 ### Delta Spec 是关键创新
 
@@ -99,9 +99,9 @@ OpenSpec 的解法是 delta：在 Change 里只写"新增了什么要求"、"修
 
 ## 放在一起看
 
-这两个项目放在我机器上不是巧合。
+这两个项目放在一起不是巧合。
 
-Superpowers 给了我一个能约束 Agent 行为的方法论。但方法论管的是"怎么做"，不是"做什么"。没有 OpenSpec 的话，Agent 按 Superpowers 的流程跑完 brainstorming 和 planning，但它的"计划"还是基于对话历史里那些零散的描述——不是基于一份结构化的、可审计的 spec。
+Superpowers 是一个能约束 Agent 行为的方法论。但方法论管的是"怎么做"，不是"做什么"。没有 OpenSpec 的话，Agent 按 Superpowers 的流程跑完 brainstorming 和 planning，但它的"计划"还是基于对话历史里那些零散的描述——不是基于一份结构化的、可审计的 spec。
 
 反过来也一样。OpenSpec 给了你一份漂亮的 spec 文档，但如果没有 Superpowers 那样的流程约束，Agent 可能在写了三行代码之后就跑偏了，或者跳过了测试，或者做了 scope creep——spec 还在那里，但代码已经不是 spec 的样子了。
 
@@ -119,7 +119,7 @@ Superpowers 给了我一个能约束 Agent 行为的方法论。但方法论管�
 
 一个是"Agent 不准跳过测试"，一个是"你刚改的那个 API 对应这条 requirement"。
 
-我自己的感觉是，一个成熟的项目两个都需要。Superpowers 解决"Agent 怎么写代码"，OpenSpec 解决"Agent 写的是什么"——一个偏执行质量，一个偏目标对齐。
+一个成熟的项目两个都需要。Superpowers 解决"Agent 怎么写代码"，OpenSpec 解决"Agent 写的是什么"——一个偏执行质量，一个偏目标对齐。
 
 ## 各自的瓶颈
 
@@ -127,8 +127,8 @@ Superpowers 目前最大的门槛是学习成本。94% 的 PR 被拒率说明他
 
 OpenSpec 的问题是它依赖团队纪律。没人拦着你跳过 \`/opsx:propose\` 直接改代码——但一旦跳了，spec 就跟代码脱节了，然后整个系统就退化成"一堆没人看的 Markdown"。这不是 OpenSpec 独有的问题，所有文档驱动开发都面临这个，但 OpenSpec 把它暴露得更清晰，因为它太轻了——轻到你可以随时开始，也可以随时放弃。
 
-另外说一句，OpenSpec 的 dogfooding 做得很好。它自己的 \`openspec/\` 目录里有 35 个 spec 文件、80+ 个已归档变更。你装完之后看一眼他们自己怎么用的，基本就知道这套东西的边界在哪了。`,
-  takeaway: 'Superpowers 和 OpenSpec 从两个方向回答同一个问题——怎么让 AI Agent 产出可靠的结果。Superpowers 管行为流程，OpenSpec 管需求契约。两个项目出自不同作者、不同社区，但它们解决的问题恰好互补。如果让我选一个开始，我会先用 OpenSpec 把"我要做什么"写下来，再用 Superpowers 让 Agent 按流程把这个"什么"做出来。只有行为框架没有契约框架，Agent 可能在正确的时间做错误的事；只有契约框架没有行为框架，Agent 可能在错误的时间做正确的事。',
+OpenSpec 的 dogfooding 做得很好。它自己的 \`openspec/\` 目录里有 35 个 spec 文件、80+ 个已归档变更。装完之后看一眼他们自己怎么用的，基本就知道这套东西的边界在哪了。`,
+  takeaway: 'Superpowers 和 OpenSpec 从两个方向回答同一个问题——怎么让 AI Agent 产出可靠的结果。Superpowers 管行为流程，OpenSpec 管需求契约。两个项目出自不同作者、不同社区，但它们解决的问题恰好互补。如果选一个开始，先用 OpenSpec 把"我要做什么"写下来，再用 Superpowers 让 Agent 按流程把这个"什么"做出来。只有行为框架没有契约框架，Agent 可能在正确的时间做错误的事；只有契约框架没有行为框架，Agent 可能在错误的时间做正确的事。',
 }
 
 export default project
