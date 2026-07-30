@@ -4,7 +4,8 @@ import okf from './discover/okf.js'
 import openaiAgentsPython from './discover/openai-agents-python.js'
 import pi from './discover/pi-agent.js'
 import mcp from './discover/mcp.js'
+import superpowersOpenspec from './discover/superpowers-openspec.js'
 
-const projects = [multica, symphony, okf, openaiAgentsPython, pi, mcp].sort((a, b) => b.date.localeCompare(a.date))
+const projects = [multica, symphony, okf, openaiAgentsPython, pi, mcp, superpowersOpenspec].sort((a, b) => b.date.localeCompare(a.date))
 
 export default projects
