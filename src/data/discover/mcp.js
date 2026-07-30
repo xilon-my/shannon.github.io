@@ -80,13 +80,19 @@ MCP 最早是 Anthropic 在 2024 年 11 月开源的。初期只有简单的工�
 
 **2026 年 7 月 28 日** — MCP 最大的更新发布。
 
-## 2026-07-28 更新
+## 2026-07-28：无状态化
 
-这次更新最核心的变化是**去掉了 session**。
+这次更新是 MCP 有史以来最大的一次改动。核心是去掉 session——但为什么要去掉？
 
-原来的 MCP 需要客户端和服务端先通过 initialize 握手建立 session，之后所有请求都绑定这个 session。这在普通服务器上没问题，但 serverless 环境（AWS Lambda、Cloudflare Workers）用不了——它们不维护持久连接。
+### 之前的模型有什么问题
 
-新版本每个 HTTP 请求自包含协议版本和能力声明：
+在旧版 MCP 里，客户端和服务端要先走一个 initialize 握手建立 session，之后所有请求都绑定在 session 上。服务端需要记住每个连接的 state，路由需要有 sticky session，Server 没法部署在无状态环境上。
+
+这对运行在服务器上的单体应用来说没问题，但 Agent 工具不只跑在服务器上。你想让 MCP server 跑在 AWS Lambda 或 Cloudflare Workers 上——它们按请求计费、不维护持久连接——就不行。而且 session 本身成了藏状态的地方，开发者经常把不该放传输层的东西塞进去，出了问题还不好查。
+
+### 改成什么样
+
+新规范完全去掉了 session。每个 HTTP 请求自己带齐所有信息：
 
 \`\`\`
 POST /mcp HTTP/1.1
@@ -95,14 +101,32 @@ Mcp-Method: tools/call
 Mcp-Name: search
 \`\`\`
 
-Server 不需要记住你是谁，每个请求都是独立的。Session 没了，但状态还在——只是从隐含的传输层变成了显式的 tool 参数。
+请求的 \`_meta\` 字段里包含了协议版本、客户端信息和能力声明。Server 不需要记住你是谁，每个请求都是全新的、独立的。
 
-两个新加的扩展机制：
+### 状态去哪了
 
-- **MCP Apps** —— 在对话里嵌入交互式 UI（sandboxed iframe）。不只是返回文本，Server 可以返回一个仪表盘或表单渲染在对话里。
-- **Tasks** —— 异步长时间任务，客户端轮询获取结果，不需要保持连接。
+Session 没了，但状态还在。只是从隐含的传输层变成了显式的 tool 参数。以前购物车的状态存在 session 里 Server 自动记住，现在模型每次调用 tool 时用参数把上下文传回来。更麻烦但更透明——设计者的原话是 "visible arguments beat hidden session bags"。
 
-认证方面对齐了企业标准：OAuth 2.0 / OpenID Connect，支持 Entra、Okta 这些身份提供商。
+### Multi-Round-Trip Requests
+
+另一个重要改动是 MRTR。以前 Server 要跟用户确认时（比如"你确定要删这个文件吗？"），靠保持 SSE 长连接发消息。这不适用于无状态架构。
+
+新的方案：Server 收到请求后返回 \`input_required\` + 一个 opaque 的 \`requestState\`，Client 展示确认 UI 后把用户确认结果带上 \`requestState\` 重新请求。不需要长连接，但能达到同样的交互效果。
+
+### 两个新扩展
+
+核心协议保持精简，新增能力通过扩展规范添加：
+
+- **MCP Apps** —— Server 可以返回交互式 UI（sandboxed iframe 渲染在对话里），不只是文本。天气预报可以返回一张天气图而不是文字描述。
+- **Tasks** —— 异步长时间任务。Server 返回一个 task ID，Client 轮询 \`tasks/get\` 获取结果。对应队列 worker 和定时任务这类场景。
+
+### 认证升级
+
+之前 MCP 的认证方案比较随意——很多实现就是"一个 header 里放长寿命共享密钥"。新规范对齐了企业标准：OAuth 2.0 / OpenID Connect，支持 Entra、Okta 等身份提供商。Dynamic Client Registration 被废弃，替代方案是 CIMD。
+
+### 废弃（12 个月迁移期）
+
+Roots、Sampling、Logging、旧版 HTTP+SSE 传输全部进入 12 个月废弃窗口。这意味着老版本 Server 还能用一年，但新开发应该直接基于新规范。
 
 ## 生态
 
