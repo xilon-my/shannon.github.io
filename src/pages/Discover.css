@@ -438,6 +438,13 @@
   border: 1px solid var(--border);
 }
 
+.discover-detail-content img[src*="langgraph-graph"] {
+  width: auto;
+  max-width: 320px;
+  display: block;
+  margin-left: 0;
+}
+
 /* ── Tables ── */
 .discover-detail-content table {
   width: calc(100% - 48px);
