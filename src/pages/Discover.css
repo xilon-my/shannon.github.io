@@ -380,6 +380,13 @@
   overflow-wrap: break-word;
 }
 
+/* ASCII diagrams inside code blocks — keep monospace alignment */
+.discover-detail-content pre:has(code.language-diagram) {
+  white-space: pre;
+  overflow-x: auto;
+  overflow-wrap: normal;
+}
+
 .discover-detail-content pre code {
   background: none;
   padding: 0;
@@ -405,6 +412,7 @@
 .discover-detail-content pre:has(code.language-sh)::before { content: "bash"; color: var(--green); }
 .discover-detail-content pre:has(code.language-diff)::before { content: "diff"; color: var(--yellow); }
 .discover-detail-content pre:has(code.language-json)::before { content: "json"; color: var(--yellow); }
+.discover-detail-content pre:has(code.language-diagram)::before { content: "diagram"; color: var(--magenta); }
 
 .discover-detail-content pre:has(code.language-markdown)::before {
   content: "md";
