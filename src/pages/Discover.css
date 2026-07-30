@@ -375,7 +375,7 @@
   margin: 16px 0;
   font-size: 0.92rem;
   line-height: 1.8;
-  font-family: 'JetBrains Mono Web', 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'Courier New', monospace;
+  font-family: var(--font);
   white-space: pre-wrap;
   overflow-wrap: break-word;
 }
@@ -436,6 +436,29 @@
   margin: 24px 0;
   border-radius: var(--radius);
   border: 1px solid var(--border);
+}
+
+/* ── ASCII diagram: render exactly as source ── */
+.discover-diagram {
+  background: var(--code-bg);
+  color: var(--code-text);
+  border-radius: var(--radius);
+  margin: 16px 0;
+  padding: 16px;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  font-family: 'JetBrains Mono Web', 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'Courier New', 'KaiTi Web', '楷体', 'STKaiti', 'KaiTi', monospace;
+  white-space: pre;
+  overflow-x: auto;
+  overflow-wrap: normal;
+}
+
+.discover-diagram code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
 }
 
 /* ── Tables ── */

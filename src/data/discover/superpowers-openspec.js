@@ -134,8 +134,7 @@ Superpowers 是一个能约束 Agent 行为的方法论。但方法论管的是"
 
 反过来也一样。OpenSpec 给了一份漂亮的 spec 文档，但如果没有 Superpowers 那样的流程约束，Agent 可能在写了三行代码之后就跑偏了，或者跳过了测试，或者做了 scope creep——spec 还在那里，但代码已经不是 spec 的样子了。
 
-\`\`\`
-         Superpowers                OpenSpec
+<pre class="discover-diagram"><code>         Superpowers                OpenSpec
     ┌──────────────────┐      ┌──────────────────┐
     │   brainstorming   │      │  proposal.md     │
     │   writing-plans   │      │  specs/ (delta)  │
@@ -143,8 +142,7 @@ Superpowers 是一个能约束 Agent 行为的方法论。但方法论管的是"
     │   code-review     │      │  tasks.md        │
     │   finishing-branch│      │  archive         │
     └──────────────────┘      └──────────────────┘
-           行为框架                     契约框架
-\`\`\`
+           行为框架                     契约框架</code></pre>
 
 一个解决"Agent 怎么写代码"，一个解决"Agent 写的是什么"。
 
