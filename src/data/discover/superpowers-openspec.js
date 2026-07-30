@@ -96,6 +96,59 @@ openspec/
 └── config.yaml          # 配置 + 项目规则
 \`\`\`
 
+### Spec 是什么
+
+\`openspec/specs/\` 下面的每个文件描述系统一个能力的当前行为。比如 \`cli-init/spec.md\` 描述 \`openspec init\` 命令当前怎么工作的。它不是需求文档，是"这个系统现在就是这样运行的"的事实记录。
+
+一篇 spec 文件的结构长这样：
+
+\`\`\`markdown
+# CLI Init Specification
+
+## Purpose
+\`openspec init\` 在当前目录创建 openspec/ 结构。
+
+## Requirements
+
+### Requirement: 目录已存在时跳过
+The system SHALL skip directory creation when openspec/ already exists.
+#### Scenario: 已初始化过
+- **WHEN** user runs \`openspec init\` in a project with openspec/
+- **THEN** the system prints a message and exits
+
+### Requirement: 指定 tools 参数
+The system SHALL generate config for specified AI tools.
+#### Scenario: 单工具
+- **WHEN** user runs \`openspec init --tools claude\`
+- **THEN** only Claude Code 的配置文件被生成
+\`\`\`
+
+每条 requirement 是 SHALL 句式定义的行为约束，后面跟具体的 scenario（Given/When/Then）。不写实现细节，只写"应该怎么样"。
+
+这是 OpenSpec 的"真理来源"（source of truth）。当有人问"这个命令干了什么"，读 spec 比读代码快。当 AI 准备改代码时，读 spec 知道当前应该有什么行为，然后决定改哪条。
+
+### 实际怎么用
+
+安装就一条命令：
+
+\`\`\`bash
+npm install -g @fission-ai/openspec
+cd your-project && openspec init
+\`\`\`
+
+\`openspec init\` 在项目里建好 \`openspec/\` 目录结构，同时在你的 AI 工具里注册 slash commands。以 Claude Code 为例，init 之后你的技能列表里多了 \`opsx:propose\`、\`opsx:apply\`、\`opsx:archive\` 等命令。
+
+日常使用走四步：
+
+1. **想清楚** —— 拿不准怎么做时跑 \`/opsx:explore\`，AI 会读你的代码并讨论方案，不产生任何文件
+2. **写计划** —— \`/opsx:propose 功能名\`，AI 生成四个 artifact，你逐份审查，不对就跟 AI 来回改
+3. **干活** —— 确认计划后跑 \`/opsx:apply\`，AI 按 tasks.md 逐项实施。做一半超时了？重开会话再跑一次 \`/opsx:apply\`，从上次未完成的任务继续
+4. **归档** —— 完成后跑 \`/opsx:archive\`，delta specs 合并进主 specs，change 移到 archive/。你的 \`openspec/specs/\` 现在描述了系统的最新行为
+
+这四步不是瀑布。你随时可以在 apply 过程中改 spec，改完继续 apply，不需要重来。也随时可以跳过某些 artifact——如果你只需要改个 API key 的名字，写个 tasks.md 直接开干就行，不用写 proposal 和 design。
+
+第一次用的话，建议跑 \`openspec init\` 之后去它的 dogfooding 目录看看——OpenSpec 自己就用 OpenSpec 开发，\`openspec/specs/\` 里有 35 个 spec 文件，\`openspec/changes/archive/\` 里有 80+ 个已归档 change。装完之后看一眼就知道怎么写了。
+
 工作流是 slash command 驱动的：
 
 \`\`\`
@@ -182,8 +235,6 @@ Archive 时这些 delta 合并到主 \`openspec/specs/\` 里——新增的追�
 ### 生态集成
 
 OpenSpec 支持 32 个 AI 编码工具的 slash commands。\`openspec init --tools claude,cursor\` 一键在对应目录生成配置。每个工具的调用格式不同（\`/opsx:propose\` vs \`/opsx-propose\` vs \`@opsx-propose\`），init 命令会自动处理。
-
-它还做了 dogfooding——自己的 \`openspec/\` 目录里有 35 个 spec 文件、80+ 个已归档 change。装完看一眼它自己怎么用的，基本就知道边界在哪。
 
 ## 放在一起看
 
