@@ -98,7 +98,6 @@ export default function DiscoverDetail() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="discover-detail-gh-link"
-                style={{marginTop: 8}}
               >
                 <span className="prompt-cv">❯</span> {project.url2.startsWith('https://github.com/') ? 'github.com/' + project.url2.replace('https://github.com/', '') : project.url2}
                 <span className="discover-card-arrow"> ↗</span>

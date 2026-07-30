@@ -241,6 +241,9 @@
 /* ── GitHub link button ── */
 .discover-detail-links {
   margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .discover-detail-gh-link {
