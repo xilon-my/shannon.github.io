@@ -1,6 +1,6 @@
 const project = {
   slug: 'multica',
-  date: '2026-07-30',
+  date: '2026-07-30 11:30',
   name: 'Multica',
   url: 'https://github.com/multica-ai/multica',
   description: '一个开源的多智能体管理平台。像分配给同事一样给 AI 编程代理分配 Issue，代理自主编写代码、报告阻塞、更新进度。',
