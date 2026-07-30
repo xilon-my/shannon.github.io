@@ -12,7 +12,15 @@ html { scroll-behavior: smooth; }
   size-adjust: 88%;
 }
 
-/* KaiTi is a system font on Windows and macOS */
+/* ── KaiTi Web (self-hosted, compressed) ── */
+@font-face {
+  font-family: 'KaiTi Web';
+  src: url('/fonts/KaiTi.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+4E00-9FFF, U+3400-4DBF, U+2F00-2FDF, U+3000-303F, U+FF00-FFEF;
+}
 
 /* ── Catppuccin Themes ── */
 :root, [data-theme="dark"] {
@@ -33,8 +41,8 @@ html { scroll-behavior: smooth; }
   --code-text: #CDD6F4;
   --radius: 10px;
   --max-w: 820px;
-  --font: 'JetBrains Mono Web', 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', '楷体', 'STKaiti', 'KaiTi', serif;
-  --mono: 'JetBrains Mono Web', 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', '楷体', 'STKaiti', 'KaiTi', serif;
+  --font: 'JetBrains Mono Web', 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'KaiTi Web', '楷体', 'STKaiti', 'KaiTi', serif;
+  --mono: 'JetBrains Mono Web', 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'KaiTi Web', '楷体', 'STKaiti', 'KaiTi', serif;
 }
 
 [data-theme="light"] {
