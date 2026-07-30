@@ -446,9 +446,9 @@
   border-radius: var(--radius);
   margin: 16px 0;
   padding: 16px;
-  font-size: 0.92rem;
-  line-height: 1.2;
-  font-family: 'JetBrains Mono Web', 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'Courier New', 'KaiTi Web', '楷体', 'STKaiti', 'KaiTi', monospace;
+  font-size: 0.85rem;
+  line-height: 1.15;
+  font-family: 'Courier New', 'Noto Sans Mono', 'Source Code Pro', 'Fira Code', monospace;
   white-space: pre;
   overflow-x: auto;
   overflow-wrap: normal;
@@ -460,6 +460,7 @@
   color: inherit;
   font-family: inherit;
   font-size: inherit;
+  white-space: inherit;
 }
 
 /* ── Tables ── */
