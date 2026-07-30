@@ -5,6 +5,6 @@ import openaiAgentsPython from './discover/openai-agents-python.js'
 import pi from './discover/pi-agent.js'
 import mcp from './discover/mcp.js'
 
-const projects = [multica, mcp, pi, openaiAgentsPython, symphony, okf]
+const projects = [multica, symphony, okf, openaiAgentsPython, pi, mcp].sort((a, b) => b.date.localeCompare(a.date))
 
 export default projects
