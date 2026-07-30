@@ -51,15 +51,53 @@ MCP 的思路是把这层标准化：每个工具写一个 MCP server，所有�
 | **Resources** | 文件/数据 | Agent 读取上下文（读文件、查文档、查数据库记录） |
 | **Prompts** | 模板 | 预置的 prompt 模板，Server 告诉 Agent 怎么跟自己打交道 |
 
-最常用的是 Tools。Agent 调用 tool 的完整流程是：
+最常用的是 Tools。Client 在这里扮演翻译的角色——它把模型的 tool calling 转成 JSON-RPC 发给 Server，再把 Server 的响应转回模型能理解的格式。
 
-1. Host 通过 Client 发 \`tools/list\`，Server 返回有哪些 tool 可用（名字、参数 schema、描述）
-2. 模型（比如 Claude）根据用户问题决定调哪个 tool
-3. Host 通过 Client 发 \`tools/call {name, arguments}\`
-4. Server 执行操作，返回结果
-5. Host 把结果送回给模型，模型生成回复
+具体到请求上，第一步是发现 Server 有什么工具。Client 发 \`tools/list\`：
 
-整个过程走 **JSON-RPC 2.0** 协议。传输层有两种：本地用 **stdio**（把 Server 当子进程启动，走 stdin/stdout），远程用 **Streamable HTTP**。生产环境要求 HTTPS。
+\`\`\`json
+{"jsonrpc": "2.0", "id": "1", "method": "tools/list", "params": {}}
+\`\`\`
+
+Server 返回可用的工具列表，每个带名字、描述和参数 schema：
+
+\`\`\`json
+{"jsonrpc": "2.0", "id": "1", "result": {
+  "tools": [{
+    "name": "get_forecast",
+    "description": "获取指定城市的天气预报",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "city": {"type": "string"},
+        "days": {"type": "number"}
+      },
+      "required": ["city"]
+    }
+  }]
+}}
+\`\`\`
+
+Client 把这个列表告诉模型。模型决定调用 \`get_forecast\`，Client 就发 \`tools/call\`：
+
+\`\`\`json
+{"jsonrpc": "2.0", "id": "2", "method": "tools/call", "params": {
+  "name": "get_forecast",
+  "arguments": {"city": "东京", "days": 3}
+}}
+\`\`\`
+
+Server 收到后调天气预报 API，返回结果：
+
+\`\`\`json
+{"jsonrpc": "2.0", "id": "2", "result": {
+  "content": [{"type": "text", "text": "东京未来3天：25-28°C，多云转晴"}]
+}}
+\`\`\`
+
+Client 把这段文本送回模型，模型据此生成自然语言回复。整个过程就是这三步：**发现 → 调用 → 返回**。
+
+传输层有两种。本地工具走 **stdio**——把 Server 当子进程启动，通信走标准输入输出，零网络开销。远程工具走 **Streamable HTTP**，生产环境要求 HTTPS。
 
 ## 为什么需要这套东西
 
