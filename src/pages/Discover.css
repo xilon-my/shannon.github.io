@@ -424,12 +424,8 @@
   vertical-align: top;
 }
 
-.discover-detail-content tbody tr:nth-child(even) td {
-  background: var(--surface);
-}
-
 .discover-detail-content tbody tr:hover td {
-  background: var(--accent-light);
+  background: var(--surface);
 }
 
 @media (max-width: 600px) {
