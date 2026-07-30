@@ -4,7 +4,7 @@
 }
 
 .discover-header {
-  margin-bottom: 40px;
+  margin-bottom: 24px;
 }
 
 .discover-prompt {
@@ -21,6 +21,38 @@
   font-size: 1rem;
   max-width: 520px;
   margin-top: 4px;
+  margin-bottom: 16px;
+}
+
+/* ── Tag filter ── */
+.discover-tag-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.tag-btn {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  padding: 3px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tag-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.tag-btn.active {
+  background: var(--accent-light);
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
 /* ── Project Grid ── */

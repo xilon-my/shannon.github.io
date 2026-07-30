@@ -1,9 +1,14 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Terminal from '../components/Terminal.jsx'
 import projects from '../data/discover-projects.js'
 import './Discover.css'
 
 export default function Discover() {
+  const [activeTag, setActiveTag] = useState(null)
+  const allTags = [...new Set(projects.flatMap(p => p.tags))].sort()
+  const filtered = activeTag ? projects.filter(p => p.tags.includes(activeTag)) : projects
+
   return (
     <div className="discover-page">
       <div className="container">
@@ -15,15 +20,32 @@ export default function Discover() {
             <p className="discover-sub">
               Cool open-source projects I&rsquo;ve come across &mdash; tools, frameworks, and ideas worth sharing.
             </p>
+            <div className="discover-tag-filter">
+              <button
+                className={`tag-btn ${activeTag === null ? 'active' : ''}`}
+                onClick={() => setActiveTag(null)}
+              >
+                all
+              </button>
+              {allTags.map(t => (
+                <button
+                  key={t}
+                  className={`tag-btn ${activeTag === t ? 'active' : ''}`}
+                  onClick={() => setActiveTag(t)}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {projects.length === 0 ? (
+          {filtered.length === 0 ? (
             <div className="discover-empty">
-              <p>No projects yet. Come back later!</p>
+              <p>No projects with tag &lsquo;{activeTag}&rsquo;.</p>
             </div>
           ) : (
             <div className="discover-grid">
-              {projects.map((p, i) => (
+              {filtered.map((p, i) => (
                 <Link key={p.slug} to={`/discover/${p.slug}`} className="discover-card-link">
                   <article className={`discover-card fade-in fade-in-${Math.min(i + 1, 5)}`}>
                     <div className="discover-card-header">
