@@ -3,6 +3,7 @@ const project = {
   date: '2026-07-30 15:00',
   name: 'Superpowers + OpenSpec',
   url: 'https://github.com/obra/superpowers',
+  url2: 'https://github.com/Fission-AI/OpenSpec',
   description: 'Superpowers 是一套给 AI 编程代理用的结构化方法论，OpenSpec 是一个 AI 原生的 spec 驱动开发框架。一个管过程一个管契约，放在一起看才完整。',
   tags: ['Framework'],
   stars: '9.2k+ / 12k+',
