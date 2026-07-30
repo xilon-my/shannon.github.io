@@ -81,7 +81,7 @@ export default function DiscoverDetail() {
             </div>
           </div>
 
-          {/* ── GitHub link ── */}
+          {/* ── Project link ── */}
           <div className="discover-detail-links">
             <a
               href={project.url}
@@ -89,7 +89,7 @@ export default function DiscoverDetail() {
               rel="noopener noreferrer"
               className="discover-detail-gh-link"
             >
-              <span className="prompt-cv">❯</span> github.com/{project.url.replace('https://github.com/', '')}
+              <span className="prompt-cv">❯</span> {project.url.startsWith('https://github.com/') ? 'github.com/' + project.url.replace('https://github.com/', '') : project.url}
               <span className="discover-card-arrow"> ↗</span>
             </a>
           </div>
