@@ -1,6 +1,6 @@
 const project = {
   slug: 'pi',
-  date: '2026-07-29',
+  date: '2026-07-29 10:08',
   name: 'Pi Agent Harness',
   url: 'https://github.com/earendil-works/pi',
   description: '一个极简 AI Agent 工具包。统一的多供应商 LLM 接口，带差分渲染的 TUI，可扩展的 Agent 运行时，和自解释的编码 Agent CLI。',
