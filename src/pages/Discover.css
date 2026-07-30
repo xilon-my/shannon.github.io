@@ -439,7 +439,7 @@
 }
 
 /* ── ASCII diagram: render exactly as source ── */
-.discover-diagram {
+.discover-detail-content .discover-diagram {
   display: block;
   background: var(--code-bg);
   color: var(--code-text);
@@ -454,7 +454,7 @@
   overflow-wrap: normal;
 }
 
-.discover-diagram code {
+.discover-detail-content .discover-diagram code {
   background: none;
   padding: 0;
   color: inherit;
