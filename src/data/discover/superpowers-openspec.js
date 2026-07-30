@@ -102,10 +102,6 @@ openspec/
 └── config.yaml          # 配置 + 项目规则
 \`\`\`
 
-### Spec 是什么
-
-\`openspec/specs/\` 下面的每个文件描述系统一个能力的当前行为。比如 \`cli-init/spec.md\` 描述 \`openspec init\` 命令当前怎么工作的。它不是需求文档，是"这个系统现在就是这样运行的"的事实记录。
-
 一篇 spec 文件的结构长这样：
 
 \`\`\`markdown
