@@ -26,33 +26,43 @@
 
 /* ── Tag filter ── */
 .discover-tag-filter {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 20px;
+  margin: 12px 0 20px;
 }
 
-.tag-btn {
+.discover-tag-filter .discover-prompt {
+  flex-wrap: wrap;
+}
+
+.filter-cmd {
+  color: var(--text);
+}
+
+.filter-pipe {
+  color: var(--text-secondary);
+  margin: 0 4px;
+}
+
+.filter-grep {
+  color: var(--green);
+  margin-right: 6px;
+}
+
+.filter-tag {
   font-family: var(--mono);
-  font-size: 0.72rem;
-  padding: 3px 12px;
-  border-radius: 4px;
-  border: 1px solid var(--border);
-  background: transparent;
+  font-size: 0.78rem;
   color: var(--text-secondary);
   cursor: pointer;
-  transition: all 0.15s;
+  padding: 0 4px;
+  transition: color 0.15s;
+  white-space: nowrap;
 }
 
-.tag-btn:hover {
-  border-color: var(--accent);
+.filter-tag:hover {
   color: var(--accent);
 }
 
-.tag-btn.active {
-  background: var(--accent-light);
-  color: var(--accent);
-  border-color: var(--accent);
+.filter-tag.active {
+  color: var(--yellow);
 }
 
 /* ── Project Grid ── */

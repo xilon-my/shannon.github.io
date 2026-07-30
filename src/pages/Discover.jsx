@@ -21,21 +21,24 @@ export default function Discover() {
               Cool open-source projects I&rsquo;ve come across &mdash; tools, frameworks, and ideas worth sharing.
             </p>
             <div className="discover-tag-filter">
-              <button
-                className={`tag-btn ${activeTag === null ? 'active' : ''}`}
-                onClick={() => setActiveTag(null)}
-              >
-                all
-              </button>
-              {allTags.map(t => (
-                <button
-                  key={t}
-                  className={`tag-btn ${activeTag === t ? 'active' : ''}`}
-                  onClick={() => setActiveTag(t)}
-                >
-                  {t}
-                </button>
-              ))}
+              <p className="discover-prompt">
+                <span className="prompt-cv">❯</span>
+                <span className="filter-cmd">cat projects-i-like.md</span>
+                {activeTag && <span className="filter-pipe">|</span>}
+                {activeTag && <span className="filter-grep">grep</span>}
+                <span className={`filter-tag ${activeTag === null ? 'active' : ''}`} onClick={() => setActiveTag(null)}>
+                  --all
+                </span>
+                {allTags.map(t => (
+                  <span
+                    key={t}
+                    className={`filter-tag ${activeTag === t ? 'active' : ''}`}
+                    onClick={() => setActiveTag(t)}
+                  >
+                    --{t.toLowerCase()}
+                  </span>
+                ))}
+              </p>
             </div>
           </div>
 
