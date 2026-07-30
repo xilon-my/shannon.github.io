@@ -425,13 +425,11 @@
 }
 
 .discover-detail-content tbody tr:nth-child(even) td {
-  background: var(--accent-light);
-  opacity: 0.85;
+  background: var(--surface);
 }
 
 .discover-detail-content tbody tr:hover td {
   background: var(--accent-light);
-  opacity: 1;
 }
 
 @media (max-width: 600px) {
