@@ -44,7 +44,7 @@ Squad 的模型是"先定义谁负责什么，再分配任务"——前端 Agent
 
 另一种思路是：只有一个 runtime，不预设角色。主 Agent 接到任务后自己判断怎么拆，需要的时候动态召子 Agent，传当前阶段需要的上下文，用完就丢。子 Agent 是函数式的——调一个子 Agent 就像调一个函数，输入参数，拿回结果。
 
-这不就是 Symphony 的思路吗——背后一个 runtime，WORKFLOW.md 定义行为，Agent 按状态流转。只不过 WORKFLOW.md 还可以做得更：不只是写一段 prompt，而是能定义"什么情况下召子 Agent"、"上下文怎么传"、"状态怎么流转"——声明式的规则，Agent 自己读自己执行。
+有点类似 Symphony 的思路吗——背后一个 runtime，WORKFLOW.md 定义行为，Agent 按状态流转。只不过 WORKFLOW.md 不只是写一段 prompt，而是能定义"什么情况下召子 Agent"、"上下文怎么传"、"状态怎么流转"——声明式的规则，Agent 自己读自己执行。
 
 两种模型没有绝对对错。Squad 适合分工明确的场景，单 runtime + 增强版 WORKFLOW.md 适合任务边界模糊、需要灵活应变的场景。
 
