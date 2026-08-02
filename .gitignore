@@ -4,3 +4,4 @@ dist
 D*askpass*.cmd
 .vercel
 .env*
+__pycache__/
