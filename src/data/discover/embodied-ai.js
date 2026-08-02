@@ -16,6 +16,8 @@ const project = {
 
 RL 的核心循环一句话：看状态 → 按策略选动作 → 拿奖励 → 更新策略。策略就是"看到什么就做什么"的映射，它输出的不是固定动作，而是每个动作的概率分布——既偏向已知好的，又保留探索空间。
 
+![强化学习工作流程](/discover/rl-loop.png)
+
 入门环境是 CartPole（倒立摆）。动作空间只有两个离散值，但"动态平衡"这个难题逼你把算法写对。
 
 **REINFORCE** 是最朴素的策略梯度，核心只有一行：
@@ -32,6 +34,10 @@ advantage = G_t − V(s_t)
 
 这就是 actor-critic 的雏形：actor 做决定，critic 打分。这一步修完，CartPole 从"学不进去"变成稳定收敛，实测第 471 回合触发 solved。
 
+训练好的策略就是反复"杆往哪倒、往哪推"——看 GIF 里的小车始终保持平衡：
+
+![CartPole 演示：倒立摆保持平衡](/discover/cartpole-demo.gif)
+
 **PPO** 补了 REINFORCE 剩下的两个洞：数据用一次就扔，步子迈太大容易崩。它做两件事——同批数据复习多遍（用重要性采样加权），和 clip 限速（每个动作概率一次最多改 20-30%）。
 
 \`\`\`python
@@ -40,7 +46,9 @@ model = PPO("MlpPolicy", env, n_steps=512, gamma=0.9, clip_range=0.3)
 
 限速和复用互相支撑：正因为每次只改一点，新旧策略才不至于差太远，旧数据才敢放心复用。这套设计让 PPO 成了机器人学习里最常用的 RL 算法。
 
-在 Reacher（平面双关节臂够目标）上实测：加上奖励工程——把控制惩罚从 1.0 降到 0.1——效果从 -6.1 提升到 -4.69。机械臂从"慢吞吞地挪"变成"果断扫向目标、稳稳停住"。
+在 Reacher（平面双关节臂够目标）上实测：加上奖励工程——把控制惩罚从 1.0 降到 0.1——效果从 -6.1 提升到 -4.69。机械臂从"慢吞吞地挪"变成"果断扫向目标、稳稳停住"：
+
+![Reacher 演示：双关节臂伸向目标](/discover/reacher-demo.gif)
 
 ## RL 的三个难处
 
@@ -72,9 +80,22 @@ lerobot-train --dataset.repo_id=lerobot/pusht --env.type=pusht \
 
 普通回归网络做不到：它会把多种做法**平均成一种"谁都不像"的推法**。扩散模型能保留每一种——这不是锦上添花，是模仿学习的刚需。
 
+## 用什么跑的：LeRobot
+
+上面那条 \`lerobot-train\` 命令来自 **LeRobot**——HuggingFace 维护的开源机器人学习框架（Apache-2.0，GitHub 约 2.6 万 stars）。它把机器人学习标准化成一条流水线：
+
+- **数据采集**：统一的 \`Robot\` 接口遥操作低成本机械臂（SO-100 等）
+- **数据集**：统一成 LeRobotDataset 格式——同步 MP4 视频（视觉）+ Parquet（状态/动作），托管在 HuggingFace Hub 上，社区已共享 16000+ 个数据集
+- **训练**：一条命令，内置 ACT、Diffusion Policy、VQ-BeT 等策略
+- **评估 / 部署**：\`lerobot-eval\` 评估，推理只是一个"取观测 → 选动作 → 发动作"的循环
+
+它常被比作"机器人领域的 transformers"——统一格式 + 共享数据 + 预训练模型，让同一套代码和模型格式在仿真与真机之间贯通。我们用的 PushT 就是它的官方入门任务：数据直接下载、训练一条命令、评估出成功率，整条流程就是 LeRobot 的日常用法。
+
 ## 论文里的三个关键设计
 
-Diffusion Policy 论文（Chi et al., RSS 2023）真正管用，靠的是三个设计的组合：
+Diffusion Policy 论文（Chi et al., RSS 2023）真正管用，靠的是三个设计的组合。整条流程就是论文的架构图——观测序列 → 视觉编码器 → DDPM 去噪迭代 → 预测动作序列：
+
+![Diffusion Policy 架构图](/discover/diffusion-policy-arch-8bit.png)
 
 **动作分块（Action Chunking）**——一次预测一整段未来动作（论文里多数任务预测 16 步），而不是一步。单步预测的毛病是相邻动作可能来自不同"模式"，造成抖动；预测整段能保证时序一致，而且对"停在原地"的空闲动作更鲁棒。代价是预测太长反应会变慢，16 步是平衡点。
 
@@ -95,9 +116,15 @@ Push-T 上（状态观测）：
 | BET | 0.79 / 0.70 |
 | LSTM-GMM | 0.67 / 0.61 |
 
-真实 Push-T 上差距更大：Diffusion Policy **95% 成功率、0.80 IoU**，人类 100%、0.84 IoU——论文说它"接近人类水平"；而最强的 baseline（IBC）在真实环境是 0%。
+真实 Push-T 上差距更大：Diffusion Policy **95% 成功率、0.80 IoU**，人类 100%、0.84 IoU——论文说它"接近人类水平"；而最强的 baseline（IBC）在真实环境是 0%。下图为真实 Push-T 上各方法的动作轨迹对比，Diffusion Policy 的轨迹最接近目标：
 
-其他任务：Kitchen 的最终成功率指标提升 **213%**（0.99 vs 0.44）；真实翻杯子 20 次试验 **90% 成功**，baseline 是 0%。论文把优势归结为三点：能表达多模态分布、能预测高维动作序列、训练稳定（扩散模型不需要像 IBC 那样估计归一化常数）。
+![真实 Push-T 各方法轨迹对比](/discover/diffusion-policy-pusht-8bit.png)
+
+其他任务：Kitchen 的最终成功率指标提升 **213%**（0.99 vs 0.44）；真实翻杯子 20 次试验 **90% 成功**，baseline 是 0%。多阶段任务（Block Push / Kitchen）的定量对比也一致地偏向 Diffusion Policy：
+
+![Block Push / Kitchen 定量对比](/discover/diffusion-policy-blockpush-kitchen-8bit.png)
+
+论文把优势归结为三点：能表达多模态分布、能预测高维动作序列、训练稳定（扩散模型不需要像 IBC 那样估计归一化常数）。
 
 ## 两代对比
 

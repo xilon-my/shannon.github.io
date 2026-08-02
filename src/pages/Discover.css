@@ -445,6 +445,23 @@
   margin: 24px auto;
 }
 
+/* ── 演示 GIF：缩小居中 ── */
+.discover-detail-content img[src$=".gif"] {
+  width: auto;
+  max-width: 380px;
+  display: block;
+  margin: 24px auto;
+}
+
+/* ── RL 循环图 / 论文图：适中宽度居中 ── */
+.discover-detail-content img[src*="rl-loop"],
+.discover-detail-content img[src*="diffusion-policy"] {
+  width: auto;
+  max-width: 640px;
+  display: block;
+  margin: 24px auto;
+}
+
 /* ── Tables ── */
 .discover-detail-content table {
   width: calc(100% - 48px);
