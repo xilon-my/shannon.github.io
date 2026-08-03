@@ -27,7 +27,20 @@ VLA 不再绑定单一任务。给它看相机画面、听一句自然语言指�
 
 ## π0:VLA 的架构蓝图
 
-2024 年 10 月,Physical Intelligence 发布 π0 论文("π₀: A Vision-Language-Action Flow Model for General Robot Control",arXiv:2410.24164),把 VLA 的架构定了下来。它由两半拼成:
+2024 年 10 月,Physical Intelligence 发布 π0 论文("π₀: A Vision-Language-Action Flow Model for General Robot Control",arXiv:2410.24164),把 VLA 的架构定了下来。在动手之前,它先问了几个当时没人答清楚的问题:
+
+- **动作能不能不用离散 token,而是连续生成?** 之前的 VLA(OpenVLA、RT-2)把动作离散成 token、和文字一起自回归生成。论文说这"pose a major challenge"——离散化做不了高频、灵巧的控制(π0 的目标是 50 Hz 的电机指令)。π0 的回答:用 flow matching 直接生成连续动作块。
+- **能不能站在一个预训练好的 VLM 肩膀上?** 论文核心主张是"继承互联网规模的语义知识"——视觉和语言理解从预训练的 VLM 里白拿,而不是从机器人数据里从零学。这样模型天然"知道"盘子、碗、还有"放上去"是什么意思。
+- **一个模型能不能跨机械臂通用?** 预训练数据横跨 7 种机器人构型、68 个任务,加上公开数据集(OXE、Bridge V2、DROID)——同一个模型,单臂、双臂、移动机械臂都能用。
+- **预训练到底值不值?** 论文结论:预训练后的模型微调新任务,经常比从零训好——"有时候是 2 倍"。
+
+这就是 π0 想做的:一个能通用、能高频灵巧控制、能听指令的"机器人基础模型"。
+
+![π0 用移动机械臂完成端到端叠衣服](/discover/pi0-hero-8bit.png)
+
+### 架构:参谋部 + 执行部
+
+它由两半拼成:
 
 \`\`\`
 相机画面 ──┐
@@ -37,22 +50,47 @@ VLA 不再绑定单一任务。给它看相机画面、听一句自然语言指�
                                                    └──→ 未来50步动作块 (50×7)
 \`\`\`
 
-- **VLM 骨干 = 参谋部**。用开源的 PaliGemma(3B)做"眼睛和耳朵":图像进视觉编码器、指令进语言模型,融合成对当前局势的完整理解。好处是继承了互联网级语义——它"知道"盘子、碗、还有"放上去"是什么意思。
+- **VLM 骨干 = 参谋部**。用开源的 PaliGemma(3B)做"眼睛和耳朵":图像进视觉编码器、指令进语言模型,融合成对当前局势的完整理解。
 - **动作专家 = 执行部**。一个更小的 transformer(约 3 亿参数),读参谋部的分析,生成机械臂动作。整个模型 33 亿参数。
 
-动作是**连续值**,用 flow matching 生成(不是像 OpenVLA 那样把动作离散成 token 逐个自回归)。一次生成未来 50 步的动作块,推理时做 10 步去噪。
+动作是**连续值**,用 flow matching 生成:一次预测未来 50 步的动作块,推理时做 10 步去噪。论文里的架构图:
 
-训练是纯行为克隆:10,000+ 小时真机数据 + 条件 flow matching loss。零样本、微调新技能都超过 OpenVLA、Octo、ACT、Diffusion Policy——从此 VLA 成了机器人学习的新基线。
+![π0 架构:VLM 骨干 + 动作专家](/discover/pi0-arch-8bit.png)
+
+## 论文的实验:零样本就压过基线
+
+π0 在真机上做零样本评估,对比 OpenVLA 和 Octo。结果:在所有任务上,连只训 160k 步的"算力对齐版"都压过所有基线,完整版大幅领先:
+
+![π0 真机零样本结果对比](/discover/pi0-results-8bit.png)
+
+它还能 50 Hz 高频控制,完成"从烘干机取衣 → 装筐 → 端到叠衣台 → 逐件叠衣服"这种几十步的灵巧任务。为了训练它,Physical Intelligence 用了 10,000+ 小时机器人数据、903M 步——论文自称"有史以来最大的机器人学习实验"。
 
 ## smolvla:把 π0 压到 4.5 亿参数
 
-π0 的 33 亿参数不是谁都跑得起。2025 年 6 月,HuggingFace LeRobot 团队发布 smolvla("SmolVLA: A Vision-Language-Action Model for Affordable and Efficient Robotics",arXiv:2506.01844),把 π0 的思路压到 **4.5 亿参数**(VLM 骨干换 SmolVLM2,动作专家约 1 亿)。三个省算力的设计:
+π0 的 33 亿参数不是谁都跑得起,而且训练数据和代码没有完全开源。2025 年 6 月,HuggingFace LeRobot 团队发布 smolvla("SmolVLA: A Vision-Language-Action Model for Affordable and Efficient Robotics",arXiv:2506.01844),它想回答的问题同样直接:
+
+- **小模型能不能追平大 10 倍的模型?** 4.5 亿参数,对比 π0 的 33 亿、OpenVLA 的 70 亿。
+- **真的需要那么多数据吗?** 只用不到 3 万个社区演示 episode——"比其他 VLA 少一个数量级"。
+- **π0 的架构贵在哪?** 逐个击破:视觉 token 太多、动作专家读了太多层、注意力太贵。
+- **能不能在消费级硬件上训和跑?** 单张 GPU 就能训练,CPU 也能推理。
+
+三个省算力的设计:
 
 - **视觉 token 缩减**:每帧只留 64 个视觉 token(PixelShuffle 把 1024 个压下来)。
 - **层跳跃**:动作专家只读 VLM 一半层的特征。
 - **交替注意力**:交叉注意力(动作"看"局势)与自注意力(动作之间时间平滑)交错,比全注意力轻量。
 
-数据也很"穷":不到 3 万个社区演示 episode,比其他 VLA 少一个数量级。但效果不差——LIBERO 平均成功率 87.3,超过 33 亿参数的 π0(86.0)和 70 亿的 OpenVLA(76.5);真机 SO-100 上 78.3%,吊打 ACT 的 48.3%。
+架构图:
+
+![smolvla 架构:SmolVLM2 骨干 + flow-matching 动作专家](/discover/smolvla-arch-8bit.png)
+
+效果怎么样?LIBERO 平均成功率 87.3——超过 33 亿参数的 π0(86.0)和 70 亿的 OpenVLA(76.5),而且它**没有用任何机器人数据做预训练**:
+
+![smolvla 在 LIBERO 与 Meta-World 的结果](/discover/smolvla-libero-8bit.png)
+
+真机 SO-100 上平均 78.3%,吊打单任务训练 ACT 的 48.3%;社区数据预训练把它从 51.7% 抬到 78.3%(+26.6):
+
+![smolvla 在真机 SO-100/SO-101 的结果](/discover/smolvla-real-8bit.png)
 
 ## 动作到底怎么生成:flow matching
 
@@ -111,7 +149,7 @@ pick up the black bowl between the plate and the ramekin and place it on the pla
 
 三代方法的反馈来源一路在变:RL 用环境奖励、模仿学习用专家演示、VLA 用"演示 + 语言指令"。VLA 的价值不在"更聪明的策略",而是**把机器人从'学会一个任务'变成'听懂指令'**——同一套权重,换一句话就换一个任务。
 
-π0 定了架构,smolvla 证明 4.5 亿参数 + 社区数据就能追平十亿级模型,而且纯仿真就能跑通全部流程。对学习者来说,这就是最好的起点:不碰硬件,也能亲眼看到机器人"听话干活"。`,
+π0 定了架构(继承预训练 VLM + flow matching 连续动作),smolvla 证明 4.5 亿参数 + 社区数据就能追平十亿级模型,而且纯仿真就能跑通全部流程。对学习者来说,这就是最好的起点:不碰硬件,也能亲眼看到机器人"听话干活"。`,
 }
 
 export default project
