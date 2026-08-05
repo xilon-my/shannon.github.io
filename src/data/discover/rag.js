@@ -4,7 +4,7 @@ const project = {
   name: 'RAG from Scratch: Bolt-On Memory for LLMs',
   url: 'https://arxiv.org/abs/2005.11401',
   url2: 'https://arxiv.org/abs/2312.10997',
-  description: 'RAG 的完整工作逻辑、最简搭建、分块这个最容易被低估的细节,以及怎么客观评估一个 RAG 好不好(RAGAS / RAGChecker / 中文 benchmark)。从 Naive RAG 一路看到 Agentic RAG——2026 年检索增强的形态已经变成了"agent 决定何时、如何检索"。',
+  description: 'RAG 的完整工作逻辑、分块这个最容易被低估的细节、怎么客观评估一个 RAG 好不好(RAGAS / RAGChecker / 中文 benchmark),以及从 Naive 到 Agentic RAG 的进化。',
   tags: ['RAG'],
   author: 'Shannon',
   detail:
@@ -12,7 +12,7 @@ const project = {
 
 核心问题一句话:**LLM 很强,但它的知识被冻结在训练截止那天。** 模型不会告诉你它不知道,它会一本正经地编。RAG(Retrieval-Augmented Generation,检索增强生成)的思路很朴素:别让模型猜,让它去查。答问题之前,先到你的资料库里把相关的几段捞出来,拼进 prompt,再让它基于这些资料回答。
 
-这篇文章从工作逻辑讲起,拆到分块这种细节,给一段能跑的最简实现,讲怎么客观评估它好不好,最后看 RAG 从 2020 到现在的进化。重点放在分块——这个最容易被跳过、却几乎决定检索质量的环节。
+这篇文章从工作逻辑讲起,拆到分块这种细节,讲怎么客观评估它好不好,最后看 RAG 从 2020 到现在的进化。重点放在分块——这个最容易被跳过、却几乎决定检索质量的环节。
 
 ## 工作逻辑:先检索,再生成
 
@@ -28,7 +28,7 @@ RAG 的原理一句话就能说完,但拆开是两条流水线,一条离线、�
 **在线那条叫问答(inference)**,每次提问跑一遍:
 
 1. 把问题用**同一个**嵌入模型算成向量。
-2. 在向量库里做 **top-k 检索**——找跟问题向量最像的 k 段(通常 3~10)。
+2. 在向量库里做 **top-k 检索**——找跟问题向量最像的 k 段(通常 3～10)。
 3. 把这几段拼进 prompt,让 LLM"基于以下资料回答"。
 4. LLM 生成答案——答案的每个事实,理论上都能回溯到检索到的段落。
 
@@ -49,11 +49,31 @@ RAG 的原理一句话就能说完,但拆开是两条流水线,一条离线、�
 
 ## 三个概念打底:嵌入、相似度、向量库
 
-**嵌入(Embedding)** 是把文本变成向量的神经网络。它学到的是"语义坐标":说"退款"和"退货政策"的文本,即便没有共同词汇,向量也靠得近。向量的每一维都不可解释,意义活在相对位置里。
+**嵌入(Embedding)** 是把文本变成向量的神经网络。它学到的是"语义坐标":说"退款"和"退货政策"的文本,即便没有共同词汇,向量也靠得近。向量的每一维都不可解释,意义活在相对位置里。中文语料里,本地开源常用 **bge-m3**(1024 维,MIT 协议),轻量演示用 nomic-embed,走 API 用 OpenAI 的 text-embedding-3。嵌入模型的质量通常比分块策略影响更大——先修分块,再谈换模型。
 
 **相似度** 默认用余弦相似度(cosine)——两个归一化向量夹角的余弦,越接近 1 越像。它只看方向、不看长度,对文本向量最合适。注意一个铁律:**入库和查询必须用同一个嵌入模型、同一个度量**。混用会让索引在数学上失效,结果全部作废。
 
-**向量库** 存储向量并支持快速找最近邻。小规模用 FAISS(它是一个相似度搜索库,不是数据库),要持久化和过滤用 Chroma、Qdrant,已经在用 Postgres 就用 pgvector。生产级向量库内部用近似最近邻(ANN)索引——HNSW、IVF 这些——把精确搜索从 O(n) 压到近对数级,代价是一点点召回损失。
+**向量库** 存储向量并支持快速找最近邻。先说度量:文本向量最常用余弦相似度,因为它只看方向、不看长度。实现上有个惯用招——入库前先把向量做 L2 归一化,归一化之后内积就等于余弦,所以 FAISS 里用 IndexFlatIP(内积索引)即可,后面实测 demo 里 encode 的 normalize_embeddings=True 就是这个用意。欧氏距离看的是长度,对文本向量没意义,一般不用。铁律跟嵌入模型那条一样:**入库和查询必须用同一个度量**,混用结果直接作废。
+
+但无论用什么度量,精确找最近邻都是 O(n) 的暴力扫描——n 是向量总数,十万、百万、千万,一次查询扫全库,谁都扛不住。向量库的秘密武器是近似最近邻(ANN)索引:拿一点点召回损失,把复杂度从 O(n) 压到近对数级。主流三种:
+
+- **HNSW**:一张多层"可导航小世界"图,顶层稀疏、底层稠密,查询从顶层贪心跳到目标,接近对数级复杂度。生产标配。
+- **IVF(倒排文件)**:先对全库做 k-means 聚类,查询只搜最近的几个簇再线性扫,适合超大库,召回略低。
+- **PQ(乘积量化)**:把向量压缩成短码(可到原来的 1/4～1/32),省内存省带宽,牺牲精度。
+
+还要分清一件常被搞混的事:FAISS 是库,不是数据库。FAISS 是 Meta 的相似度搜索库,纯内存态,不管持久化,不管按元数据过滤,不管副本和权限。Chroma、Qdrant、Pinecone 才是数据库:持久化、按元数据过滤、横向扩展全内置。选型大致是:
+
+| 场景 | 选什么 |
+|---|---|
+| 原型快跑 | Chroma |
+| 规模 + 过滤 | Qdrant |
+| 已有 Postgres | pgvector(加一列向量 + HNSW 索引) |
+| 托管省事 | Pinecone |
+| 自己搭检索层 | FAISS |
+
+生产里元数据过滤不是加分项,是必需项:通常先按权限/日期/租户把候选集缩到子集,再在子集里做 ANN——检索的正确性和性能都靠这一下。
+
+顺便说一句天花板:2025 年 DeepMind 的分析指出,单向量稠密嵌入有一个可证明的召回上限——512 维在约 50 万篇文档、1024 维在约 400 万篇时开始漏召回,再大就要靠混合检索(BM25 + 稠密)打破,这是给后面埋的伏笔。最后给个规模感:HNSW 在 1000 万向量上能到亚 100ms;存储上维度越高越贵,float32 下 384 维约 1.5GB/百万向量,1024 维约 4GB/百万向量——所以选型本质是在"够用"和"烧钱"之间找平衡。
 
 有一个被反复低估的事实:**检索质量是 RAG 的天花板。** 生成器只能回答检索器给它的东西。AWS 的人说得很直白:"A RAG is only as good as its retriever"——检索没捞到,后面再好的模型也白搭。所以调 RAG 的顺序永远是:先调检索,再谈生成。
 
@@ -81,90 +101,68 @@ RAG 的原理一句话就能说完,但拆开是两条流水线,一条离线、�
 - **太小**(比如不到 100 token):每一段都是一句话的碎片。检索精确,但捞出来没有上下文——代词指代谁?实体是谁?答案散落在好几段里。
 - **太大**(超过 1000 token):每一段都是一个"话题的平均值"。相似度信号被稀释,不相关的内容塞满上下文窗口。
 
-这个权衡是可测量的,不是玄学。一篇 2025 年的多数据集研究:SQuAD 的 recall@1 在 **64 token** 时最高(64.1%),涨到 512 token 掉了 10~15 个百分点——事实型答案就藏在一句话里,块越大噪声越多。而 TechQA 反过来,从 128 token 的 16.5% 涨到 512 token 的 61.3%——它的答案是描述性的、分散在多句里。同一个设置,两个数据集,最优块大小完全相反。所以不存在通用最优解,**分块是一个针对语料调的超参数**。
+这个权衡是可测量的,不是玄学。一篇 2025 年的多数据集研究:SQuAD 的 recall@1 在 **64 token** 时最高(64.1%),涨到 512 token 掉了 10～15 个百分点——事实型答案就藏在一句话里,块越大噪声越多。而 TechQA 反过来,从 128 token 的 16.5% 涨到 512 token 的 61.3%——它的答案是描述性的、分散在多句里。同一个设置,两个数据集,最优块大小完全相反。所以不存在通用最优解,**分块是一个针对语料调的超参数**。
 
 ### 七种分块策略
 
 | 策略 | 怎么做 | 适合 | 坑 |
 |---|---|---|---|
-| 固定长度 + 重叠 | 按 N token 滑窗切,留 10~15% 重叠 | 结构均匀的文本、快速原型 | 句子从中间切断、表行切碎 |
+| 固定长度 + 重叠 | 按 N token 滑窗切,留 10～15% 重叠 | 结构均匀的文本、快速原型 | 句子从中间切断、表行切碎 |
 | 递归 / 结构化 | 按段落→句子→字符逐级切;Markdown 按标题切 | 技术文档、Markdown、代码 | 超大段落仍会被硬切 |
 | 句子窗口 | 只嵌入单句,检索命中后扩成前后 N 句再喂 LLM | 新闻、报告、书籍 | 单句太短,丢代词和限定 |
 | 语义分块 | 先算每句的 embedding,相似度骤降处断开 | 话题频繁切换的语料 | 入库多一次推理,未必比固定长度好 |
 | Late Chunking | 先对整个文档做一次长上下文嵌入,过完 transformer 再分块 | 长文档、跨段引用多 | 需要支持长上下文的嵌入模型 |
-| 父子分块 | 小的子块用于检索,命中了回取大的父块喂给 LLM | 长结构化文档(合同/手册) | 上下文膨胀 30~60% |
+| 父子分块 | 小的子块用于检索,命中了回取大的父块喂给 LLM | 长结构化文档(合同/手册) | 上下文膨胀 30～60% |
 | 上下文增强 | 入库时让 LLM 给每段写一句"这段在讲什么"再嵌入 | 元数据密集的语料(日期/版本/产品号) | 入库贵,每段一次 LLM 调用 |
 
-最后一种的代表是 Anthropic 2024 年 9 月的 **Contextual Retrieval**:入库时让 LLM 给每段写一句 50~100 token 的"上下文定位"(这段出自哪、前文发生了什么),嵌入的是"定位 + 原文"。基准上 top-20 检索失败率从 5.7% 一路降到 3.7%(上下文嵌入)→ 2.9%(再加上下文 BM25)→ 1.9%(再加 rerank)——检索失败被砍掉三分之二。
+### 逐个看这七种策略
+
+**固定长度 + 重叠**:按 N token 滑窗硬切,是所有人的基线——论文报告新策略,都是拿它当"打不过的对手"。赢在结构均匀的文本和快速原型。坑也直白:句子从中间切断,表行会被切碎。
+
+**递归/结构化**:按"段落→句子→字符"的优先级逐级切,能保段落就保段落。LangChain 的 RecursiveCharacterTextSplitter 就是这个思路;Markdown 变体按标题切,把标题路径带上(比如 "## 架构 > ### 数据库选择"),正文就继承了标题里的关键词;代码变体按函数/类切,或用 tree-sitter 这种 AST。适合技术文档、Markdown、代码。坑:超大段落仍会被硬切——但它结构最多、默认最稳。
+
+**句子窗口**:索引只嵌单个句子(检索精确),命中后把前后 N 句一起取出来喂给 LLM(上下文完整)。LlamaIndex 的 SentenceWindowNodeParser 默认 window_size=3,即命中句前后各 3 句、共 7 句。注意代价:窗口句不嵌入,只有命中句的向量参与检索——这是它"精确 + 完整"两头都要的代价。2025 年一个对比里它语义相似度 0.700,胜过 auto-merging(0.505)、multi-query(0.620)、HyDE(0.693)。适合新闻、报告、书籍。
+
+**语义分块**:先把每句嵌入,算相邻句的相似度,相似度骤降的地方就是"话题换了",在此断块。LangChain 的 SemanticChunker 用百分位/标准差等阈值。优点:块内部话题一致、几乎不用重叠。坑:入库多一次推理(每句都要嵌入),而且 2026 年一些评测发现它对真实数据未必赢固定长度——嵌入模型的质量,往往比分块策略更重要。
+
+**Late Chunking**(Jina,2024 年 9 月):反着来——先用支持长上下文的嵌入模型把整个文档过一遍,在 transformer 输出之后、平均池化之前再分块。这样每个块的 embedding 都被整个文档"看过":"城市"这个词在块 A 里出现、但真正指代的"柏林"在前面的块里,它的向量也能带上这个关联。Jina 的例子里,查询"柏林"的相似度从 0.753 涨到 0.850。坑:要求模型支持长上下文 + 平均池化,大多数常用嵌入模型不支持——先查你的模型支不支持,再决定要不要学它。
+
+**父子分块**:索引小块(256～384 token)做精确检索,每块在元数据里记着父块的 ID;命中子块就回取父块(一个章节或几千字)喂给 LLM——等于把"检索精度"和"生成上下文"解耦。长结构化文档(合同、手册、法规)常用。坑:喂给 LLM 的上下文膨胀 30～60%,而且改分块要整个重新入库。
+
+**上下文增强**(Anthropic Contextual Retrieval,2024 年 9 月):入库时让 LLM 给每段写一句 50～100 token 的"上下文定位"(这段出自哪、前文发生了什么),嵌入的是"定位 + 原文",同时把定位后的文本也喂进 BM25。Anthropic 的基准:top-20 检索失败率 5.7% → 3.7%(上下文嵌入)→ 2.9%(再加上下文 BM25)→ 1.9%(再加 rerank)。坑:每段一次 LLM 调用,入库最贵(用 prompt 缓存降到约 1 美元/百万 token);而且段落本身越自包含(比如 FAQ 问答对),收益越小。
 
 ### 参数怎么定
 
-- **块大小**:最常被引用的起点是 **512 token**(约 50 token 重叠)。按问题类型调:事实型短问答 256~512,分析型/多跳 512~1024,整段理解 1024~2048。2026 年的生产基线是 400~600 token + reranker。
-- **重叠**:传统惯例 10~20%(15% 常见),但 2026 年一篇系统分析发现重叠几乎没带来可测量的收益(BERTScore 变化 ≤0.004),却让块数膨胀约 1.25 倍。建议从 0 开始,用你自己的数据验证过再加大。
+- **块大小**:最常被引用的起点是 **512 token**(约 50 token 重叠)。按问题类型调:事实型短问答 256～512,分析型/多跳 512～1024,整段理解 1024～2048。2026 年的生产基线是 400～600 token + reranker。
+- **重叠**:传统惯例 10～20%(15% 常见),但 2026 年一篇系统分析发现重叠几乎没带来可测量的收益(BERTScore 变化 ≤0.004),却让块数膨胀约 1.25 倍。建议从 0 开始,用你自己的数据验证过再加大。
 - **按 token 切,别按字符切**:切分要对齐 embedding 模型的 tokenizer,保证块不超出模型的上下文窗口被静默截断。
 - **代码永远别从函数中间切**:按函数/类切,或直接用 tree-sitter 之类的 AST 分块。
 
 ### 按文档类型选
 
-长文叙事 → 句子窗口,或递归段落切分(150~400 token);代码 → 按 AST/函数切,绝不从中间切;Markdown/HTML → 按标题切,把标题路径带上;PDF → 先 OCR 再句子窗口;长结构化文档 → 父子分块 + rerank。
+长文叙事 → 句子窗口,或递归段落切分(150～400 token);代码 → 按 AST/函数切,绝不从中间切;Markdown/HTML → 按标题切,把标题路径带上;PDF → 先 OCR 再句子窗口;长结构化文档 → 父子分块 + rerank。
 
-没有把握就从"递归分块 + 512 token"起步,在 ~50 条问题的评测集上量一下 Recall@5,再决定要不要上贵的策略。2026 年的共识:先固定 400~600 token 递归切分 + reranker,量出检索缺口,才值得为语义/late/上下文这类策略付 2~200 倍的入库成本。
-
-## 最简实现:40 行代码
-
-不需要框架。核心就是"嵌入 → 存 → 检索 → 生成"四步,用 sentence-transformers + FAISS + 任意 LLM 就够:
-
-\`\`\`python
-# pip install sentence-transformers faiss-cpu openai
-import os
-from openai import OpenAI
-import faiss
-import numpy as np
-from sentence_transformers import SentenceTransformer
-
-model = SentenceTransformer("BAAI/bge-m3")  # 多语言(100+ 语言),1024 维
-dim = model.get_embedding_dimension()
-
-def chunk(text: str, size: int = 400, overlap: int = 60):
-    # 简化:按字符切;生产请按 token 切,对齐模型 tokenizer
-    return [text[i : i + size] for i in range(0, len(text), size - overlap)]
-
-documents = [...]          # 你的文档列表
-chunks = [c for d in documents for c in chunk(d)]
-
-# 入库:嵌入 + 存 FAISS
-index = faiss.IndexFlatIP(dim)
-index.add(np.asarray(model.encode(chunks, normalize_embeddings=True), dtype="float32"))
-
-# 检索:嵌入问题,取 top-k
-query = "RAG 是什么?"
-q = np.asarray(model.encode([query], normalize_embeddings=True), dtype="float32")
-scores, idxs = index.search(q, k=3)
-context = "\\n\\n".join(chunks[i] for i in idxs[0])
-
-# 生成:基于检索结果回答
-llm = OpenAI(api_key=os.environ.get("DEEPSEEK_API_KEY"), base_url="https://api.deepseek.com")   # 任意 OpenAI 兼容端点
-resp = llm.chat.completions.create(
-    model="deepseek-chat",
-    messages=[
-        {"role": "system", "content": "只根据提供的资料回答;资料里没有就直说没有。"},
-        {"role": "user", "content": f"资料:\\n{context}\\n\\n问题:{query}"},
-    ],
-)
-print(resp.choices[0].message.content)
-\`\`\`
-
-工具怎么选:
-
-- **嵌入模型**:本地开源首选 **bge-m3**(1024 维,100+ 语言,MIT 协议),中文用它最稳;轻量 CPU 演示用 nomic-embed;API 用 OpenAI text-embedding-3。记住一点:嵌入模型的质量通常比分块策略影响更大,先修分块再换嵌入。
-- **向量库**:原型用 Chroma,规模用 Qdrant,已有 Postgres 用 pgvector,自己搞检索层用 FAISS。2026 年生产检索器几乎都是**混合检索**——dense 向量 + BM25 关键词,用 Reciprocal Rank Fusion 融合,再加 cross-encoder reranker。
-- **框架**:基础 RAG 不需要。LangChain / LlamaIndex 在你要做复杂文档解析或 Agent 循环时才有价值。
-
-评估分两段:检索用 **Hit Rate@k、MRR、Recall@k**;生成用 RAGAS 的 **Faithfulness**(答案每个论断是否被上下文支持)和 **Answer Relevancy**。BLEU/ROUGE 不能用来评估 RAG——它们是字面 n-gram 重叠,惩罚正确改写,还可能奖励共享 n-gram 的幻觉答案。
+没有把握就从"递归分块 + 512 token"起步,在约 50 条问题的评测集上量一下 Recall@5,再决定要不要上贵的策略。2026 年的共识:先固定 400～600 token 递归切分 + reranker,量出检索缺口,才值得为语义/late/上下文这类策略付 2～200 倍的入库成本。
 
 ## 实测:给这个博客建一个 RAG
 
-上面的代码不是纸上谈兵。我拿这个站自己的 10 篇文章当语料,搭了一个最小 RAG:10 篇、约 5 万字符,用 bge-small-zh-v1.5(本地,CPU)嵌入,FAISS 索引,DeepSeek 生成。没有框架,就是上面那段代码的完整版。
+前面讲的原理、分块都落到代码上了。我拿这个站自己的 10 篇文章当语料,搭了一个最小 RAG:10 篇、约 5 万字符,用 bge-small-zh-v1.5(本地,CPU)嵌入,FAISS 索引,DeepSeek 生成。没用什么框架,核心逻辑就这几行:
+
+\`\`\`python
+from sentence_transformers import SentenceTransformer
+import faiss, numpy as np
+
+model = SentenceTransformer("BAAI/bge-small-zh-v1.5")   # 本地嵌入,512 维
+index = faiss.IndexFlatIP(512)
+
+# 入库:按 "##" 章节分块 → 嵌入 → 存 FAISS
+chunks = [c for a in articles for c in split_by_section(a)]   # 10 篇 → 59 段
+index.add(np.asarray(model.encode(chunks, normalize_embeddings=True), dtype="float32"))
+
+# 检索:嵌入问题 → top-3
+q = np.asarray(model.encode([query], normalize_embeddings=True), dtype="float32")
+scores, hits = index.search(q, k=3)   # 结果就是下面的两张表
+\`\`\`
 
 先看分块的影响。同一批文档,两种策略——按 \`##\` 章节切,和固定 300 字符 + 60 重叠:
 
@@ -233,7 +231,7 @@ RAG 这个概念 2020 年由 Lewis 等人提出(《Retrieval-Augmented Generatio
 
 之后的进化按五代看:
 
-### Naive RAG(2020~2022)
+### Naive RAG(2020～2022)
 
 固定的"检索-然后-读"链条。问题:分块噪声、检索不精确、"lost in the middle"(上下文中间的信息被模型忽视)。
 
@@ -243,9 +241,9 @@ RAG 这个概念 2020 年由 Lewis 等人提出(《Retrieval-Augmented Generatio
 
 - **检索前**:查询改写、查询分解、HyDE(让 LLM 先写一个"假设答案",拿它去检索,弥合问句和文档的措辞差距)。
 - **检索中**:混合检索——BM25 稀疏向量 + dense 向量,RRF 融合。dense 抓语义,BM25 抓精确词、产品号、专有名词。
-- **检索后**:cross-encoder rerank、上下文压缩。先捞 top-20~50,重排后留 top-3~5。
+- **检索后**:cross-encoder rerank、上下文压缩。先捞 top-20～50,重排后留 top-3～5。
 
-### Modular RAG(2023~2024)
+### Modular RAG(2023～2024)
 
 把 RAG 拆成可插拔模块(索引、预检索、检索、后处理、记忆、生成、编排),可以线性、条件、并行、循环地组合。查询可以路由:走 RAG、走联网搜索、还是走 SQL。
 
@@ -255,7 +253,7 @@ RAG 这个概念 2020 年由 Lewis 等人提出(《Retrieval-Augmented Generatio
 
 同一时期还有 **RAPTOR**——把块递归地聚成树,每一层用 LLM 把一组相似块摘要成父节点,检索时按问题需要的粒度选层——和 GraphRAG 同属"超越平铺 top-k"的路线,适合整体性、跨文档的问题。
 
-### Agentic RAG(2024~2026,当下)
+### Agentic RAG(2024～2026,当下)
 
 检索从"流水线的一步"变成"agent 循环里的一系列决策":
 
@@ -271,7 +269,7 @@ RAG 这个概念 2020 年由 Lewis 等人提出(《Retrieval-Augmented Generatio
 2024 年的论点是"上下文窗口都 100 万 token 了,直接全塞进去"。但实证不支持:
 
 - **长窗口不平均**。中间位置的信息掉 30%+ 准确率(lost-in-the-middle),模型声称的窗口长度实际不可用。
-- **成本是压倒性的**。RAG 每次查询通常几百 token,全量塞 ~100 万 token,成本差约 **1250 倍**(未计 prompt 缓存;缓存会显著缩小这个倍数)。
+- **成本是压倒性的**。RAG 每次查询通常几百 token,全量塞约 100 万 token,成本差约 **1250 倍**(未计 prompt 缓存;缓存会显著缩小这个倍数)。
 - **更新跟不上**。RAG 换一批文档是分钟级,长上下文要重新喂。
 
 到 2026 年,"长上下文取代 RAG"的论点基本被否掉,共识是混合:**用 RAG 检索,用长上下文推理**——检索捞 top 候选,长窗口负责把候选读透。
