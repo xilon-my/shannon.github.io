@@ -1,0 +1,221 @@
+const project = {
+  slug: 'embeddings-rerankers',
+  date: '2026-08-06 10:00',
+  name: 'Embeddings and Rerankers from Scratch: When and How to Judge Relevance',
+  url: 'https://arxiv.org/abs/1908.10084',
+  url2: 'https://arxiv.org/abs/2402.03216',
+  description: '嵌入模型(embedding)和重排模型(reranker)的深度拆解:为什么一个把判断提前到入库、一个留到查询时,它们分别怎么被训出来,近三年又怎么被蒸馏成同一份判断力。',
+  tags: ['RAG'],
+  author: 'Shannon',
+  detail:
+`先看一次真实的翻车。你问检索器"这笔订单的退款政策是什么",embedding 检索器从库里捞回 top-3:一条讲退货流程的,一条讲运费险的,一条讲优惠券的,没一条直接回答。答案其实就在库里,只是它的每个词都和问题对不上——embedding 把整段压成一颗向量,精确词被稀释成了泛语义。同样的候选集换给 reranker,它把问题和每段文档逐字对看一遍,答案跳到了第一名。
+
+前一篇《RAG from Scratch》说过,检索质量是 RAG 的天花板。而这块天花板由两个模型钉死:embedding(双塔 bi-encoder)在入库时把全库文档压成一颗向量,reranker(单塔 cross-encoder)在查询时让查询和文档逐 token 互看再打分。它们回答同一个问题——"这段文档跟你的问题相不相关"——判断方式却南辕北辙:一个在入库时就把判断做完了,一个把判断留到查询时。
+
+这篇文章不讲怎么搭 RAG 流水线(那在前一篇),钻到流水线的两个引擎内部:它们为什么长成"双塔"和"单塔"、怎么被训出来、为什么这两年越变越大。最后你会发现,这两个模型不是对手——它们是同一份判断力的老师和学生。
+
+## 同一个问题,两种判断方式:双塔与单塔
+
+判断"相不相关"这件事,可以发生在两个时刻:入库时(先把所有文档变成可比较的形式),或者查询时(拿到问题再逐个细看)。embedding 选了前者,reranker 选了后者。
+
+### 双塔:把判断提前到入库
+
+今天的嵌入模型都长着一个叫"双塔"(bi-encoder)的形状,而这个形状的发明有个极好的动机故事。2019 年之前,想算"两句话相不相似",用的是原生 BERT——把两句话拼成一个序列丢进去。它很准,但贵到离谱:在一万句话里找最相似的一对,需要跑约 5000 万次两两拼接的推理,约 65 小时。SBERT 的解法(Sentence-BERT,2019,arXiv:1908.10084)是共享权重的孪生网络:两个 BERT 用同一套权重,各自把一句话编码成一个向量,再比余弦。离线把一万句话全部编码一遍只要约 5 秒,查询时和一个新向量比相似度只要 0.01 秒。
+
+![SBERT 孪生双塔架构](/discover/sbert-arch-8bit.png)
+*图:SBERT 用共享权重的两个 BERT 把句子各自编码成向量(arXiv:1908.10084,Figure 1)*
+
+代价是把判断提前了:入库时就得决定"这句话是什么",查询时只剩几何比对。注意权重是共享的——两个塔如果各学一套权重,同一个词就会得到两套向量,query 和 passage 就比不起来了。为了让这个提前的判断更准,双塔用了一个巧劲——决定怎么把句子压成向量(池化)。三种主流做法:取 [CLS] 位置(bge 家族、SimCSE 有监督版)、整句平均(mean pooling,SBERT 默认)、取最后一个 token(LLM 底座)。池化不是随便选的,它和损失、数据一起决定向量质量。骨干从 BERT 类编码器走向解码器 LLM 后,有两个适配坑:causal mask 掩码只让每个 token 看左边,限制整段编码([NV-Embed](https://github.com/NVIDIA/NV-Embed) 改成双向注意力 + latent pooling);EOS-last 池化有 recency bias(left-padding 时按 attention mask 取位置,不能无脑取最后一个)。
+
+向量维度不是超参,是骨干模型的隐藏层宽度:BERT-base 是 768、bge-m3 是 1024、GTE-Qwen2-7B 是 3584、Qwen3-8B 是 4096。维度是"够用 vs 烧钱"的权衡——前一篇讲过,1024 维 float32 约 4GB/百万向量。MRL 在这里先埋一句:同样是改损失不改架构,可以逼着模型把判别信息挤进前几维,让你按需裁剪向量——细节留到训练那一节。
+
+### 单塔:把判断留到查询时
+
+reranker 用单塔(cross-encoder):把 query 和 passage 拼成一个序列([query] [SEP] [passage]),让全部注意力层逐 token 互看,最后接一个打分头输出相关分。这里没有"压成一颗向量"这一步——每个词都能直接和另一边的每个词交互,这就是它准的原因。打分头有两种:分类头(bge-reranker-v2-m3,输出两类 logits 的差值当分数)和生成头(MonoT5,让模型生成 "true"/"false" token,取两个 logit 的差)。
+
+### 一张图看清范式的差别
+
+用一个真实的工作样例感受"看得多细"的差别。query 是"退款政策",文档里有一句"如果您的订单还未发货,可以申请退款;关于退货的流程见第三节"。双塔把整句平均池化成一颗向量后判 0.72,单塔逐 token 互看判 0.91。差距从哪来?"退款""政策"这几个精确词被揉进均值向量里,和一大堆泛泛的词混在一起,信号被稀释成"平均意义上像退款";而逐 token 交互保留了硬匹配——虽然原文写的是"申请退款"和"退货的流程",但问题里的"退款"能直接和句子里的"退款"对齐,不需要先把整句话压成一个点再比。这就是"看得多细"的落点:双塔牺牲精确词换速度,单塔牺牲速度换精确词。
+
+| 维度 | 双塔(bi-encoder,embedding) | 单塔(cross-encoder,reranker) |
+|---|---|---|
+| 判断时机 | 入库时(预制成一颗向量) | 查询时(拿到问题再逐 token 互看) |
+| 看得多细 | 压缩成一点 | 逐 token 交互 |
+| 能否预计算 | 全库一次算完 | 每个 (query, 候选) 一次前向 |
+| 单次成本 | 约 5～10ms 查全库 | 约 100～500ms/对 |
+| 检索基准 | 双塔粗筛 | 单塔通常高 5%～15%(域内最高 +13.8% mAP) |
+
+表里的数字是"典型报道区间,具体取决于语料与训练数据"——怎么用你自己的数据验证,第五节再讲。范式之间的差别,ColBERT 论文里有一张图讲得最清楚——三种匹配方式站在"预计算多少 × 判断多细"这条曲线的不同位置:
+
+![三种匹配范式对比](/discover/colbert-paradigms-8bit.png)
+*图:representation-based(先压缩再比)、interaction-based(拼一起逐 token 互看)与 late interaction 的对比(arXiv:2004.12832,Figure 2)*
+
+这正是全文的主线:别把 embedding 和 reranker 当成两个孤立工具,它们站在同一条"何时判断 × 看得多细"的取舍曲线上,只是站在了两端。说 reranker 是"单塔",是因为 query 和 passage 被拼进了同一个序列,两个塔并成了一个。而曲线中间还有一站,下一节讲。
+
+## 曲线的中点:晚期交互
+
+如果"一颗向量"太粗,"每对完整前向"太贵,中间还有第三条路:晚期交互(late interaction)。[ColBERT](https://github.com/stanford-futuredata/ColBERT)(2020,arXiv:2004.12832)的做法是:入库时不为整段存一个向量,而是为每个 token 存一个向量(预计算,偏晚);查询时 query 的每个 token 和 passage 的每个 token 逐对算相似度,取最大再求和(MaxSim)。既拿到双塔的"预计算",又拿到单塔的"逐 token 细粒度"。
+
+![ColBERT 架构](/discover/colbert-arch-8bit.png)
+*图:ColBERT 的晚期交互,查询和文档的 token 向量逐对 MaxSim(arXiv:2004.12832,Figure 3)*
+
+它不是第三种模型,是曲线上的中点:精度和成本都落在两塔之间。这个中点比想象中常用——Cohere 的商业 rerank 就以晚交互为主力;bge-m3 的"三合一"里也有一个 ColBERT 引擎,第六节会回来引用。
+
+## 怎么训出这份判断
+
+现在到全文最深的部分。一个容易被误解的点先讲清楚:"语义"不是模型先验定义好的,而是"你拿什么当正样本、什么当负样本"定义出来的。同样一段话,拿"意思相近的句子"当正样本训出来的,和拿"能回答问题的那段文档"当正样本训出来的,向量空间完全不同。所以损失、负样本质量、数据构造,比模型结构更决定效果。
+
+### 双塔:把"语义"训进向量空间
+
+双塔的训练目标一句话:正样本对拉近,负样本对推远。背后有两个力在同时作用——alignment(正对尽量近)和 uniformity(所有向量在超球面上尽量均匀、别塌缩成一团)。对比学习同时优化这两个力,这也是它能修掉 BERT 句向量"各向异性"问题的原因:无关句子算出来余弦平均也有约 0.42,mean pooling 还会把 token 级的 0.446 放大到句子级的 0.924——向量都挤在同一个锥里,没法区分。对比学习把这个锥旋转开。
+
+损失函数从成对 margin(Hadsell 2006)一路收敛到 InfoNCE(van den Oord 2018,arXiv:1807.03748),因为批量越大,互信息下界越紧——这是"为什么都要加大 batch"的数学原因。互信息是信息论里衡量两个变量共享多少信息的概念;InfoNCE 损失正是这个量在实践中的可算近似。InfoNCE 有同一个公式的三个视角:一个 N 路 softmax 分类问题、NCE(噪声对比估计)估计器的推广、互信息的下界(log K − L)。温度参数 τ 控制分布的锐度,检索任务常用 0.05～0.1(E5 预训练用 0.01,bge-m3 微调 0.05,SimCSE 0.05)。
+
+![SimCLR 对比学习框架](/discover/simclr-8bit.png)
+*图:SimCLR 的对比学习框架,同一输入的两个增广视角互为"正对"(arXiv:2002.05709,Figure 2)*
+
+负样本从哪来?最省事的是批内负样本:同一个 batch 里其他样本的编码直接当负样本,零额外前向。SimCSE 无监督版 batch 只用 64,E5 预训练直接上到 32768——靠跨设备收集([FlagEmbedding](https://github.com/FlagOpen/FlagEmbedding) 的 negatives_cross_device 参数)。[sentence-transformers](https://github.com/UKPLab/sentence-transformers) 的 MultipleNegativesRankingLoss 就是 InfoNCE 的封装,手写一份只要十几行:
+
+\`\`\`python
+import torch
+import torch.nn.functional as F
+
+def contrastive_loss(q, k, temperature=0.05):
+    # q, k: 同一 batch 的两个视角,已做 L2 归一化
+    # 对角线是正样本对;同 batch 其它行自动成为负样本(in-batch negatives)
+    logits = q @ k.T / temperature            # (batch, batch) 相似度矩阵
+    labels = torch.arange(logits.shape[0])    # 正样本的位置在对角线上
+    return F.cross_entropy(logits, labels)
+
+# SimCSE 里"两个视角"是同一句话过两次编码器:
+# q = encoder(sentences)   # 一次 dropout mask
+# k = encoder(sentences)   # 另一次 dropout mask
+# loss = contrastive_loss(q, k)
+\`\`\`
+
+这十几行值得拆开看:q @ k.T 算出一个 batch×batch 的相似度矩阵,第 i 行第 j 列是第 i 个查询和第 j 个文档的相似度;对角线是正样本对;cross_entropy 对每一行做 softmax,把"对角线尽量大、同行其他位置尽量小"当成目标。温度 τ 在这里是关键旋钮:τ 越小,softmax 越尖锐,模型被逼得越狠地拉开正负样本,但太小梯度会爆炸,0.05 左右是检索任务的经验值。
+
+正样本对从哪来?2019 年之后最重要的一个技巧来自 SimCSE(2021,arXiv:2104.08821):把 dropout 当数据增强。同一句话过两次编码器,两次 dropout mask 不同,得到的两个表示互为"正对"。诀窍在于 dropout 必须开着——关掉(p=0)或固定 mask,模型会直接塌缩:所有向量变成同一个。无监督版在 STS 上 Spearman 76.3,有监督版 81.6;有监督版把 NLI 的 contradiction 对当难负样本混进分母,把 STS-B 从 84.9 推到 86.2。
+
+![SimCSE 无监督和有监督对比](/discover/simcse-8bit.png)
+*图:SimCSE——左为无监督(同一句两个 dropout mask 互为正对),右为有监督(蕴含对为正、矛盾对为负)(arXiv:2104.08821,Figure 1)*
+
+#### 难负样本:质量的分水岭
+
+负样本的质量,是 embedding 训练里最容易被低估的分水岭。随机负样本在向量空间里离 anchor 已经够远,算出来的梯度约等于 0,不产生任何学习信号。只有"看起来像正、其实是负"的样本才逼着模型做精细区分。比如 anchor 是"狗追猫",随机负样本"股票今天大涨"离得十万八千里,学不到任何东西;难负样本"猫追狗"才逼模型学会区分"谁在追谁"。类比:分辨猫和汽车不需要训练,分辨猫和狗才需要。
+
+三种挖法,从便宜到贵:
+1. **数据里天然就有**:NLI 的矛盾对、问答数据里"答非所问"的文档。
+2. **检索器挖**:[FlagEmbedding](https://github.com/FlagOpen/FlagEmbedding) 的 hn_mine.py 对全库建一个 FAISS 索引,取 top-2～200 区间当候选,避开与正样本太像的"伪负样本";挖负样本的老师模型要够强——"用底座模型挖、从底座微调"。
+3. **LLM 生成**:E5-Mistral 让 GPT-3.5/4 生成约 50 万条合成数据(含 15 万条指令、约 1.8 亿 token),覆盖 93 种语言。
+
+数据有三个来源,恰好是三代路线的缩影:弱监督 web 对([E5](https://github.com/microsoft/unilm) 的 CCPairs 从 13 亿对一致性过滤到 2.7 亿对,E5 论文声称零样本 BEIR 首次击穿 BM25)、LLM 合成(Qwen3-32B 合成 1.5 亿对)、公开标注(MS MARCO、NQ、SNLI·MNLI)。
+
+这里要泼一盆现实的冷水:上面的规模是几十亿美元和几千张卡堆出来的。E5-Mistral 那约 1.8 亿 token 的合成数据,按当时的 API 价格粗算,光生成就要上百万美元量级,而且合成完还要一致性去重,实际有效率远低于生成量。对你我来说,记住一条务实路径——**约 1 万对标注 + 单卡(可 LoRA),几天就能微调出一个够用的模型**,不需要从头训。想知道"够用"长什么样?拿你自己的语料,用现成模型生成正负对,微调一个小模型,量一下 Recall@5 有没有涨——这比花几周攒数据快得多。
+
+#### 指令前缀:训练时学的,不是推理时的咒语
+
+检索型嵌入训练时就把文本分成"查询侧"和"文档侧"两种角色。E5 给查询加 "query:"、文档加 "passage:";bge 只给查询加一句英文指令 "Represent this sentence for searching relevant passages:",文档侧绝不加;Qwen3 更进一步做指令感知,效果 +3%～5%。关键:前缀是训练时学进权重的,推理时必须照抄——训练和推理不一致就是分布漂移,这正好是前一篇"同模型同度量"铁律在提示词层的对应。
+
+#### MRL:一颗向量,按需裁剪
+
+维度不是越多越好,是"够用 vs 烧钱"。Matryoshka Representation Learning(MRL,2022,arXiv:2205.13147)的思路:训练时对不同长度的前缀各算一份损失(如 64/128/256/512/1024 维),逼判别信息挤进前几维。于是同一颗向量,你既可以只用前 128 维(省存储),也可以全用(更准)。
+
+![MRL 嵌套表示](/discover/mrl-nested-8bit.png)
+*图:MRL 让表示按维度嵌套,前几维就能承载大部分判别信息(arXiv:2205.13147,Figure 1)*
+
+两条铁律:**只有 MRL 训过的模型能截断**,没训过直接砍尾,等于扔掉信息;截完必须再做一次 L2 归一化。OpenAI text-embedding-3-large 官方声称 3072 维裁到 1024 维仍保有 95%～98% 的质量,省约 67% 的存储。
+
+诚实局限:批内负样本有 false negative——正样本可能混进分母当了负样本;大 batch 的工程代价也不小(mixed precision、ZeRO、梯度检查点)。
+
+### 单塔:排序损失,和从老师那里偷师
+
+双塔学的是"向量",单塔学的是"排序"。reranker 的训练数据分三档:pointwise(二分类:相关/不相关)、pairwise(正负对)、listwise(一个 query 加一组文档加它们的顺序)。这个三分框架出自 Tie-Yan Liu 2009 年的专著,排序损失家族二十年没换骨架:RankNet(2005,成对概率 + 交叉熵,曾支撑 Bing)→ LambdaRank(2006,按 ΔNDCG 加权)→ LambdaMART(2010,赢了 Yahoo! Challenge)。落到今天的 cross-encoder:bge-reranker 家族用 pointwise 两类交叉熵;Qwen3-Reranker 用 pointwise(生成式 yes/no 的 BCE)加 listwise——一个 query 配 1 个正样本和 n 个负样本,对 n+1 个分数做带温度的 softmax,目标就是正样本排第一。listwise 更贴合真实检索的形态:检索时你面对的从来不是"这一个相关、那一个不相关"的二分类,而是一整排候选要排出先后。
+
+难负样本在这里同样关键:负例质量决定判别力。[FlagEmbedding](https://github.com/FlagOpen/FlagEmbedding) 的训练数据每行是一个 JSON:{"query", "pos", "neg", "prompt"},关键参数 train_group_size 8、query_max_len 32、passage_max_len 128、学习率 5e-6、5 个 epoch。
+
+训练单塔的另一个趋势是 LLM 当老师。[RankRAG](https://github.com/zjukg/rankRAG)(NeurIPS 2024)把排序和生成 instruction-tune 进同一个 LLM,在 5 个 RAG benchmark 上追平 GPT-4;ReasonRank 用 DeepSeek-R1 合成带推理的排序数据,self-consistency 过滤后再训。
+
+#### 蒸馏闭环:老师学生,在此兑现
+
+最后是全文的高潮,也是开头"老师和学生"的兑现——**把 cross-encoder 的判别力,蒸馏回 bi-encoder**。方法上的里程碑是 Hofstätter 2020 的 Margin-MSE(arXiv:2010.02666):不让学生复刻老师的绝对分数,而是复刻"相关分数与不相关分数之间的差",因为不同架构的分数天然不在一个量纲。
+
+[TCT-ColBERT](https://github.com/castorini/tct_colbert)(arXiv:2010.11386)的关键发现值得单独说:只喂难负样本、没有老师把关,性能反而下降——难负样本有噪声,必须有个更准的老师来校对。[RocketQA](https://github.com/PaddlePaddle/RocketQA)(2021)用迭代去噪解决同一个问题。到了 2024 年,Gienapp 等人的自蒸馏只用 13.5% 的数据就达到完整蒸馏的水平。
+
+读到这里,"老师学生"就完整了:评分函数从 cross-encoder 流向 bi-encoder,两个架构共享同一份判断力。说"双塔单塔是一家人"略过了严谨细节——更准确的说法是,蒸馏让它们共享同一份判断力。
+
+诚实局限:bge-reranker-v2-m3 没训过跨语言数据,跨语言对很弱——这正好当"模型卡不等于真实能力"的例证。
+
+## 推理:成本住在哪儿
+
+训练讲完了,现在算账——推理时钱花在哪。
+
+**双塔**:入库时把全库向量算完,查询时只剩"query 编码一次 + ANN 检索"(前一篇讲过),成本 O(1) 摊销,可以离线预计算。
+
+**单塔**:每个 (query, 候选) 都要一次完整前向,复杂度 O(k),无法预计算——分数是 query 和 passage 拼出来的,换一个 query 全部重算,库里存的东西一件都复用不了。所以生产里 reranker 只对第一阶段捞回来的 top-100 精排,延迟预算 100～400ms;bge-reranker-v2-m3 的输入上限 max_length=1024;[jina-reranker-v2](https://github.com/jina-ai/jina-embeddings) 对超长文档自动滑窗切块(overlap 默认 80)取各块最高分。为什么检索必须分两段、第一段宁多勿漏?前一篇的"人力粗筛 vs 面试官细聊"已经讲透,这里不重推。
+
+L2 归一化值得补一个新角度:前一篇讲它为了能用内积索引,更本质的是——**扔掉长度,只留方向**。同一句语义,无论写多写少,方向应该一致。bge v1.5 专门为此重训,让相似/不相似的分数分布可分。
+
+工程细节三条:
+- **批量推理**:batch 摊薄 transformer 开销。
+- **缓存**:块的哈希命中就跳过推理;注意改分块参数后要整体重新入库。
+- **MRL 维度裁剪落地**:只有 MRL 训过的能裁。text-embedding-3-small 官方声称裁到 512 维保约 97.6% 质量,1536 维裁到 512 省 2/3 存储;没训 MRL 的模型直接裁尾,等于每维同等重要、丢信息。
+
+存储账:1024 维 float32 约 4GB/百万向量(前一篇讲过)。用 MRL 前 128 维建 ANN 索引,1000 万条约 5.1GB,全维要 41GB,约省 8 倍。注意细节:**索引建在截断维度上,全维向量另存,粗筛 top-200 后拿全维精打分**。FAISS 里就几句话:
+
+\`\`\`python
+import faiss
+import numpy as np
+
+dim = 128                          # 只取 MRL 的前 128 维做索引
+index = faiss.IndexFlatIP(dim)     # 归一化后内积 = 余弦
+index.add(full_vectors[:, :dim])   # 截断维度建 ANN;全维向量另存
+_, I = index.search(query[:dim][None], 200)   # 粗筛 top-200
+# 再用全维向量对 top-200 精打分、排序,取前几个
+\`\`\`
+
+## 谁说了算:MTEB,和榜单骗你的地方
+
+搭好了、训好了,怎么知道它好不好?嵌入模型的通用榜单是 [MTEB](https://github.com/embeddings-benchmark/mteb)(2022,arXiv:2210.07316):8 个任务族、58 个数据集,总分是 8 族等权平均——注意,**检索只占 1/8 的权重**,读榜必须先看分项。检索这一族直接复用 BEIR(18 个数据集,主指标 nDCG@10——归一化折损累计增益,衡量"相关结果是不是排在前 10 名里,而且排得越靠前分越高")。中文看 C-MTEB(bge 同篇发布,arXiv:2309.07597,35 个数据集、6 类任务,发布时超当时所有中文嵌入 10% 以上);跨语言看 MIRACL;2025 年又出了 MMTEB,500+ 任务、250+ 语言。
+
+为什么"MTEB 排前面"不等于"你的语料上好用"?四个坑:
+1. **英语中心**:中文要用 C-MTEB 这类中文榜。
+2. **检索只占 1/8**:总分高可能靠的是聚类、重排那些任务。
+3. **零样本域外**:BEIR 基准建立的初衷就是暴露一个失败——只在 MS MARCO 训过的 dense 模型,一到域外就崩,**BM25 反而反超**。你的语料也是域外。这是"榜单骗你"最有力的一张牌。
+4. **榜单污染与配置不一致**:换实现、换归一化方式,分数就有出入。
+
+还有一条纪律要养成:凡 vendor 自报的数字(Qwen3-Reranker 对比 bge-reranker-v2-m3 的 +21.0% MTEB-R、bge-m3 三合一、OpenAI 的裁维数字),一律当"自家评测"看待,读完接一句"换到你的语料,自己量一遍才作数"。
+
+务实建议:别迷信任何榜单,拿约 50 条真实 query,量 Recall@5 / nDCG@10——这正是前一篇"先量出来,再说好坏"的落点。第一节对比表里的"典型报道区间",在这里被"先量出来"一并否决。
+
+诚实局限集中营(每项一句,不重复数字):① 各向异性(训练节讲过,对比学习是把锥旋转开)② 批内负样本的 false negative ③ 大 batch 的工程代价 ④ 维度不可解释(前一篇说过"每一维都不可解释,意义活在相对位置里")⑤ bge-reranker-v2-m3 跨语言弱 ⑥ 单向量召回天花板:512 维约 50 万篇、1024 维约 400 万篇文档起开始漏召回(Weller 等,arXiv:2508.21038,前一篇埋过钩子)。
+
+## 2024-2026:这两个模型在怎么变
+
+近三年的变化,可以压缩成三个因果。
+
+**因果一:合成数据解除了数据瓶颈,decoder 骨干吃长上下文,MRL 成标配。** 2024 年 1 月 E5-Mistral(arXiv:2401.00368)证明用 GPT-4 合成数据 + 少于 1000 步微调就能刷榜(注意它几乎没有标注数据);同年 6 月 [GTE-Qwen2](https://github.com/Alibaba-NLP/gte) 把骨干换成 Qwen2(7B、3584 维、32K 上下文);8 月 [NV-Embed-v2](https://github.com/NVIDIA/NV-Embed) 证明只用公开数据也能达到同样高度;2025 年 6 月 [Qwen3-Embedding](https://github.com/QwenLM/Qwen3)(0.6/4/8B、32K 上下文、MRL 32～4096 维、Apache-2.0)把这套组合固定成新基线。
+
+**因果二:评估压力倒逼变大变全。** 榜在涨,模型就必须跟着涨。reranker 同步变大:Qwen3-Reranker(0.6/4/8B)MTEB-R 8B 达 69.02(对比 bge-reranker-v2-m3 的 +21.0%,自家评测)。指令感知从 INSTRUCTOR(2022)到 bge-en-icl 再到 Qwen3,成了标配能力。
+
+**因果三:蒸馏主流化,开源与 API 的差距基本弥合。** RAG-Retrieval 这类框架把 7B LLM reranker 蒸馏成边缘小模型;cross 是精排标杆、bi 是蒸馏出的廉价近似。开源侧 NV-Embed-v2 72.31、Harrier 27B 74.3、Jina v5 71.7(均为官方宣称),和商业 API 的差距已经不大。
+
+还有一个重要的单模型形态:**bge-m3**(0.567B、1024 维、8192 上下文、100+ 语言)——一次推理同时产出 dense、sparse、ColBERT 三种表示(稀疏是对关键词检索的覆盖,ColBERT 引擎就是第二节那个"中点"),三合一在 MIRACL/MKQA/MLRB 上全面超单模式(自家评测)。这一代模型不再问你"选哪个范式",而是全都给。
+
+MRL 变维常态化:OpenAI text-embedding-3 官方声称 3072 维裁到 256 维仍超 ada-002 完整的 1536 维(64.6 vs 61.0),1024 维保 95%+;Nomic 768 → 64(官方声称)。
+
+多模态和 agent 各留一句:Cohere Embed v4 把文本和图像放进同一个空间,Gemini Embedding 2、Jina v5-omni 同路;agent 里 embedder 还被拿来选工具/函数——"工具描述"当文档、"用户意图"当查询,判断对象在变,判断方式的取舍没变。
+
+诚实的展望:模型越来越大、越来越贵——4～8B 的 embedding 对个人开发者不现实,GTE-Qwen2-7B FP32 要约 28GB 显存,入库、存储、推理全涨。选型重心正在从"MTEB 分数"转向合规、延迟、运维;4-bit 量化 + MRL 成了新标配。
+
+## 结论:判断发生在哪,决定模型长什么样
+
+回头看,池化、维度、负样本、蒸馏、变大——一切都是"判断发生在何时 × 看得多细"这条取舍的推论。双塔把判断提前到入库,用一颗向量换速度;单塔把判断留到查询时,用逐 token 互看换精度;晚期交互站在中间,预计算和细粒度两头都要。而蒸馏这条线把两端缝在一起:cross 的判别力流向 bi,它们共享同一份判断力。
+
+一句话选型:本地用 [bge-m3](https://github.com/FlagOpen/FlagEmbedding)(1024 维、MIT、三合一,前一篇讲过)或 Qwen3 小档(0.6B、1024 维、Apache);走 API 用 text-embedding-3(3072/1536 + MRL)或 Cohere/Gemini。2026 年的生产基线是混合检索 + 强制 rerank(前一篇讲过,和这里不打架)。
+
+回到开头的翻车场景:答案在库里,却没被捞出来——问题出在两个裁判身上。好消息是,裁判是可以换、可以训、可以蒸馏的。先把天花板量出来(约 50 条真实 query),再把力气花在对的地方。LLM 一本正经地编,正是这两个裁判,让"别让它记,让它查"成立。`,
+  takeaway: 'Embedding(bi-encoder)和 reranker(cross-encoder)回答同一个问题"这段文档跟你的问题相不相关",差别只在判断发生在什么时候(入库时 vs 查询时)和看得多细(一颗向量 vs 逐 token 互看),晚期交互是这条取舍曲线上的中点。训练的本质是"拿什么当正负样本就定义出什么语义":InfoNCE + 难负样本 + 合成数据塑造双塔,排序损失 + LLM 蒸馏塑造单塔;蒸馏最终让两个架构共享同一份判断力。榜单分数不等于你的语料效果,拿约 50 条真实 query 先量出来。',
+}
+
+export default project

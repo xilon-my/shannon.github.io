@@ -9,7 +9,8 @@ import langgraph from './discover/langgraph.js'
 import embodiedAi from './discover/embodied-ai.js'
 import vla from './discover/vla.js'
 import rag from './discover/rag.js'
+import embeddingsRerankers from './discover/embeddings-rerankers.js'
 
-const projects = [multica, symphony, okf, openaiAgentsPython, pi, mcp, superpowersOpenspec, langgraph, embodiedAi, vla, rag].sort((a, b) => b.date.localeCompare(a.date))
+const projects = [multica, symphony, okf, openaiAgentsPython, pi, mcp, superpowersOpenspec, langgraph, embodiedAi, vla, rag, embeddingsRerankers].sort((a, b) => b.date.localeCompare(a.date))
 
 export default projects
