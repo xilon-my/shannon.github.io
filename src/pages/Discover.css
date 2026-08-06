@@ -461,6 +461,21 @@
   margin: 24px auto;
 }
 
+/* ── RAG 论文图：架构图宽、框架图适中 ── */
+.discover-detail-content img[src*="rag-arch"] {
+  width: auto;
+  max-width: 760px;
+  display: block;
+  margin: 24px auto;
+}
+
+.discover-detail-content img[src*="ragchecker"] {
+  width: auto;
+  max-width: 460px;
+  display: block;
+  margin: 24px auto;
+}
+
 /* ── Tables ── */
 .discover-detail-content table {
   width: calc(100% - 48px);

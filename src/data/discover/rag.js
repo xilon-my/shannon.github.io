@@ -32,6 +32,10 @@ RAG 的原理一句话就能说完,但拆开是两条流水线,一条离线、�
 3. 把这几段拼进 prompt,让 LLM"基于以下资料回答"。
 4. LLM 生成答案——答案的每个事实,理论上都能回溯到检索到的段落。
 
+RAG 原论文(Lewis et al., 2020)的架构图把这条流水线画得很清楚——上半是查询编码和索引检索,下半是生成器在检索到的文档上生成:
+
+![RAG 原论文架构图:查询编码 → 索引检索 → 生成器在检索文档上生成答案](/discover/rag-arch-8bit.png)
+
 这个循环的关键在最后两步之间:LLM 自己不用"记住"任何资料,它只需要"读"检索结果。资料更新了,重新入库就行,模型权重不用动——这就是 RAG 对"知识过期"问题的天然解。
 
 ## 为什么是 RAG,不是微调
@@ -193,6 +197,10 @@ faithfulness 的玩法:把答案拆成原子论断,逐个问"这条能否从检�
 但 LLM 裁判有个绕不开的问题:**它会继承模型自己的偏差**——冗长偏差(越长的答案分越高)、对 prompt 措辞敏感、自己不确定的地方反而心虚。最尖锐的质疑来自 Amazon 的 **[RAGChecker](https://github.com/amazon-science/RAGChecker)**(NeurIPS 2024)。它做了论断级(claim-level)的元评估,发现 RAGAS 的 faithfulness 与人类整体判断的相关性很弱——Pearson 相关系数(衡量两个变量线性相关程度的统计量,越接近 1 越强正相关)只有约 7.8,而 RAGChecker 与人类判断的整体相关性能到 61.9。通俗说:一个"看起来忠实"的 RAGAS 高分,可能和真人认为的好坏对不上。
 
 RAGChecker 的方法论不同:不按整段答案打分,而是把答案、ground truth、检索上下文全部拆成原子论断,逐条判断"这条论断能否被上下文蕴含"。由此得到一组细粒度诊断指标:overall precision/recall/F1、claim_recall(检索捞全了没)、faithfulness、context_utilization(上下文里的有用信息用了多少)、hallucination(幻觉比例)、noise sensitivity(对噪声多敏感)。用它最大的好处是能**定位问题出在检索还是生成**——这正是它和"一个笼统总分"的本质区别。RAGChecker 还在自己的 benchmark(8 套 RAG 系统、2 个检索器 × 4 个生成器、4162 个问题、10 个领域)里验证了一个和本系列前面完全一致的观点:**检索质量是最主要的因素**——dense 检索器 E5-Mistral 一致地赢过 BM25,换什么生成器都一样。
+
+RAGChecker 的评估框架原图——模型回答 vs 标准答案的论断集合,以及每个检索块被判为相关/不相关,喂出整体、检索、生成三组指标:
+
+![RAGChecker 评估框架:模型回答 vs 标准答案的论断集合,和检索块的相关性判定](/discover/ragchecker-framework-8bit.png)
 
 中文场景有现成的 benchmark:评估中文 RAG 常用 **[CRUD-RAG](https://github.com/IAAR-Shanghai/CRUD_RAG)**(3.6 万个中文测试样本,按 Create/Read/Update/Delete 四类任务组织)和 **[RGB](https://github.com/chen700564/RGB)**(中英双语,涵盖噪声鲁棒性、反事实鲁棒性等能力)。
 
